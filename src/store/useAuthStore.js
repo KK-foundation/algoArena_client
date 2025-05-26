@@ -10,13 +10,28 @@ export const useAuthStore = create((set) => ({
 
   checkAuth: async () => {
     set({ isCheckingAuth: true });
-
     try {
       const res = await axiosInstance.get("/auth/check");
-      set({ authUser: res.data.user });
+      set({ authUser: res.data.data });
     } catch (error) {
-      set({ authUser: null });
-      console.log(error);
+      if (error.response?.status === 401) {
+        try {
+          // Try to refresh the token
+          await axiosInstance.get("/refresh-token");
+
+          // Retry the original auth check after refreshing
+          const res = await axiosInstance.get("/auth/check");
+          set({ authUser: res.data.data });
+        } catch (refreshError) {
+          // If refresh also fails, force logout
+          set({ authUser: null });
+          console.log("Refresh token failed:", refreshError);
+        }
+      } else {
+        // Other errors (not 401)
+        set({ authUser: null });
+        console.log("Auth check error:", error);
+      }
     } finally {
       set({ isCheckingAuth: false });
     }
@@ -26,10 +41,26 @@ export const useAuthStore = create((set) => ({
     set({ isSigninUp: true });
 
     try {
-      const res = await axiosInstance.post("/auth/register", data);
-      set({ authUser: res.data.user });
+      const res = await axiosInstance.post("/auth/register", data, {
+        withCredentials: true,
+      });
+      return res;
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isSigninUp: false });
+    }
+  },
+
+  verify: async (otp) => {
+    set({ isSigninUp: true });
+
+    try {
+      const res = await axiosInstance.post("/auth/verify-account", otp);
+      return res;
+    } catch (error) {
+      toast.error(error.response.data.message);
     } finally {
       set({ isSigninUp: false });
     }
@@ -37,14 +68,51 @@ export const useAuthStore = create((set) => ({
 
   login: async (data) => {
     set({ isLoggingIn: true });
-
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      set({ authUser: res.data.user });
+      console.log("Response: ", res);
+      return res;
     } catch (error) {
       console.log(error);
+      toast.error(error.response.data.message);
     } finally {
       set({ isLoggingIn: false });
+    }
+  },
+
+  forgotPassword: async (data) => {
+    set({ isSigninUp: true });
+    try {
+      const res = await axiosInstance.post("/auth/forgot-password", data);
+      return res;
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isSigninUp: false });
+    }
+  },
+
+  resetPassword: async (data) => {
+    set({ isSigninUp: true });
+    try {
+      const res = await axiosInstance.post("/auth/reset-password", data);
+      return res;
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isSigninUp: false });
+    }
+  },
+
+  socialAuth: async (data) => {
+    set({ isSigninUp: true });
+    try {
+      const res = await axiosInstance.post("/auth/social-auth", data);
+      return res;
+    } catch (error) {
+      toast.error(error.response.data.message);
+    } finally {
+      set({ isSigninUp: false });
     }
   },
 

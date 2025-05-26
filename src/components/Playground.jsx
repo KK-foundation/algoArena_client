@@ -100,24 +100,24 @@ export default function Playground() {
         <select
           value={language}
           onChange={handleLanguageChange}
-          className="p-2 border rounded"
+          className="p-2 border rounded cursor-pointer"
         >
-          <option className="bg-[#13181c]" value="cpp">
+          <option className="bg-[#13181c] cursor-pointer" value="cpp">
             C++
           </option>
-          <option className="bg-[#13181c]" value="java">
+          <option className="bg-[#13181c] cursor-pointer" value="java">
             Java
           </option>
-          <option className="bg-[#13181c]" value="python">
+          <option className="bg-[#13181c] cursor-pointer" value="python">
             Python
           </option>
-          <option className="bg-[#13181c]" value="javascript">
+          <option className="bg-[#13181c] cursor-pointer" value="javascript">
             JavaScript
           </option>
         </select>
         <button
           onClick={handleRun}
-          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded"
+          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
           disabled={isRunning}
         >
           {isRunning ? "Running..." : "Run"}
