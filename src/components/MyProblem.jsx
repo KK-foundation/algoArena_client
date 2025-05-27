@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import ProblemCard from "./ProblemCard";
 import CreateProblemForm from "./CreateProblemForm";
+import { useProblemStore } from "../store/useProblemStore";
 
 const MyProblem = () => {
+  const { getAllProblemCreatedByUser, createdByUserProblems } =
+    useProblemStore();
+
+  useEffect(() => {
+    getAllProblemCreatedByUser();
+  }, [getAllProblemCreatedByUser]);
   return (
     <div className="bg-[#2f3136] p-4">
       <div className="flex justify-between">
@@ -30,16 +37,26 @@ const MyProblem = () => {
         </div>
       </dialog>
       <br />
-      <div className="flex flex-col gap-4">
-        {[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0].map(() => (
-          <ProblemCard />
-        ))}
-      </div>
-      <br />
-      <div className="flex justify-between">
-        <button className="border px-4 py-1 rounded-lg cursor-pointer">Prev</button>
-        <button className="border px-4 py-1 rounded-lg cursor-pointer">Next</button>
-      </div>
+      {createdByUserProblems.length > 0 && (
+        <>
+          <div className="flex flex-col gap-4">
+            {createdByUserProblems.map((problem, index) => (
+              <div key={index}>
+                <ProblemCard problem={problem} />
+              </div>
+            ))}
+          </div>
+          <br />
+          <div className="flex justify-between">
+            <button className="border px-4 py-1 rounded-lg cursor-pointer">
+              Prev
+            </button>
+            <button className="border px-4 py-1 rounded-lg cursor-pointer">
+              Next
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

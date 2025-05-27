@@ -1,7 +1,7 @@
 import React from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import { boolean, z } from "zod";
 import {
   Plus,
   Trash2,
@@ -31,9 +31,19 @@ const problemSchema = z.object({
       z.object({
         input: z.string().min(1, "Input is required"),
         output: z.string().min(1, "Output is required"),
+        isPrivate: z.boolean().default(true),
       })
     )
-    .min(1, "At least one test case is required"),
+    .min(1, "At least one test case is required")
+    .refine(
+      (testcases) => {
+        const publicCount = testcases.filter((tc) => !tc.isPrivate).length;
+        return publicCount <= 3;
+      },
+      {
+        message: "Only up to 3 public test cases are allowed",
+      }
+    ),
   examples: z.object({
     JAVASCRIPT: z.object({
       input: z.string().min(1, "Input is required"),
@@ -50,16 +60,23 @@ const problemSchema = z.object({
       output: z.string().min(1, "Output is required"),
       explanation: z.string().optional(),
     }),
+    CPP: z.object({
+      input: z.string().min(1, "Input is required"),
+      output: z.string().min(1, "Output is required"),
+      explanation: z.string().optional(),
+    }),
   }),
   codeSnippets: z.object({
     JAVASCRIPT: z.string().min(1, "JavaScript code snippet is required"),
     PYTHON: z.string().min(1, "Python code snippet is required"),
     JAVA: z.string().min(1, "Java solution is required"),
+    CPP: z.string().min(1, "C++ solution is required"),
   }),
   referenceSolutions: z.object({
     JAVASCRIPT: z.string().min(1, "JavaScript solution is required"),
     PYTHON: z.string().min(1, "Python solution is required"),
     JAVA: z.string().min(1, "Java solution is required"),
+    CPP: z.string().min(1, "C++ solution is required"),
   }),
 });
 
@@ -79,14 +96,32 @@ const sampledpData = {
     {
       input: "2",
       output: "2",
+      isPrivate: false
     },
     {
       input: "3",
       output: "3",
+      isPrivate: false
     },
     {
       input: "4",
       output: "5",
+      isPrivate: false
+    },
+    {
+      input: "2",
+      output: "2",
+      isPrivate: true
+    },
+    {
+      input: "3",
+      output: "3",
+      isPrivate: true
+    },
+    {
+      input: "4",
+      output: "5",
+      isPrivate: true
     },
   ],
   examples: {
@@ -103,6 +138,12 @@ const sampledpData = {
         "There are three ways to climb to the top:\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step",
     },
     JAVA: {
+      input: "n = 4",
+      output: "5",
+      explanation:
+        "There are five ways to climb to the top:\n1. 1 step + 1 step + 1 step + 1 step\n2. 1 step + 1 step + 2 steps\n3. 1 step + 2 steps + 1 step\n4. 2 steps + 1 step + 1 step\n5. 2 steps + 2 steps",
+    },
+    CPP: {
       input: "n = 4",
       output: "5",
       explanation:
@@ -171,6 +212,7 @@ class Main {
       scanner.close();
   }
 }`,
+    CPP: "#include <iostream>\n#include <string>\nusing namespace std;\n\nclass Main {\npublic:\nint climbStairs(int n) {\n    // Write your code here\n                       return 0;\n                     }\n                 };\n\n                 int main() {\n                    string input;\n                     getline(cin, input);\n                     int n = stoiinput);\n\n                     Main mainObj; // Use Main class instead of Solution\n                     int result = mainObj.climbStairs(n);\n\n                     cout << result << endl;\n                     return 0;\n                 };",
   },
   referenceSolutions: {
     JAVASCRIPT: `/**
@@ -306,6 +348,7 @@ class Main {
       scanner.close();
   }
 }`,
+    CPP: "#include <iostream>\n#include <string>\n#include <vector>\nusing namespace std;\n\nclass Main {\npublic:\n    int climbStairs(int n) {\n        // Base cases\n        if (n <= 2) {\n            return n;\n        }\n\n        // Dynamic programming approach\n        vector<int> dp(n + 1);\n        dp[1] = 1;\n        dp[2] = 2;\n\n        for (int i = 3; i <= n; i++) {\n            dp[i] = dp[i - 1] + dp[i - 2];\n        }\n\n        return dp[n];\n\n        /* Alternative approach with O(1) space\n        int a = 1; // ways to climb 1 step\n        int b = 2; // ways to climb 2 steps\n\n        for (int i = 3; i <= n; i++) {\n            int temp = a + b;\n            a = b;\n            b = temp;\n        }\n\n        return n == 1 ? a : b;\n        */\n    }\n};\n\nint main() {\n    string input;\n    getline(cin, input);\n    int n = stoi(input);\n\n    // Use Main class instead of Solution\n    Main mainObj;\n    int result = mainObj.climbStairs(n);\n\n    cout << result << endl;\n    return 0;\n}\n",
   },
 };
 
@@ -348,6 +391,11 @@ const sampleStringProblem = {
       explanation: '"amanaplanacanalpanama" is a palindrome.',
     },
     JAVA: {
+      input: 's = "A man, a plan, a canal: Panama"',
+      output: "true",
+      explanation: '"amanaplanacanalpanama" is a palindrome.',
+    },
+    CPP: {
       input: 's = "A man, a plan, a canal: Panama"',
       output: "true",
       explanation: '"amanaplanacanalpanama" is a palindrome.',
@@ -416,6 +464,7 @@ public class Main {
     }
 }
 `,
+    CPP: '#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nclass Main {\npublic:\n    static string preprocess(const string& s) {\n        string result;\n        for (char ch : s) {\n            if (isalnum(ch)) {\n                result += tolower(ch);\n            }\n        }\n        return result;\n    }\n\n    static bool isPalindrome(const string& s) {\n        string str = preprocess(s);\n        int left = 0, right = str.length() - 1;\n\n        while (left < right) {\n            if (str[left] != str[right]) {\n                return false;\n            }\n            left++;\n            right--;\n        }\n        return true;\n    }\n};\n\nint main() {\n    string input;\n    getline(cin, input);\n\n    bool result = Main::isPalindrome(input);\n    cout << (result ? "true" : "false") << endl;\n\n    return 0;\n}\n',
   },
   referenceSolutions: {
     JAVASCRIPT: `/**
@@ -507,6 +556,7 @@ public class Main {
     }
 }
 `,
+    CPP: '#include <iostream>\n#include <string>\n#include <cctype>\nusing namespace std;\n\nclass Main {\npublic:\n    static string preprocess(const string& s) {\n        string result;\n        for (char ch : s) {\n            if (isalnum(ch)) {\n                result += tolower(ch);\n            }\n        }\n        return result;\n    }\n\n    static bool isPalindrome(string s) {\n        s = preprocess(s);\n        int left = 0, right = s.length() - 1;\n\n        while (left < right) {\n            if (s[left] != s[right]) return false;\n            left++;\n            right--;\n        }\n\n        return true;\n    }\n};\n\nint main() {\n    string input;\n    getline(cin, input);\n\n    bool result = Main::isPalindrome(input);\n    cout << (result ? "true" : "false") << endl;\n\n    return 0;\n}\n',
   },
 };
 
@@ -522,22 +572,25 @@ const CreateProblemForm = () => {
   } = useForm({
     resolver: zodResolver(problemSchema),
     defaultValues: {
-      testcases: [{ input: "", output: "" }],
+      testcases: [{ input: "", output: "", isPrivate: boolean }],
       tags: [""],
       examples: {
         JAVASCRIPT: { input: "", output: "", explanation: "" },
         PYTHON: { input: "", output: "", explanation: "" },
         JAVA: { input: "", output: "", explanation: "" },
+        CPP: { input: "", output: "", explanation: "" },
       },
       codeSnippets: {
         JAVASCRIPT: "function solution() {\n  // Write your code here\n}",
         PYTHON: "def solution():\n    # Write your code here\n    pass",
         JAVA: "public class Solution {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}",
+        CPP: "#include <iostream>\n using namespace std;\n\nint main() {\n    // Write your code here\n return 0;\n }",
       },
       referenceSolutions: {
         JAVASCRIPT: "// Add your reference solution here",
         PYTHON: "# Add your reference solution here",
         JAVA: "// Add your reference solution here",
+        CPP: "// Add your reference solution here",
       },
     },
   });
@@ -606,7 +659,7 @@ const CreateProblemForm = () => {
                   className={`btn join-item ${
                     sampleType === "DP" ? "btn-active" : ""
                   }`}
-                  onClick={() => setSampleType("array")}
+                  onClick={() => setSampleType("DP")}
                 >
                   DP Problem
                 </button>
@@ -814,6 +867,20 @@ const CreateProblemForm = () => {
                             </label>
                           )}
                         </div>
+
+                        {/* Add isPrivate checkbox across full width */}
+                        <div className="form-control md:col-span-2">
+                          <label className="label cursor-pointer">
+                            <span className="label-text font-medium">
+                              Make this test case public?
+                            </span>
+                            <input
+                              type="checkbox"
+                              className="checkbox checkbox-primary"
+                              {...register(`testcases.${index}.isPrivate`)}
+                            />
+                          </label>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -830,7 +897,7 @@ const CreateProblemForm = () => {
 
             {/* Code Editor Sections */}
             <div className="space-y-8">
-              {["JAVASCRIPT", "PYTHON", "JAVA"].map((language) => (
+              {["JAVASCRIPT", "PYTHON", "JAVA", "CPP"].map((language) => (
                 <div
                   key={language}
                   className="card bg-base-200 p-4 md:p-6 shadow-md"

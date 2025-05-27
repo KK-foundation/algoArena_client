@@ -9,7 +9,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-import { useSignIn } from "@clerk/clerk-react";
+// import { useSignIn } from "@clerk/clerk-react";
 
 const LoginSchema = z.object({
   data: z.string().min(1, "Email or username is required"),
@@ -20,8 +20,8 @@ const LoginPage = () => {
   const { isLoggingIn, login } = useAuthStore();
   const [visibility, setVisibility] = useState(false);
   const navigate = useNavigate();
-  const { signIn, isLoaded: signInLoaded } = useSignIn();
-  const [oauthLoading, setOauthLoading] = useState(false);
+  // const { signIn, isLoaded: signInLoaded } = useSignIn();
+  // const [oauthLoading, setOauthLoading] = useState(false);
 
 
   const {
@@ -43,23 +43,23 @@ const LoginPage = () => {
     }
   };
 
-  const handleSocial = async (provider) => {
-    if (!signInLoaded || oauthLoading) return;
+  // const handleSocial = async (provider) => {
+  //   if (!signInLoaded || oauthLoading) return;
 
-    setOauthLoading(true);
+  //   setOauthLoading(true);
 
-    try {
-      const user = await signIn.authenticateWithRedirect({
-        strategy: `oauth_${provider}`, // "oauth_google" | "oauth_github"
-        redirectUrl: "/sso-callback", // where step 3 lives
-        redirectUrlComplete: "/", // where to land after success
-      });
-      console.log(user)
-    } catch (error) {
-      console.error(error);
-      setOauthLoading(false);
-    }
-  };
+  //   try {
+  //     const user = await signIn.authenticateWithRedirect({
+  //       strategy: `oauth_${provider}`, // "oauth_google" | "oauth_github"
+  //       redirectUrl: "/sso-callback", // where step 3 lives
+  //       redirectUrlComplete: "/", // where to land after success
+  //     });
+  //     console.log(user)
+  //   } catch (error) {
+  //     console.error(error);
+  //     setOauthLoading(false);
+  //   }
+  // };
   return (
     <>
       <Navbar />
@@ -133,8 +133,8 @@ const LoginPage = () => {
           <br />
           <p className="opacity-60">or you can sign in with</p>
           <div className="flex mt-2 gap-4">
-            <FaGoogle className="text-2xl cursor-pointer" onClick={() => handleSocial('google')}/>
-            <FaGithub className="text-2xl cursor-pointer" onClick={() => handleSocial('github')}/>
+            <FaGoogle className="text-2xl cursor-pointer" />
+            <FaGithub className="text-2xl cursor-pointer" />
           </div>
         </form>
       </main>

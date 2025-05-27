@@ -7,10 +7,9 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
-import { useUser } from "@clerk/clerk-react";
 const LandingPage = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-  const { user, isLoaded } = useUser();
+  
 
   //Mistake if i add the dependencies : like the authUser or isCheckingAuth and if authUser to get data the infinite loop start.
   useEffect(() => {
@@ -18,7 +17,7 @@ const LandingPage = () => {
       checkAuth();
     }
   }, [checkAuth]);
-console.log(user)
+
   if (isCheckingAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -26,6 +25,8 @@ console.log(user)
       </div>
     );
   }
+
+  console.log("landing page")
 
   return (
     <>

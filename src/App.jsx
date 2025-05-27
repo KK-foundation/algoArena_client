@@ -10,7 +10,6 @@ import ResetPassword from "./pages/ResetPassword";
 import LoginPage from "./pages/LoginPage";
 import SignUpPage from "./pages/SignUpPage";
 import VerificationPage from "./pages/VerificationPage";
-// import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import SsoCallback from "./pages/SsoCallback";
 import Profile from "./pages/Profile";
 import Problems from "./pages/Problems";
@@ -32,13 +31,14 @@ const App = () => {
       </div>
     );
   }
+  console.log("App")
   return (
     <div className="bg-[#212326] w-full h-full text-[#e0e0e0]">
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route index element={<LandingPage />} />
           <Route
-            path="/profile"
+            path="/profile/:username"
             element={authUser ? <Profile /> : <Navigate to={"/login"} />}
           />
           <Route
@@ -60,27 +60,23 @@ const App = () => {
         </Route>
         <Route
           path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to={"/"} />}
+          element={!authUser ? <LoginPage /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/signup"
-          element={!authUser ? <SignUpPage /> : <Navigate to={"/"} />}
+          element={!authUser ? <SignUpPage /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/verify"
-          element={!authUser ? <VerificationPage /> : <Navigate to={"/"} />}
+          element={!authUser ? <VerificationPage /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/forgot-password"
-          element={!authUser ? <ForgotPassword /> : <Navigate to={"/"} />}
+          element={!authUser ? <ForgotPassword /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/reset-password/:token"
-          element={!authUser ? <ResetPassword /> : <Navigate to={"/"} />}
-        />
-        <Route
-          path="/sso-callback"
-          element={!authUser ? <SsoCallback /> : <Navigate to={"/"} />}
+          element={!authUser ? <ResetPassword /> : <Navigate to={"/problems"} />}
         />
       </Routes>
       <Toaster />

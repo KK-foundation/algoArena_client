@@ -1,8 +1,13 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SheetCard from "./SheetCard";
 import CreateSheetForm from "./CreateSheetForm";
+import { useSheetStore } from "../store/useSheetStore";
 
 const MySheet = () => {
+  const { getSheetCreatedByUser, sheetCreatedByUser } = useSheetStore();
+  useEffect(() => {
+    getSheetCreatedByUser();
+  }, [getSheetCreatedByUser]);
   return (
     <div className="bg-[#2f3136] p-4">
       <div className="flex flex-col justify-between bg-[#2f3136]">
@@ -30,16 +35,22 @@ const MySheet = () => {
           </div>
         </dialog>
         <br />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[0, 0, 0, 0, 0, 0, 0].map(() => (
-            <SheetCard />
-          ))}
-        </div>
-        <br />
-        <div className="flex justify-between">
-          <button className="border px-4 py-1 rounded-lg">Prev</button>
-          <button className="border px-4 py-1 rounded-lg">Next</button>
-        </div>
+        {sheetCreatedByUser.lenght > 0 && (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {sheetCreatedByUser.map((sheet, index) => (
+                <div key={index}>
+                  <SheetCard sheet={sheet} />
+                </div>
+              ))}
+            </div>
+            <br />
+            <div className="flex justify-between">
+              <button className="border px-4 py-1 rounded-lg">Prev</button>
+              <button className="border px-4 py-1 rounded-lg">Next</button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
