@@ -6,8 +6,9 @@ import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import { useSubmissionStore } from "../store/useSubmissionStore";
 import { useParams } from "react-router-dom";
 
-const Accepted = () => {
+const Submissions = ({ problem }) => {
   const [openIndex, setOpenIndex] = useState(null);
+  const { problemId } = useParams();
 
   const langMap = {
     CPP: "cpp",
@@ -32,12 +33,12 @@ const Accepted = () => {
     setTimeout(() => setCopied(false), 1000);
   };
 
-  const { getAllSubmissions, submissions, isLoading } = useSubmissionStore();
-  const { problemId } = useParams();
+  const { getSubmissionForProblem, submissionByUser, isLoading } =
+    useSubmissionStore();
 
   useEffect(() => {
-    getAllSubmissions(problemId);
-  }, [getAllSubmissions, problemId]);
+    getSubmissionForProblem(problemId);
+  }, [getSubmissionForProblem, problemId]);
 
   if (isLoading) {
     return (
@@ -46,13 +47,13 @@ const Accepted = () => {
       </div>
     );
   }
-
+  console.log(submissionByUser);
   return (
     <>
-      {submissions.length > 0 ? (
+      {submissionByUser && submissionByUser.length > 0 ? (
         <div className="p-4">
           <div className="flex flex-col gap-2">
-            {submissions.map((submission) => (
+            {submissionByUser.map((submission) => (
               <div key={submission.id}>
                 <div
                   className="bg-[#212326] flex justify-between p-3 rounded-lg hover:bg-[#2f3136] cursor-pointer"
@@ -60,7 +61,7 @@ const Accepted = () => {
                 >
                   <h4
                     className={`font-bold ${
-                      submission.status.tolowerCase() === "accepted"
+                      submission?.status === "Accepted"
                         ? "text-green-500"
                         : "text-red-600"
                     }`}
@@ -89,11 +90,11 @@ const Accepted = () => {
                       </button>
 
                       <SyntaxHighlighter
-                        language={langMap[submission.language]}
+                        language={langMap[submission.language] || submission.language}
                         style={oneDark}
                         customStyle={{ margin: 0, padding: "1rem" }}
                       >
-                        {submission.sourceCode[submission.language]}
+                        {submission.sourceCode}
                       </SyntaxHighlighter>
                     </div>
                   </div>
@@ -104,11 +105,13 @@ const Accepted = () => {
         </div>
       ) : (
         <div className="flex justify-center items-center relative">
-          <p className="text-2xl font-bold absolute mt-[50%]">No submission yet...</p>
+          <p className="text-2xl font-bold absolute mt-[50%]">
+            No submission yet...
+          </p>
         </div>
       )}
     </>
   );
 };
 
-export default Accepted;
+export default Submissions;

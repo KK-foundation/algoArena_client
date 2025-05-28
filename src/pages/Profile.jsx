@@ -10,7 +10,6 @@ import MyProblem from "../components/MyProblem";
 import MySheet from "../components/MySheet";
 
 const Profile = () => {
-  const { authUser } = useAuthStore();
   const [active, setActive] = useState("3");
   return (
     <div className="w-[90%] lg:w-[80%] m-auto mt-4">

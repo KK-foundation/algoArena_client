@@ -16,19 +16,14 @@ export const useAuthStore = create((set) => ({
     } catch (error) {
       if (error.response?.status === 401) {
         try {
-          // Try to refresh the token
           await axiosInstance.get("/refresh-token");
-
-          // Retry the original auth check after refreshing
           const res = await axiosInstance.get("/auth/check");
           set({ authUser: res.data.data });
         } catch (refreshError) {
-          // If refresh also fails, force logout
           set({ authUser: null });
           console.log("Refresh token failed:", refreshError);
         }
       } else {
-        // Other errors (not 401)
         set({ authUser: null });
         console.log("Auth check error:", error);
       }
@@ -71,6 +66,7 @@ export const useAuthStore = create((set) => ({
     try {
       const res = await axiosInstance.post("/auth/login", data);
       console.log("Response: ", res);
+      localStorage.setItem("userInfo", JSON.stringify(res.data.data));
       return res;
     } catch (error) {
       console.log(error);
@@ -120,6 +116,7 @@ export const useAuthStore = create((set) => ({
     try {
       await axiosInstance.post("/auth/logout");
       set({ authUser: null });
+      localStorage.removeItem("userInfo");
     } catch (error) {
       console.log(error);
       toast.error("Error logging out");

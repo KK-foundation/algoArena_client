@@ -11,7 +11,7 @@ const SolvedProblem = () => {
 
   return (
     <>
-      {solvedProblems.lenght > 0 && (
+      {solvedProblems.length > 0 && (
         <div className="bg-[#2f3136] p-4">
           <input
             type="text"

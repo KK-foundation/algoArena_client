@@ -1,12 +1,15 @@
 import QuestionDescription from "../components/QuestionDescription";
 import Solution from "../components/Solution";
-import Accepted from "../components/Accepted";
 import { useState, useRef, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 import { RotateCcw, Expand, AlignLeft, Loader } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { useProblemStore } from "../store/useProblemStore";
 import { axiosInstance } from "../libs/axios";
+import { useExecutionStore } from "../store/useExecutionStore";
+
+import Submissions from "../components/Submissions";
+import Accepted from "./Accepted";
 
 const langMap = {
   CPP: "cpp",
@@ -14,10 +17,26 @@ const langMap = {
   PYTHON: "python",
   JAVASCRIPT: "javascript",
 };
+const languageIdMap = {
+  CPP: 54,
+  JAVA: 62,
+  PYTHON: 71,
+  JAVASCRIPT: 63,
+};
+
+
 
 const ProblemDetail = () => {
   const { problemId } = useParams();
   const { isProblemLoading, problem, getProblemById } = useProblemStore();
+  const {
+    isExecutingRun,
+    executeRun,
+    isExecuting,
+    submitResult,
+    testCaseResult,
+    executeSubmit,
+  } = useExecutionStore();
 
   const [activeCard, setActiveCard] = useState("1");
   const [inputs, setInputs] = useState("1");
@@ -50,17 +69,28 @@ const ProblemDetail = () => {
     }
   };
 
-  const handleRun = () => {
-    console.log("Run code:", code);
+  const handleRun = async () => {
+    const language_id = languageIdMap[language];
+    executeRun(code, language_id, problemId);
   };
 
   const handleSubmit = () => {
-    console.log("Submit code:", code);
+    const language_id = languageIdMap[language];
+    executeSubmit(code, language_id, problemId);
   };
 
   useEffect(() => {
     getProblemById(problemId);
   }, [getProblemById, problemId]);
+  useEffect(() => {
+    if (testCaseResult) {
+      setInputs("2");
+      setShowConsole(true);
+    }
+    if (submitResult) {
+      setActiveCard("4");
+    }
+  }, [testCaseResult, submitResult]);
 
   if (isProblemLoading) {
     return (
@@ -103,6 +133,16 @@ const ProblemDetail = () => {
                   >
                     Submissions
                   </li>
+                  {submitResult && <li
+                    className={`text-lg font-semibold cursor-pointer px-4 py-1 ${
+                      submitResult.status === "Accepted"
+                        ? "text-green-500"
+                        : "text-red-500"
+                    } ${activeCard === "4" ? "border-b-2" : ""}`}
+                    onClick={() => setActiveCard("4")}
+                  >
+                    Accepted
+                  </li>}
                 </ul>
               </div>
               <div>
@@ -110,7 +150,8 @@ const ProblemDetail = () => {
                   <QuestionDescription problem={problem} />
                 )}
                 {activeCard === "2" && <Solution problem={problem} />}
-                {activeCard === "3" && <Accepted problem={problem} />}
+                {activeCard === "3" && <Submissions problem={problem} />}
+                {activeCard === "4" && <Accepted submitResult={submitResult} />}
               </div>
             </div>
             {/* Code editor */}
@@ -222,40 +263,61 @@ const ProblemDetail = () => {
 
                         {inputs === "2" && (
                           <div>
-                            <div className="flex justify-between items-center">
-                              <h1 className="text-green-500 font-bold text-2xl">
-                                Accepted
-                              </h1>
-                              <span>Passed test cases: 2/2</span>
-                            </div>
-                            <br />
-                            <div className="flex gap-8">
-                              {[0, 0].map((i, index) => (
-                                <div>
-                                  <p
-                                    className="bg-[#212326] w-fit px-4 py-1 rounded-lg cursor-pointer"
-                                    onClick={() => setInputs(index)}
-                                  >
-                                    Case {index + 1}
-                                  </p>
+                            {testCaseResult && (
+                              <>
+                                <div className="flex justify-between items-center">
+                                  <h1 className="text-green-500 font-bold text-2xl">
+                                    {testCaseResult.status}
+                                  </h1>
+                                  <span>
+                                    Passed test cases:{" "}
+                                    {
+                                      testCaseResult.testCases.filter(
+                                        (tc) => tc.status === "Accepted"
+                                      ).length
+                                    }
+                                    /{testCaseResult.testCases.length}
+                                  </span>
                                 </div>
-                              ))}
-                            </div>
-                            <br />
-                            <div className="flex flex-col gap-4">
-                              {["Input", "Output", "Expected Output"].map(
-                                (item) => (
-                                  <div>
-                                    <p className="font-semibold text-lg">
-                                      {item} :
-                                    </p>
-                                    <div className=" px-4 py-8 mt-2 bg-[#212326] rounded-lg">
-                                      nums=[1,4,5,6]
-                                    </div>
-                                  </div>
-                                )
-                              )}
-                            </div>
+                                <br />
+                                <div className="flex flex-col gap-8">
+                                  {testCaseResult.testCases.map(
+                                    (testcase, index) => (
+                                      <div className="flex flex-col bg-[#212326] w-full px-4 py-2 rounded-lg cursor-pointer">
+                                        <p
+                                          className={`font-bold ${
+                                            testcase.status === "Accepted"
+                                              ? "text-green-500"
+                                              : "text-red-500"
+                                          }`}
+                                          onClick={() => setInputs(index)}
+                                        >
+                                          Case {index + 1} :
+                                        </p>
+                                        <br />
+                                        {testcase.status === "Accepted" ? (
+                                          <>
+                                            <p className="text-green-500">
+                                              Your Output :{testcase.stdout}
+                                            </p>
+                                            <br />
+                                            <p className="text-green-500">
+                                              Expected Output :
+                                              {testcase.expected}
+                                            </p>
+                                          </>
+                                        ) : (
+                                          <p className="text-red-500">
+                                            {testcase.compileOutput}
+                                          </p>
+                                        )}
+                                      </div>
+                                    )
+                                  )}
+                                </div>
+                                <br />
+                              </>
+                            )}
                           </div>
                         )}
                       </div>
@@ -279,14 +341,24 @@ const ProblemDetail = () => {
                   <button
                     onClick={handleRun}
                     className="bg-green-600 text-white px-4 py-1 rounded hover:bg-green-500 text-sm"
+                    disabled={isExecutingRun}
                   >
-                    Run
+                    {isExecutingRun ? (
+                      <Loader className="animate-spin" />
+                    ) : (
+                      "Run"
+                    )}
                   </button>
                   <button
                     onClick={handleSubmit}
                     className="bg-purple-600 text-white px-4 py-1 rounded hover:bg-purple-500 text-sm"
+                    disabled={isExecuting}
                   >
-                    Submit
+                    {isExecuting ? (
+                      <Loader className="animate-spin" />
+                    ) : (
+                      "Submit"
+                    )}
                   </button>
                 </div>
               </div>

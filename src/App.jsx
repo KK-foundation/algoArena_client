@@ -19,6 +19,7 @@ import ProblemDetail from "./pages/ProblemDetail";
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   useEffect(() => {
     checkAuth();
@@ -39,44 +40,44 @@ const App = () => {
           <Route index element={<LandingPage />} />
           <Route
             path="/profile/:username"
-            element={authUser ? <Profile /> : <Navigate to={"/login"} />}
+            element={userInfo ? <Profile /> : <Navigate to={"/login"} />}
           />
           <Route
             path="/problems"
-            element={authUser ? <Problems /> : <Navigate to={"/login"} />}
+            element={userInfo ? <Problems /> : <Navigate to={"/login"} />}
           />
           <Route
             path="/problem/:problemId"
-            element={authUser ? <ProblemDetail /> : <Navigate to={"/login"} />}
+            element={userInfo ? <ProblemDetail /> : <Navigate to={"/login"} />}
           />
           <Route
             path="/sheets"
-            element={authUser ? <Sheets /> : <Navigate to={"/login"} />}
+            element={userInfo ? <Sheets /> : <Navigate to={"/login"} />}
           />
           <Route
             path="/sheet/:sheetId"
-            element={authUser ? <SheetDetail /> : <Navigate to={"/login"} />}
+            element={userInfo ? <SheetDetail /> : <Navigate to={"/login"} />}
           />
         </Route>
         <Route
           path="/login"
-          element={!authUser ? <LoginPage /> : <Navigate to={"/problems"} />}
+          element={!userInfo ? <LoginPage /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/signup"
-          element={!authUser ? <SignUpPage /> : <Navigate to={"/problems"} />}
+          element={!userInfo ? <SignUpPage /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/verify"
-          element={!authUser ? <VerificationPage /> : <Navigate to={"/problems"} />}
+          element={!userInfo ? <VerificationPage /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/forgot-password"
-          element={!authUser ? <ForgotPassword /> : <Navigate to={"/problems"} />}
+          element={!userInfo ? <ForgotPassword /> : <Navigate to={"/problems"} />}
         />
         <Route
           path="/reset-password/:token"
-          element={!authUser ? <ResetPassword /> : <Navigate to={"/problems"} />}
+          element={!userInfo ? <ResetPassword /> : <Navigate to={"/problems"} />}
         />
       </Routes>
       <Toaster />
