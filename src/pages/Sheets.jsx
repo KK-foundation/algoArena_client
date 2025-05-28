@@ -1,7 +1,22 @@
-import React from "react";
+import React, { useEffect } from "react";
 import SheetCard from "../components/SheetCard";
+import { useSheetStore } from "../store/useSheetStore";
+import { Loader } from "lucide-react";
 
 const Sheets = () => {
+  const { sheets, getAllSheets, isLoading } = useSheetStore();
+
+  useEffect(() => {
+    getAllSheets();
+  }, [getAllSheets]);
+
+  if (isLoading && !sheets) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
+  }
   return (
     <div className="w-[90%] lg:w-[80%] m-auto mt-4">
       <div>
@@ -17,8 +32,10 @@ const Sheets = () => {
           </div>
           <br />
           <div className="grid lg:grid-cols-2 grid-cols-1 gap-4">
-            {[0, 0, 0, 0, 0, 0].map(() => (
-              <SheetCard />
+            {sheets.map((sheet) => (
+              <div key={sheet.id}>
+                <SheetCard sheet={sheet} />
+              </div>
             ))}
           </div>
           <div className="w-full flex justify-center items-center mt-3">

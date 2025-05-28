@@ -24,8 +24,6 @@ const languageIdMap = {
   JAVASCRIPT: 63,
 };
 
-
-
 const ProblemDetail = () => {
   const { problemId } = useParams();
   const { isProblemLoading, problem, getProblemById } = useProblemStore();
@@ -37,6 +35,7 @@ const ProblemDetail = () => {
     testCaseResult,
     executeSubmit,
   } = useExecutionStore();
+
 
   const [activeCard, setActiveCard] = useState("1");
   const [inputs, setInputs] = useState("1");
@@ -99,7 +98,7 @@ const ProblemDetail = () => {
       </div>
     );
   }
-
+  
   return (
     <>
       {problem ? (
@@ -133,16 +132,18 @@ const ProblemDetail = () => {
                   >
                     Submissions
                   </li>
-                  {submitResult && <li
-                    className={`text-lg font-semibold cursor-pointer px-4 py-1 ${
-                      submitResult.status === "Accepted"
-                        ? "text-green-500"
-                        : "text-red-500"
-                    } ${activeCard === "4" ? "border-b-2" : ""}`}
-                    onClick={() => setActiveCard("4")}
-                  >
-                    Accepted
-                  </li>}
+                  {submitResult && (
+                    <li
+                      className={`text-lg font-semibold cursor-pointer px-4 py-1 ${
+                        submitResult.status === "Accepted"
+                          ? "text-green-500"
+                          : "text-red-500"
+                      } ${activeCard === "4" ? "border-b-2" : ""}`}
+                      onClick={() => setActiveCard("4")}
+                    >
+                      Accepted
+                    </li>
+                  )}
                 </ul>
               </div>
               <div>
@@ -267,53 +268,55 @@ const ProblemDetail = () => {
                               <>
                                 <div className="flex justify-between items-center">
                                   <h1 className="text-green-500 font-bold text-2xl">
-                                    {testCaseResult.status}
+                                    {testCaseResult.map(
+                                      (testcase) =>
+                                        testcase.status === "Accepted"
+                                    ).length === testCaseResult.length
+                                      ? "Accepted"
+                                      : "Wrong answer"}
                                   </h1>
                                   <span>
                                     Passed test cases:{" "}
                                     {
-                                      testCaseResult.testCases.filter(
+                                      testCaseResult.filter(
                                         (tc) => tc.status === "Accepted"
                                       ).length
                                     }
-                                    /{testCaseResult.testCases.length}
+                                    /{testCaseResult.length}
                                   </span>
                                 </div>
                                 <br />
                                 <div className="flex flex-col gap-8">
-                                  {testCaseResult.testCases.map(
-                                    (testcase, index) => (
-                                      <div className="flex flex-col bg-[#212326] w-full px-4 py-2 rounded-lg cursor-pointer">
-                                        <p
-                                          className={`font-bold ${
-                                            testcase.status === "Accepted"
-                                              ? "text-green-500"
-                                              : "text-red-500"
-                                          }`}
-                                          onClick={() => setInputs(index)}
-                                        >
-                                          Case {index + 1} :
-                                        </p>
-                                        <br />
-                                        {testcase.status === "Accepted" ? (
-                                          <>
-                                            <p className="text-green-500">
-                                              Your Output :{testcase.stdout}
-                                            </p>
-                                            <br />
-                                            <p className="text-green-500">
-                                              Expected Output :
-                                              {testcase.expected}
-                                            </p>
-                                          </>
-                                        ) : (
-                                          <p className="text-red-500">
-                                            {testcase.compileOutput}
+                                  {testCaseResult.map((testcase, index) => (
+                                    <div className="flex flex-col bg-[#212326] w-full px-4 py-2 rounded-lg cursor-pointer">
+                                      <p
+                                        className={`font-bold ${
+                                          testcase.status === "Accepted"
+                                            ? "text-green-500"
+                                            : "text-red-500"
+                                        }`}
+                                        onClick={() => setInputs(index)}
+                                      >
+                                        Case {index + 1} :
+                                      </p>
+                                      <br />
+                                      {testcase.status === "Accepted" ? (
+                                        <>
+                                          <p className="text-green-500">
+                                            Your Output :{testcase.stdout}
                                           </p>
-                                        )}
-                                      </div>
-                                    )
-                                  )}
+                                          <br />
+                                          <p className="text-green-500">
+                                            Expected Output :{testcase.expected}
+                                          </p>
+                                        </>
+                                      ) : (
+                                        <p className="text-red-500">
+                                          {testcase.compileOutput}
+                                        </p>
+                                      )}
+                                    </div>
+                                  ))}
                                 </div>
                                 <br />
                               </>

@@ -15,8 +15,8 @@ const Problems = () => {
     getAllProblems();
     const res = getTopThreeSheets();
     res.then((res) => {
-      if (res.data.message) {
-        setSheet(res.data.data);
+      if (res.message) {
+        setSheet(res.data);
       }
     });
   }, [getAllProblems, getTopThreeSheets]);
@@ -28,7 +28,7 @@ const Problems = () => {
       </div>
     );
   }
-  console.log(problems);
+  console.log(sheet);
   return (
     <div className="w-[90%] lg:w-[80%] m-auto mt-4">
       <h3 className="text-2xl font-bold">Sheets</h3>
@@ -41,12 +41,12 @@ const Problems = () => {
       <br />
       {sheet.length > 0 ? (
         <div className="flex flex-col gap-4">
-          {sheet.length > 0 && <SheetCard sheet={sheet} />}
+          {sheet.length > 0 && <SheetCard sheet={sheet[0]} />}
           <div className="grid lg:grid-cols-2 gap-4">
             {sheet.length === 3 && (
               <div>
-                <SheetCard sheet={sheet} />
-                <SheetCard sheet={sheet} />
+                <SheetCard sheet={sheet[1]} />
+                <SheetCard sheet={sheet[2]} />
               </div>
             )}
           </div>

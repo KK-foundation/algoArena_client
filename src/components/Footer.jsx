@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -18,32 +19,51 @@ const Footer = () => {
         <div className="lg:w-[70%] flex flex-col lg:flex-row mt-8 gap-10 lg:gap-0 justify-around">
           <div>
             <h1 className="text-lg font-bold">Social</h1>
-            <span className="text-[#2143db] block font-semibold cursor-pointer ">
-              Discord
-            </span>
-            <span className="text-[#2143db] block font-semibold cursor-pointer ">
-              instagram
-            </span>
-            <span className="text-[#2143db] block font-semibold cursor-pointer ">
-              X
-            </span>
-            <span className="text-[#2143db] block font-semibold cursor-pointer ">
-              linkedin
-            </span>
+            <Link to={"https://discord.gg/VjH6Z8zBmw"}>
+              <span className="text-[#2143db] block font-semibold cursor-pointer hover:underline">
+                Discord
+              </span>
+            </Link>
+            <Link to={"https://www.instagram.com/kunal011010/"}>
+              <span className="text-[#2143db] block font-semibold cursor-pointer hover:underline">
+                instagram
+              </span>
+            </Link>
+            <Link to={"https://x.com/Kunal_098"}>
+              <span className="text-[#2143db] block font-semibold cursor-pointer hover:underline">
+                X
+              </span>
+            </Link>
+            <Link to={"https://www.linkedin.com/in/kunal003/"}>
+              <span className="text-[#2143db] block font-semibold cursor-pointer hover:underline">
+                linkedin
+              </span>
+            </Link>
           </div>
           <div>
             <h1 className="text-lg font-bold">Contact us</h1>
-            <span >support@algoarena.com</span>
+            <span>support@algoarena.com</span>
           </div>
           <div className="">
             <h1 className="text-lg font-bold">Legal</h1>
-            <span className="text-[#2143db] block font-semibold cursor-pointer">Privacy Policy</span>
-            <span className="text-[#2143db] block font-semibold cursor-pointer">Terms of Service</span>
+
+            <Link to={"/"}>
+              <span className="text-[#2143db] block font-semibold cursor-pointer hover:underline">
+                Privacy Policy
+              </span>
+            </Link>
+            <Link to={"/"}>
+              <span className="text-[#2143db] block font-semibold cursor-pointer hover:underline">
+                Terms of Service
+              </span>
+            </Link>
           </div>
         </div>
       </div>
-      <hr className="mt-4 mb-4"/>
-      <p className="text-center">Copyright © 2025 algoarena.com All rights reserved.</p>
+      <hr className="mt-4 mb-4" />
+      <p className="text-center">
+        Copyright © 2025 algoarena.com All rights reserved.
+      </p>
     </div>
   );
 };

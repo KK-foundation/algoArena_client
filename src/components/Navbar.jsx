@@ -2,7 +2,11 @@ import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 
 const Navbar = () => {
-  const { authUser } = useAuthStore();
+  const { authUser,logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+  }
   return (
     <nav className="w-full flex justify-between px-12 py-4 items-center bg-[#2f3136]">
       <Link to={"/"}>
@@ -11,16 +15,39 @@ const Navbar = () => {
           <span className="uppercase font-bold">Algo Arena</span>
         </div>
       </Link>
+
       <div></div>
       <div>
         {authUser ? (
-          <Link to={`/profile/${authUser.username}`}>
-            <img
-              src={authUser.image ? authUser.image : "/user.png"}
-              alt="user"
-              className="w-10 bg-white rounded-full object-contain"
-            />
-          </Link>
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} role="button" className="cursor-pointer">
+              <img
+                src={authUser.image ? authUser.image : "/user.png"}
+                alt="user"
+                className="w-10 bg-white rounded-full object-contain"
+              />
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm"
+            >
+              <li className="font-bold text-lg hover:underline">
+                <Link to={`/profile/${authUser.username}`}>Profile</Link>
+              </li>
+              <hr />
+              <li className="font-bold text-lg hover:underline">
+                <Link to={'/problems'}>Problems</Link>
+              </li>
+              <hr />
+              <li className="font-bold text-lg hover:underline">
+                <Link to={'/sheets'}>Sheets</Link>
+              </li>
+              <hr />
+              <li className="font-bold text-lg hover:underline">
+                <button onClick={handleLogout}>Logout</button>
+              </li>
+            </ul>
+          </div>
         ) : (
           <Link to="/login">
             <button className="px-4 py-2 border rounded-2xl cursor-pointer font-semibold hover:text-white">

@@ -33,7 +33,6 @@ const MyProblem = () => {
             </button>
           </form>
           <CreateProblemForm />
-          <h1>Kunal Kumar</h1>
         </div>
       </dialog>
       <br />

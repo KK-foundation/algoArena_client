@@ -1,13 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import SheetCard from "./SheetCard";
 import CreateSheetForm from "./CreateSheetForm";
 import { useSheetStore } from "../store/useSheetStore";
 
 const MySheet = () => {
   const { getSheetCreatedByUser, sheetCreatedByUser } = useSheetStore();
+  const [newSheetAdd, setNewSheetAdd] = useState(false);
   useEffect(() => {
     getSheetCreatedByUser();
-  }, [getSheetCreatedByUser]);
+  }, [getSheetCreatedByUser, newSheetAdd]);
   return (
     <div className="bg-[#2f3136] p-4">
       <div className="flex flex-col justify-between bg-[#2f3136]">
@@ -31,11 +32,11 @@ const MySheet = () => {
                 ✕
               </button>
             </form>
-            <CreateSheetForm />
+            <CreateSheetForm setNewSheetAdd={setNewSheetAdd} />
           </div>
         </dialog>
         <br />
-        {sheetCreatedByUser.lenght > 0 && (
+        {sheetCreatedByUser.length > 0 && (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {sheetCreatedByUser.map((sheet, index) => (

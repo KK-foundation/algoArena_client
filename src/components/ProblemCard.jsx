@@ -4,17 +4,17 @@ import { useAuthStore } from "../store/useAuthStore";
 const ProblemCard = ({ problem }) => {
   const { authUser } = useAuthStore();
   return (
-    <Link to={`/problem/${problem.id}`}>
+    <Link to={`/problem/${problem.id || problem.problem.id}`}>
       <div className="flex justify-between bg-[#303133] hover:bg-[#13181c] px-4 py-2 rounded-lg shadow-xl">
         <div className="flex gap-2 w-[80%] ">
-          {problem?.solvedBy?.includes(authUser.id) && (
+          {((problem?.solvedBy?.includes(authUser.id)) || (problem?.problem?.solvedBy?.includes(authUser.id))) && (
             <p className="font-semibold">✅</p>
           )}
           <p className="whitespace-nowrap overflow-hidden text-ellipsis w-full font-semibold">
-            {problem.title}
+            {problem.title || problem.problem.title}
           </p>
         </div>
-        <span className="text-green-400 font-bold">{problem.difficulty}</span>
+        <span className="text-green-400 font-bold">{problem.difficulty || problem.problem.difficulty}</span>
       </div>
     </Link>
   );
