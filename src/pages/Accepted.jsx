@@ -8,15 +8,15 @@ const Accepted = ({ submitResult }) => {
     console.log("he")
     memoryArray =
       submitResult &&
-      JSON.parse(submitResult.memory).map((m) =>
+      JSON.parse(submitResult.memory)?.map((m) =>
         parseInt(m.replace(" KB", ""))
       );
     timeArray =
       submitResult &&
-      JSON.parse(submitResult.time).map((t) => parseFloat(t.replace(" s", "")));
+      JSON.parse(submitResult.time)?.map((t) => parseFloat(t.replace(" s", "")));
   }
-  const avgMemory = memoryArray.reduce((a, b) => a + b, 0) / memoryArray.length;
-  const avgTime = timeArray.reduce((a, b) => a + b, 0) / timeArray.length;
+  const avgMemory = memoryArray?.reduce((a, b) => a + b, 0) / memoryArray?.length;
+  const avgTime = timeArray?.reduce((a, b) => a + b, 0) / timeArray?.length;
 
   return (
     <div className="p-4">

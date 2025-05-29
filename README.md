@@ -1,50 +1,63 @@
-lightColor : #212326
-secondaryDark : #2f3136
-dark: #212326
-dark2: #13181c
-green: #00ad5f
-green2: #48c78e
-blue: #2143db
-blue : #2041dc
-red: #f24669
-yellow : #f0b002
+# AlgoArena Client
 
-error.response.data: here what data we send in error
+This is the client-side application for AlgoArena, a platform for solving algorithmic challenges and practicing coding skills.
 
-response.data : {
-data: {
-name:this
-},
-message: "User logged in successfully",
-statusCode: "200",
-success: true,
-}
+## Project Overview
 
+AlgoArena Client is a web-based interface that allows users to:
+- Solve programming challenges
+- Test their solutions
+- Track their progress
+- Compete with other developers
 
-## Working on Sheet logic
-1. creation of sheet ✅
-2. sheet details ✅
-3. add problem in sheet ✅
-4. remove problem in sheet ✅
-5. delete sheet ✅
-6. redirect done ✅ 
-7. run execution done ✅ 
-8. accepted ui ✅ 
+## Getting Started
 
-## User Profile
-1. upload image ✅
-2. update profile info ✅ 
-3. yearly grid ✅
-4. streak ✅ 
-5. totalProblemSolved ✅ 
+### Prerequisites
+- Node.js (v14 or higher)
+- npm or yarn
 
-## playground
-submit code when you login ✅
+### Installation
+```bash
+git clone https://github.com/yourusername/algoArena_client.git
+cd algoArena_client
+npm install
+```
 
-## debug
-1. logout logic ✅
-2. playground only works when you login ✅ 
-3. Outline issue ✅ 
-4. forgot password page ui issue ✅
-5. white screen issue ✅ 
-6. playground debug ✅
+### Development
+```bash
+npm run dev
+```
+
+### Production Build
+```bash
+npm run build
+```
+
+## Project Structure
+```
+algoArena_client/
+├── public/
+├── src/
+│   ├── assets/
+│   ├── components/
+│   ├── pages/
+│   ├── layout/
+│   ├── libs/
+│   ├── store/
+│   └── App.js
+├── README.md
+└── package.json
+```
+
+## Features
+- Interactive code editor
+- Real-time test results
+- Problem categories
+- User authentication
+- Progress tracking
+
+## Contributing
+Feel free to submit issues and pull requests.
+
+## License
+This project is licensed under the MIT License.
