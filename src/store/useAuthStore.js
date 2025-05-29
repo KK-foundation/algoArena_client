@@ -65,11 +65,9 @@ export const useAuthStore = create((set) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      console.log("Response: ", res);
       localStorage.setItem("userInfo", JSON.stringify(res.data.data));
       return res;
     } catch (error) {
-      console.log(error);
       toast.error(error.response.data.message);
     } finally {
       set({ isLoggingIn: false });
@@ -80,9 +78,13 @@ export const useAuthStore = create((set) => ({
     set({ isSigninUp: true });
     try {
       const res = await axiosInstance.post("/auth/forgot-password", data);
+      if(res.data.success) {
+        toast.success("Check your email");
+      }
       return res;
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error("didn't find your email");
+      console.log(error);
     } finally {
       set({ isSigninUp: false });
     }
@@ -91,6 +93,7 @@ export const useAuthStore = create((set) => ({
   resetPassword: async (data) => {
     set({ isSigninUp: true });
     try {
+      console.log(data);
       const res = await axiosInstance.post("/auth/reset-password", data);
       return res;
     } catch (error) {

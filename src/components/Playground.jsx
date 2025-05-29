@@ -1,5 +1,8 @@
 import { useState } from "react";
 import Editor from "@monaco-editor/react";
+import { useExecutionStore } from "../store/useExecutionStore";
+import { Loader } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const languageTemplates = {
   cpp: `#include <iostream>
@@ -26,72 +29,47 @@ print("Hello, World!")
 console.log("Hello, World!");
 `,
 };
+const langMap = {
+  CPP: "cpp",
+  JAVA: "java",
+  PYTHON: "python",
+  JAVASCRIPT: "javascript",
+};
+const languageIdMap = {
+  CPP: 54,
+  JAVA: 62,
+  PYTHON: 71,
+  JAVASCRIPT: 63,
+};
 
 export default function Playground() {
-  const [language, setLanguage] = useState("cpp");
-  const [code, setCode] = useState(languageTemplates[language]);
-  const [output, setOutput] = useState("");
-  const [isRunning, setIsRunning] = useState(false);
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  const [language, setLanguage] = useState("CPP");
+  const [code, setCode] = useState(languageTemplates[langMap[language]]);
+
+  const {
+    playgroundResult,
+    isPlaygroundCodeExecuting,
+    playground,
+    playgroundWrong,
+  } = useExecutionStore();
 
   const handleLanguageChange = (e) => {
     const selected = e.target.value;
     setLanguage(selected);
-    setCode(languageTemplates[selected]);
+    setCode(languageTemplates[langMap[selected]]);
   };
 
   const handleRun = async () => {
-    setIsRunning(true);
-    setOutput("Running...");
     const data = {
-      languageName: language,
+      language_id: languageIdMap[language],
       code: code,
     };
-    console.log(data);
-    // try {
-    //   const encodedCode = btoa(code); // Encode to base64
-    //   const response = await axios.post(
-    //     "https://judge0-ce.p.rapidapi.com/submissions",
-    //     {
-    //       source_code: encodedCode,
-    //       language_id: languageMap[language],
-    //       stdin: "", // optional input
-    //     },
-    //     {
-    //       headers: {
-    //         "Content-Type": "application/json",
-    //         "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY", // Replace with your key
-    //         "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-    //       },
-    //     }
-    //   );
 
-    //   const token = response.data.token;
-
-    //   // Polling for result
-    //   let result = null;
-    //   while (!result || result.status.id <= 2) {
-    //     const resultResponse = await axios.get(
-    //       `https://judge0-ce.p.rapidapi.com/submissions/${token}`,
-    //       {
-    //         headers: {
-    //           "X-RapidAPI-Key": "YOUR_RAPIDAPI_KEY",
-    //           "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-    //         },
-    //       }
-    //     );
-    //     result = resultResponse.data;
-    //     await new Promise((r) => setTimeout(r, 1000)); // wait 1s
-    //   }
-
-    //   const outputText =
-    //     result.stdout || result.stderr || result.compile_output || "No output";
-
-    //   setOutput(atob(outputText)); // decode from base64
-    // } catch (error) {
-    //   setOutput("Error: " + error.message);
-    // }
-
-    // setIsRunning(false);
+    if (data) {
+      console.log(data);
+      playground(data);
+    }
   };
 
   return (
@@ -102,38 +80,72 @@ export default function Playground() {
           onChange={handleLanguageChange}
           className="p-2 border rounded cursor-pointer"
         >
-          <option className="bg-[#13181c] cursor-pointer" value="cpp">
-            C++
+          <option className="bg-[#13181c] cursor-pointer" value="CPP">
+            CPP
           </option>
-          <option className="bg-[#13181c] cursor-pointer" value="java">
-            Java
+          <option className="bg-[#13181c] cursor-pointer" value="JAVA">
+            JAVA
           </option>
-          <option className="bg-[#13181c] cursor-pointer" value="python">
-            Python
+          <option className="bg-[#13181c] cursor-pointer" value="PYTHON">
+            PYTHON
           </option>
-          <option className="bg-[#13181c] cursor-pointer" value="javascript">
-            JavaScript
+          <option className="bg-[#13181c] cursor-pointer" value="JAVASCRIPT">
+            JAVASCRIPT
           </option>
         </select>
-        <button
-          onClick={handleRun}
-          className="ml-4 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
-          disabled={isRunning}
-        >
-          {isRunning ? "Running..." : "Run"}
-        </button>
+        {userInfo ? (
+          <button
+            onClick={handleRun}
+            className="ml-4 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer"
+            disabled={isPlaygroundCodeExecuting}
+          >
+            {isPlaygroundCodeExecuting ? (
+              <Loader className="animate-spin" />
+            ) : (
+              "Run"
+            )}
+          </button>
+        ) : (
+          <Link to="/login">
+            <button className="ml-4 px-4 py-2 bg-blue-600 text-white rounded cursor-pointer">
+              Run
+            </button>
+          </Link>
+        )}
       </div>
 
       <Editor
         height="400px"
-        language={language}
+        language={langMap[language]}
         value={code}
         onChange={(value) => setCode(value)}
       />
 
-      <div className="mt-4 bg-[#13181c] text-green-400 p-4 rounded h-48 overflow-auto font-mono">
+      <div
+        className={`mt-4 bg-[#13181c] p-4 rounded h-48 overflow-auto font-mono`}
+      >
         <strong>Output:</strong>
-        <pre>{output}</pre>
+        {playgroundResult && (
+          <pre
+            className={`${
+              !playgroundResult ? "text-red-500" : "text-green-400"
+            }`}
+          >
+            {playgroundResult.stdout}
+          </pre>
+        )}
+        {playgroundResult && (
+          <pre className={`${"text-red-500"}`}>
+            {playgroundResult.compile_output}
+          </pre>
+        )}
+        {playgroundWrong && (
+          <pre
+            className={`${playgroundWrong ? "text-red-500" : "text-green-400"}`}
+          >
+            {playgroundWrong}
+          </pre>
+        )}
       </div>
     </div>
   );

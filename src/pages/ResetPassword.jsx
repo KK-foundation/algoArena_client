@@ -6,8 +6,9 @@ import { z } from "zod";
 import { useAuthStore } from "../store/useAuthStore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Link, useParams } from "react-router-dom";
-import toast from "daisyui/components/toast";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Loader } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ResetPasswordSchema = z.object({
   password: z.string().min(6, "Password must be atleast of 6 characters"),
@@ -16,6 +17,7 @@ const ResetPasswordSchema = z.object({
 const ResetPassword = () => {
   const { isSigninUp, resetPassword } = useAuthStore();
   const { token } = useParams();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -29,7 +31,8 @@ const ResetPassword = () => {
     try {
       const res = await resetPassword({ ...data, ["token"]: token });
       if (res.data.success) {
-        toast.success("Check your email");
+        toast.success("Password reset successfully");
+        navigate("/login");
       }
     } catch (error) {
       console.log(error);
@@ -55,7 +58,7 @@ const ResetPassword = () => {
                 className="bg-[#13181c] px-4 py-2 rounded-lg w-full"
                 {...register("password")}
               />
-              {errors.data && (
+              {errors.password && (
                 <p className="text-red-500 text-sm mt-1">
                   {errors.password.message}
                 </p>
@@ -67,13 +70,13 @@ const ResetPassword = () => {
             className="bg-white text-black w-full rounded-md mt-4 px-4 py-1 cursor-pointer"
             disabled={isSigninUp}
           >
-            {isSigninUp ? "Loading..." : "Reset Password"}
+            {isSigninUp ? <Loader className="animate-spin flex justify-center items-center w-full"/> : "Reset Password"}
           </button>
           <br />
           <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
             Go back to sign in?
             <Link to={"/login"}>
-              <span className="text-[#2190ff] pl-1 cursor-pointer">
+              <span className="text-[#2190ff] pl-1 cursor-pointer hover:underline">
                 Sign in
               </span>
             </Link>

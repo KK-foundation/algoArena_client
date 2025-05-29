@@ -108,7 +108,7 @@ const SheetDetail = () => {
                     {
                       <div className="w-full">
                         <ProblemCard problem={problem} />
-                        {problem.tilte}
+                        {problem.title}
                       </div>
                     }
                   </>

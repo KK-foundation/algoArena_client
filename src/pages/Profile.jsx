@@ -23,7 +23,7 @@ const Profile = () => {
         {/* YearlyActivityGrid: top-right, spans 4 columns */}
         <div className="lg:col-span-4">
           <YearlyActivityGrid
-            submissions={["2025-01-01", "2025-05-22", "2025-05-21"]}
+            
           />
         </div>
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { FaEye, FaGoogle } from "react-icons/fa";
@@ -9,7 +9,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link, useNavigate } from "react-router-dom";
-// import { useSignIn } from "@clerk/clerk-react";
+import { Loader } from "lucide-react";
 
 const LoginSchema = z.object({
   data: z.string().min(1, "Email or username is required"),
@@ -20,9 +20,7 @@ const LoginPage = () => {
   const { isLoggingIn, login } = useAuthStore();
   const [visibility, setVisibility] = useState(false);
   const navigate = useNavigate();
-  // const { signIn, isLoaded: signInLoaded } = useSignIn();
-  // const [oauthLoading, setOauthLoading] = useState(false);
-
+  
 
   const {
     register,
@@ -87,11 +85,14 @@ const LoginPage = () => {
               )}
             </div>
             <div className="w-full">
-              <div className="bg-[#13181c] flex items-center justify-between rounded-lg">
+              <div
+                tabIndex={-1} 
+                className="bg-[#13181c] flex items-center justify-between rounded-lg  focus-within:outline-2 focus-within:outline-white"
+              >
                 <input
                   type={visibility ? "text" : "password"}
                   placeholder="Password"
-                  className="bg-[#13181c] px-4 py-2 rounded-lg w-full"
+                  className="bg-[#13181c] px-4 py-2 rounded-lg w-full outline-none"
                   {...register("password")}
                 />
                 <span
@@ -113,7 +114,7 @@ const LoginPage = () => {
             className="bg-white text-black w-full rounded-md mt-4 px-4 py-1 cursor-pointer"
             disabled={isLoggingIn}
           >
-            {isLoggingIn ? "Loading..." : "Login"}
+            {isLoggingIn ? <Loader className="animate-spin flex justify-center items-center w-full"/> : "Login"}
           </button>
           <Link to={"/forgot-password"}>
             <p className="w-full flex justify-end pt-1 opacity-60 cursor-pointer hover:underline">

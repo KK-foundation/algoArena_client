@@ -8,6 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Link } from "react-router-dom";
 import toast from "daisyui/components/toast";
+import { Loader } from "lucide-react";
 
 const ForgotPasswordSchema = z.object({
   email: z.string().email("Enter a valid email"),
@@ -54,9 +55,9 @@ const ForgotPassword = () => {
                 className="bg-[#13181c] px-4 py-2 rounded-lg w-full"
                 {...register("email")}
               />
-              {errors.data && (
+              {errors.email && (
                 <p className="text-red-500 text-sm mt-1">
-                  {errors.data.message}
+                  {errors.email.message}
                 </p>
               )}
             </div>
@@ -66,13 +67,13 @@ const ForgotPassword = () => {
             className="bg-white text-black w-full rounded-md mt-4 px-4 py-1 cursor-pointer"
             disabled={isSigninUp}
           >
-            {isSigninUp ? "Loading..." : "Forgot Password"}
+            {isSigninUp ? <Loader className="animate-spin flex justify-center items-center w-full"/> : "Forgot Password"}
           </button>
           <br />
           <h5 className="text-center pt-4 font-Poppins text-[14px] text-black dark:text-white">
             Go back to sign in?
             <Link to={"/login"}>
-              <span className="text-[#2190ff] pl-1 cursor-pointer">
+              <span className="text-[#2190ff] pl-1 cursor-pointer hover:underline">
                 Sign in
               </span>
             </Link>

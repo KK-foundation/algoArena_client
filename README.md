@@ -31,3 +31,20 @@ success: true,
 7. run execution done ✅ 
 8. accepted ui ✅ 
 
+## User Profile
+1. upload image ✅
+2. update profile info ✅ 
+3. yearly grid ✅
+4. streak ✅ 
+5. totalProblemSolved ✅ 
+
+## playground
+submit code when you login ✅
+
+## debug
+1. logout logic ✅
+2. playground only works when you login ✅ 
+3. Outline issue ✅ 
+4. forgot password page ui issue ✅
+5. white screen issue ✅ 
+6. playground debug ✅

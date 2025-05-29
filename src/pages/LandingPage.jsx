@@ -5,18 +5,9 @@ import streak from "../assets/features/streak.png";
 import Playground from "../components/Playground";
 import { Link } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { useEffect } from "react";
 import { Loader } from "lucide-react";
 const LandingPage = () => {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-  
-
-  //Mistake if i add the dependencies : like the authUser or isCheckingAuth and if authUser to get data the infinite loop start.
-  useEffect(() => {
-    if (!authUser && !isCheckingAuth) {
-      checkAuth();
-    }
-  }, [checkAuth]);
+  const { authUser, isCheckingAuth } = useAuthStore();
 
   if (isCheckingAuth) {
     return (
@@ -25,9 +16,6 @@ const LandingPage = () => {
       </div>
     );
   }
-
-  console.log("landing page")
-
   return (
     <>
       <div className="w-[90%] lg:w-[80%] m-auto">

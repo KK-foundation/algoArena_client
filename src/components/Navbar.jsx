@@ -24,7 +24,7 @@ const Navbar = () => {
               <img
                 src={authUser.image ? authUser.image : "/user.png"}
                 alt="user"
-                className="w-10 bg-white rounded-full object-contain"
+                className="w-10 h-10 bg-white rounded-full object-cover"
               />
             </div>
             <ul

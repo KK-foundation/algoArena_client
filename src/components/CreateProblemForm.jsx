@@ -16,7 +16,7 @@ import Editor from "@monaco-editor/react";
 import { useState } from "react";
 import { axiosInstance } from "../libs/axios";
 import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 const problemSchema = z.object({
   title: z.string().min(3, "Title must be at least 3 characters"),
@@ -560,9 +560,8 @@ public class Main {
   },
 };
 
-const CreateProblemForm = () => {
+const CreateProblemForm = ({setNewProblemAdd}) => {
   const [sampleType, setSampleType] = useState("DP");
-  const navigation = useNavigate();
   const {
     register,
     control,
@@ -622,8 +621,10 @@ const CreateProblemForm = () => {
       setIsLoading(true);
       const res = await axiosInstance.post("/problems/create-problem", value);
       console.log(res.data);
-      toast.success(res.data.message || "Problem Created successfully⚡");
-      navigation("/");
+      if(res.data.success) {
+        setNewProblemAdd(true);
+        toast.success(res.data.message || "Problem Created successfully⚡");
+      }
     } catch (error) {
       console.log(error);
       toast.error("Error creating problem");
