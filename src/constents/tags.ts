@@ -1,0 +1,18 @@
+export const availableTags = [
+  "Array",
+  "String",
+  "Hash Table",
+  "Dynamic Programming",
+  "Math",
+  "Sorting",
+  "Greedy",
+  "Database",
+  "Binary Search",
+  "Tree",
+  "Depth-First Search",
+  "Binary Tree",
+  "Breadth-First Search",
+  "Two Pointers",
+  "Stack",
+  "Graph",
+];
