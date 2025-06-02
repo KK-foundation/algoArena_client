@@ -2,17 +2,38 @@ import Header from "@/components/Header";
 import ProblemCard from "@/components/ProblemCard";
 import FilterBar from "@/components/FilterBar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, Plus } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Plus } from "lucide-react";
+import { Link, useSearchParams } from "react-router-dom";
 import { useProblemStore } from "@/store/useProblemStore";
 import { useEffect } from "react";
 import { useQueryStore } from "@/store/useQueryStore";
-
+// import { parseJSON } from "date-fns";
+// 
 const ProblemsPage = () => {
+  const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
   const { setPage } = useQueryStore();
-  let count: number = 1;
-  const { problems, getAllProblems, isProblemsLoading } = useProblemStore();
+  const [searchParams] = useSearchParams();
+  const {
+    problems,
+    isProblemsLoading,
+    applyFilters,
+    filteredProblems,
+  } = useProblemStore();
+
+  useEffect(() => {
+    const query: Record<string, string> = {};
+    for (const [key, value] of searchParams.entries()) {
+      query[key] = value;
+    }
+    applyFilters(query,userInfo.id);
+  }, [searchParams, applyFilters]);
+
+  const handleLoadMore = () => {
+    if (problems) {
+      setPage(problems.pagination.currentPage + 1);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-craft-bg">
       <Header />
@@ -46,40 +67,35 @@ const ProblemsPage = () => {
               All Problems
             </h2>
             <div className="flex items-center space-x-2 text-sm text-craft-text-secondary">
-              {problems ? <span>{problems.pagination.message}</span> : null}
+              {problems && <span>{problems.pagination.message}</span>}
             </div>
           </div>
 
-          {problems && (
-            <div className="grid gap-4">
-              {isProblemsLoading && (
-                <div className="flex items-center justify-center text-white">
-                  Loading...
-                </div>
-              )}
-              {problems.problems.map((problem) => (
+          <div className="grid gap-4">
+            {isProblemsLoading && (
+              <div className="flex items-center justify-center text-white">
+                Loading...
+              </div>
+            )}
+            {!isProblemsLoading &&
+              (searchParams ? filteredProblems : problems.problems)?.map((problem) => (
                 <ProblemCard key={problem.id} problem={problem} />
               ))}
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Load More */}
-        <div className="text-center mt-8">
-          {problems && (
+        {problems && problems.pagination.currentPage < problems.pagination.totalPages && (
+          <div className="text-center mt-8">
             <Button
               variant="outline"
               className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent transition-all duration-200"
-              onClick={() => {
-                count++;
-                setPage(count);
-              }}
-              disabled={problems.pagination.currentPage >= problems.pagination.totalPages}
+              onClick={handleLoadMore}
             >
               Load More Problems
             </Button>
-          )}
-        </div>
+          </div>
+        )}
       </div>
     </div>
   );

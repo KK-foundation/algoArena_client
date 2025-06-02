@@ -1,24 +1,17 @@
 import React from "react";
 import { motion } from "motion/react";
+import { iconMap } from "@/constents/tags";
 
-const topics = [
-  { name: "Arrays", icon: "🔢", count: 342, progress: 65 },
-  { name: "Strings", icon: "📝", count: 256, progress: 45 },
-  { name: "Trees", icon: "🌳", count: 189, progress: 78 },
-  { name: "Graphs", icon: "🕸️", count: 167, progress: 32 },
-  { name: "Dynamic Programming", icon: "⚡", count: 145, progress: 23 },
-  { name: "Sorting", icon: "📊", count: 134, progress: 89 },
-  { name: "Searching", icon: "🔍", count: 123, progress: 67 },
-  { name: "Linked Lists", icon: "🔗", count: 98, progress: 54 },
-  { name: "Hash Tables", icon: "🗂️", count: 87, progress: 43 },
-  { name: "Stacks & Queues", icon: "📚", count: 76, progress: 71 },
-];
-
-const TopicGrid = () => {
+const TopicGrid = ({tags}) => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-      {topics.map((topic, index) => (
-        <motion.div
+      {tags.map((topic, index) => {
+        const tagLower = topic.tag?.toLowerCase();
+        const matchedIcon = iconMap[tagLower];
+
+        if(!matchedIcon) return null;
+        return (
+          <motion.div
           key={topic.name}
           className="topic-card neon-glow group"
           initial={{ opacity: 0, y: 20 }}
@@ -32,17 +25,17 @@ const TopicGrid = () => {
               className="text-4xl mb-3 group-hover:animate-float"
               whileHover={{ scale: 1.2, rotate: 10 }}
             >
-              {topic.icon}
+              {iconMap[topic.tag?.toLowerCase()]}
             </motion.div>
             <h3 className="font-semibold text-sm mb-2 text-foreground group-hover:text-neon-green transition-colors">
-              {topic.name}
+              {topic.tag}
             </h3>
             <p className="text-xs text-muted-foreground mb-3">
               {topic.count} challenges
             </p>
 
             {/* Progress Bar */}
-            <div className="progress-bar">
+            {/* <div className="progress-bar">
               <motion.div
                 className="progress-fill"
                 initial={{ width: 0 }}
@@ -52,10 +45,11 @@ const TopicGrid = () => {
             </div>
             <p className="text-xs text-neon-green mt-1 font-medium">
               {topic.progress}% complete
-            </p>
+            </p> */}
           </div>
         </motion.div>
-      ))}
+        )
+      })}
     </div>
   );
 };

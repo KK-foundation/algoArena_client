@@ -302,3 +302,19 @@ Community Stats (profile views, sheet likes, etc.)
  <!-- fork or share remove the button and inc the size of progress bar -->
  <!-- leaderboard alginment -->
  <!-- if we get a one day we add a terminal -->
+
+
+Explore done ✅ 
+search problems ✅ 
+explore by tags ✅ 
+Problem of the day ✅ 
+explore challenges ✅ 
+  1. trending ✅
+  2. daily challenges ✅
+  3. problem sheet most liked ❌ 
+
+all tags with problems ✅ 
+trending challenges ✅ 
+leaderboard ✅ 
+filter work for problems ✅ 
+

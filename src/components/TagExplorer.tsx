@@ -2,24 +2,12 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 
-// const tags = [
-//   { name: "binary-search", count: 156, color: "neon-green" },
-//   { name: "dynamic-programming", count: 89, color: "neon-blue" },
-//   { name: "dfs", count: 234, color: "accent" },
-//   { name: "graph", count: 178, color: "neon-green" },
-//   { name: "recursion", count: 145, color: "neon-blue" },
-//   { name: "sliding-window", count: 92, color: "accent" },
-//   { name: "heap", count: 67, color: "neon-green" },
-//   { name: "greedy", count: 123, color: "neon-blue" },
-//   { name: "backtracking", count: 78, color: "accent" },
-//   { name: "two-pointers", count: 134, color: "neon-green" },
-// ];
 
 const TagExplorer = ({tags}) => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const navigate = useNavigate();
   const handlerClickTag = (tagName: string) => {
-    navigate(`/problems?tag=${tagName}`);
+    navigate(`/problems?tags=${tagName}`);
   }
 
 

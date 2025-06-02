@@ -54,14 +54,14 @@ const TrendingCarousel = ({top3Problems}) => {
   };
 
   return (
-    <div className="relative">
+    <div className="relative ">
       {/* Navigation Buttons */}
       <div className="flex justify-between items-center mb-6">
         <Button
           variant="outline"
           size="icon"
           onClick={() => paginate(-1)}
-          className="rounded-full border-neon-green/30 hover:border-neon-green hover:shadow-neon bg-secondary text-white"
+          className="rounded-full border-neon-green/30 hover:border-neon-green hover:shadow-neon bg-secondary text-white "
         >
           <ChevronLeft className="w-4 h-4" />
         </Button>
@@ -98,7 +98,7 @@ const TrendingCarousel = ({top3Problems}) => {
             }}
             className="absolute inset-0"
           >
-            <div className="challenge-card h-full p-6 flex flex-col justify-between">
+            <div className="challenge-card h-full p-6 flex flex-col justify-between rounded-xl">
               <div>
                 <div className="flex items-center justify-between mb-4">
                   <Badge
@@ -138,7 +138,7 @@ const TrendingCarousel = ({top3Problems}) => {
                 </div>
               </div>
 
-              <Link to={`/problems/${top3Problems[currentIndex].id}`} className="w-full">
+              <Link to={`/problem/${top3Problems[currentIndex].id}`} className="w-full">
                 <Button className="btn-primary w-full">Solve Challenge</Button>
               </Link>
             </div>

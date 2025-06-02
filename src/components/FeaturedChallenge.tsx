@@ -32,19 +32,19 @@ const FeaturedChallenge = ({potd}) => {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
               <span className="bg-neon-gradient text-black px-3 py-1 rounded-full text-sm font-semibold">
-                🔥 FEATURED
+                🔥 Problem of the day
               </span>
               <span className="difficulty-medium px-2 py-1 rounded text-xs">
-                {potd.difficulty}
+                {potd.problem.difficulty}
               </span>
             </div>
 
             <h3 className="text-2xl font-orbitron font-bold text-foreground mb-2">
-              {potd.title}
+              {potd.problem.title}
             </h3>
 
             <p className="text-muted-foreground mb-4 max-w-2xl">
-             {potd.description}
+             {potd.problem.description}
             </p>
 
             <div className="flex items-center gap-6 mb-6">
@@ -54,7 +54,7 @@ const FeaturedChallenge = ({potd}) => {
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-yellow-400" />
-                <span className="text-foreground">~{times[potd.problem.difficulty.toLowerCase]} min</span>
+                <span className="text-foreground">~{times[potd.problem.difficulty.toLowerCase()]} min</span>
               </div>
               <div className="text-sm text-muted-foreground">
                 Solved by {potd.solvedUsers.length} developers
@@ -63,7 +63,7 @@ const FeaturedChallenge = ({potd}) => {
           </div>
 
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link to={`/problems/${potd.problem.id}`} className="w-full">
+            <Link to={`/problem/${potd.problem.id}`} className="w-full">
               <Button className="btn-primary text-lg px-6 py-3 group">
                 Start Challenge
                 <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

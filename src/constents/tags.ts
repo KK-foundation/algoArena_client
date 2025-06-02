@@ -16,3 +16,21 @@ export const availableTags = [
   "Stack",
   "Graph",
 ];
+export const iconMap = {
+  array: "🔢",
+  string: "📝",
+  "hash table": "🗂️",
+  "dynamic programming": "⚡",
+  math: "➗",
+  sorting: "📊",
+  greedy: "💰",
+  database: "💾",
+  "binary search": "🔎",
+  tree: "🌳",
+  "depth-first search": "🧭",
+  "binary tree": "🌲",
+  "breadth-first search": "🚶",
+  "two pointers": "👯",
+  stack: "📚",
+  graph: "🕸️",
+};

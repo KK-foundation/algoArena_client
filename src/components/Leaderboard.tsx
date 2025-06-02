@@ -27,7 +27,7 @@ const leaderboardData = {
   ],
 };
 
-const Leaderboard = () => {
+const Leaderboard = ({leaderboard}) => {
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "allTime">(
     "daily"
   );

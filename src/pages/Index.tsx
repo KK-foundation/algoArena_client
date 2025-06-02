@@ -17,12 +17,14 @@ import AnimatedTabs from "../components/AnimatedTabs";
 import CodeRainBackground from "../components/CodeRainBackground";
 import { usePotdStore } from "@/store/usePotdStore";
 import { useProblemStore } from "@/store/useProblemStore";
+import { useLeaderboardStore } from "@/store/useLeaderboard";
 
 const Index = () => {
   const [isCodePanelOpen, setIsCodePanelOpen] = useState(false);
   const { potd, getPotd, isPotdGetting } = usePotdStore();
   const { getTop3Problems, isTop3ProblemsLoading, top3Problems,tags,companiesChallenges,getAllTags,getAllCompaniesChallenges } =
     useProblemStore();
+  const {leaderboard,getLeaderboard,isLeaderboardGetting} = useLeaderboardStore();
 
   // Sample challenges data
   const sampleChallenges = [
@@ -95,6 +97,9 @@ const Index = () => {
     }
     if(companiesChallenges.length === 0) {
       getAllCompaniesChallenges();
+    }
+    if(leaderboard.length <= 0){
+      getLeaderboard();
     }
   }, [potd, getPotd, getTop3Problems, top3Problems,tags, getAllTags, companiesChallenges, getAllCompaniesChallenges]);
 
@@ -184,7 +189,7 @@ const Index = () => {
             <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
               <span className="hero-text">Topics to Explore</span>
             </h2>
-            <TopicGrid />
+            <TopicGrid tags={tags}/>
           </motion.section>
 
           {/* Trending Challenges */}
@@ -213,7 +218,7 @@ const Index = () => {
               <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
                 <span className="hero-text">Leaderboard</span>
               </h2>
-              <Leaderboard />
+              {isLeaderboardGetting ? "Loading.." : <Leaderboard leaderboard={leaderboard}/>}
             </motion.section>
           </div>
         </div>
