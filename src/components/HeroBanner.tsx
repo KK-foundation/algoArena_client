@@ -3,6 +3,7 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { landingPage } from "@/constents/landingPage";
 
 const HeroBanner = () => {
   return (
@@ -41,15 +42,13 @@ const HeroBanner = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className="text-6xl md:text-8xl font-orbitron font-black mb-6">
-            <span className="hero-text">EXPLORE</span>
+            <span className="hero-text">{landingPage.hero.heading}</span>
           </h1>
           <h2 className="text-2xl md:text-4xl font-orbitron font-bold mb-4">
-            <span className="hero-text">SOLVE & LEVEL UP</span>
+            <span className="hero-text">{landingPage.hero.subheading}</span>
           </h2>
           <p className="text-xl text-[rgb(160,160,160)] mb-8 max-w-2xl mx-auto">
-            Dive into the neon-powered coding universe. Master algorithms,
-            conquer challenges, and become the developer you've always dreamed
-            of being.
+            {landingPage.hero.description}
           </p>
         </motion.div>
 
@@ -58,12 +57,12 @@ const HeroBanner = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
-          <Link to="/signin">
+          <Link to={landingPage.hero.buttonLink}>
             <Button
               className="btn-primary animate-glow-pulse text-lg px-8 py-4 group text-[rgb(13,13,13)] rounded-none"
               size="lg"
             >
-              Start a Challenge
+             {landingPage.hero.buttonText}
               <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
@@ -76,11 +75,7 @@ const HeroBanner = () => {
           transition={{ duration: 0.8, delay: 0.6 }}
           className="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto"
         >
-          {[
-            { label: "Active Coders", value: "50K+" },
-            { label: "Challenges", value: "2.5K+" },
-            { label: "Companies", value: "100+" },
-          ].map((stat, index) => (
+          {landingPage.hero.stats.map((stat, index) => (
             <div key={index} className="text-center">
               <div className="text-3xl font-orbitron font-bold text-neon-green mb-2">
                 {stat.value}

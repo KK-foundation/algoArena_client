@@ -3,8 +3,9 @@ import { motion } from "motion/react";
 import { ChevronRight, Clock, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { times, xp } from "@/constents/achivements";
 
-const FeaturedChallenge = () => {
+const FeaturedChallenge = ({potd}) => {
   return (
     <motion.div
       className="relative overflow-hidden rounded-xl bg-gradient-to-r from-neon-green/20 to-neon-blue/20 border border-neon-green/30 p-8"
@@ -34,37 +35,35 @@ const FeaturedChallenge = () => {
                 🔥 FEATURED
               </span>
               <span className="difficulty-medium px-2 py-1 rounded text-xs">
-                Medium
+                {potd.difficulty}
               </span>
             </div>
 
             <h3 className="text-2xl font-orbitron font-bold text-foreground mb-2">
-              Binary Tree Maximum Path Sum
+              {potd.title}
             </h3>
 
             <p className="text-muted-foreground mb-4 max-w-2xl">
-              A challenging tree problem that tests your understanding of
-              recursion and dynamic programming. Perfect for preparing for top
-              tech interviews.
+             {potd.description}
             </p>
 
             <div className="flex items-center gap-6 mb-6">
               <div className="flex items-center gap-2">
                 <Award className="w-4 h-4 text-neon-green" />
-                <span className="text-neon-green font-semibold">+150 XP</span>
+                <span className="text-neon-green font-semibold">+{xp[potd.problem.difficulty.toLowerCase()]} XP</span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-yellow-400" />
-                <span className="text-foreground">~45 min</span>
+                <span className="text-foreground">~{times[potd.problem.difficulty.toLowerCase]} min</span>
               </div>
               <div className="text-sm text-muted-foreground">
-                Solved by 12.4K developers
+                Solved by {potd.solvedUsers.length} developers
               </div>
             </div>
           </div>
 
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Link to="/signin">
+            <Link to={`/problems/${potd.problem.id}`} className="w-full">
               <Button className="btn-primary text-lg px-6 py-3 group">
                 Start Challenge
                 <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />

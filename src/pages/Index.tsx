@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import HeroBanner from "../components/HeroBanner";
 import SearchAndFilters from "../components/SearchAndFilters";
@@ -15,9 +15,14 @@ import CodePreviewPanel from "../components/CodePreviewPanel";
 import FloatingChallengeCard from "../components/FloatingChallengeCard";
 import AnimatedTabs from "../components/AnimatedTabs";
 import CodeRainBackground from "../components/CodeRainBackground";
+import { usePotdStore } from "@/store/usePotdStore";
+import { useProblemStore } from "@/store/useProblemStore";
 
 const Index = () => {
   const [isCodePanelOpen, setIsCodePanelOpen] = useState(false);
+  const { potd, getPotd, isPotdGetting } = usePotdStore();
+  const { getTop3Problems, isTop3ProblemsLoading, top3Problems,tags,companiesChallenges,getAllTags,getAllCompaniesChallenges } =
+    useProblemStore();
 
   // Sample challenges data
   const sampleChallenges = [
@@ -56,7 +61,7 @@ const Index = () => {
       label: "🔥 Trending",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sampleChallenges.map((challenge) => (
+          {top3Problems.map((challenge) => (
             <FloatingChallengeCard
               key={challenge.id}
               challenge={challenge}
@@ -68,7 +73,7 @@ const Index = () => {
     },
     {
       id: "daily",
-      label: "📅 Daily",
+      label: "📅 Daily Challenges",
       content: <XPMissions />,
     },
     {
@@ -77,6 +82,21 @@ const Index = () => {
       content: <CompanyZone />,
     },
   ];
+
+  useEffect(() => {
+    if (!potd) {
+      getPotd();
+    }
+    if (top3Problems.length === 0) {
+      getTop3Problems();
+    }
+    if(tags.length === 0) {
+      getAllTags();
+    }
+    if(companiesChallenges.length === 0) {
+      getAllCompaniesChallenges();
+    }
+  }, [potd, getPotd, getTop3Problems, top3Problems,tags, getAllTags, companiesChallenges, getAllCompaniesChallenges]);
 
   return (
     <>
@@ -88,6 +108,10 @@ const Index = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
+        <br />
+        <br />
+        <br />
+        <br />
         {/* Hero Section with enhanced animations */}
         <motion.section
           initial={{ y: 40, opacity: 0 }}
@@ -96,6 +120,9 @@ const Index = () => {
         >
           <HeroBanner />
         </motion.section>
+        <br/>
+        <br />
+        <br />
 
         {/* Main Content */}
         <div className="container mx-auto px-4 space-y-12 pb-16">
@@ -109,6 +136,19 @@ const Index = () => {
             <SearchAndFilters />
           </motion.section>
 
+          {/* Explore by Tags */}
+          <motion.section
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <h2 className="text-2xl font-orbitron font-bold mb-6">
+              <span className="hero-text">Explore by Tags</span>
+            </h2>
+            <TagExplorer tags={tags}/>
+          </motion.section>
+
           {/* Featured Challenge */}
           <motion.section
             initial={{ opacity: 0, y: 50 }}
@@ -116,21 +156,23 @@ const Index = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <FeaturedChallenge />
+            {potd && <FeaturedChallenge potd={potd} />}
           </motion.section>
 
           {/* Animated Tabs Section */}
-          <motion.section
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
-              <span className="hero-text">Explore Challenges</span>
-            </h2>
-            <AnimatedTabs tabs={tabsData} defaultTab="trending" />
-          </motion.section>
+          {top3Problems.length > 0 && (
+            <motion.section
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
+                <span className="hero-text">Explore Challenges</span>
+              </h2>
+              <AnimatedTabs tabs={tabsData} defaultTab="trending" />
+            </motion.section>
+          )}
 
           {/* Topics to Explore */}
           <motion.section
@@ -145,63 +187,30 @@ const Index = () => {
             <TopicGrid />
           </motion.section>
 
-          {/* Explore by Tags */}
-          <motion.section
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            <h2 className="text-2xl font-orbitron font-bold mb-6">
-              <span className="hero-text">Explore by Tags</span>
-            </h2>
-            <TagExplorer />
-          </motion.section>
-
           {/* Trending Challenges */}
-          <motion.section
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-          >
-            <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
-              <span className="hero-text">Trending Challenges</span>
-            </h2>
-            <TrendingCarousel />
-          </motion.section>
-
-          {/* Weekly Pick */}
-          <motion.section
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-          >
-            <WeeklyPick />
-          </motion.section>
-
-          {/* Live Feed & Leaderboard */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {top3Problems.length > 0 && (
             <motion.section
-              initial={{ opacity: 0, x: -50 }}
-              whileInView={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: 0.8 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
             >
-              <h2 className="text-2xl font-orbitron font-bold mb-6">
-                <span className="hero-text">Live Solving</span>
+              <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
+                <span className="hero-text">Trending Challenges</span>
               </h2>
-              <LiveFeed />
+              <TrendingCarousel top3Problems={top3Problems} />
             </motion.section>
+          )}
 
+          {/* Leaderboard */}
+          <div className="grid grid-cols-1 gap-8">
             <motion.section
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              <h2 className="text-2xl font-orbitron font-bold mb-6">
+              <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
                 <span className="hero-text">Leaderboard</span>
               </h2>
               <Leaderboard />

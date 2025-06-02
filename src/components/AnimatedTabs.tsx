@@ -1,17 +1,10 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { Problem } from "@/store/useProblemStore";
 
-interface AnimatedTabsProps {
-  tabs: {
-    id: string;
-    label: string;
-    content: React.ReactNode;
-  }[];
-  defaultTab?: string;
-}
 
-const AnimatedTabs = ({ tabs, defaultTab }: AnimatedTabsProps) => {
+const AnimatedTabs = ({ tabs, defaultTab }) => {
   const [activeTab, setActiveTab] = useState(defaultTab || tabs[0]?.id);
 
   return (

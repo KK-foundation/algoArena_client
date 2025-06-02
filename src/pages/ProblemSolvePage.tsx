@@ -25,6 +25,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import { CodeFormatter } from '@/utils/codeFormatter';
+
 
 const langMap = {
   CPP: "cpp",
@@ -136,6 +138,12 @@ const ProblemSolvePage = () => {
 
   if (isProblemLoading) return <div>Loading...</div>;
 
+  const handleFormat = ( ) => {
+    const formattedCode = CodeFormatter.formatForJudge0(code,language);
+    setCode(formattedCode);
+  }
+  
+
   return (
     <div className="min-h-screen bg-craft-bg">
       <Header />
@@ -212,7 +220,7 @@ const ProblemSolvePage = () => {
                           <DropdownMenuContent className="bg-craft-bg border-craft-border text-craft-text-primary hover:bg-craft-bg/80">
                             <DropdownMenuLabel>Settings</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>Format</DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleFormat}>Format</DropdownMenuItem>
                             <DropdownMenuItem>Reset</DropdownMenuItem>
                             <DropdownMenuItem>FullScreen</DropdownMenuItem>
                           </DropdownMenuContent>

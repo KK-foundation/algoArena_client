@@ -3,24 +3,9 @@ import { motion } from "motion/react";
 import { Clock, Award, Users, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { times, xp } from "@/constents/achivements";
 
-interface FloatingChallengeCardProps {
-  challenge: {
-    id: string;
-    title: string;
-    difficulty: "easy" | "medium" | "hard";
-    xp: number;
-    timeEstimate: string;
-    solvedBy: number;
-    tags: string[];
-  };
-  onPreview: () => void;
-}
-
-const FloatingChallengeCard = ({
-  challenge,
-  onPreview,
-}: FloatingChallengeCardProps) => {
+const FloatingChallengeCard = ({ challenge, onPreview }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   const getDifficultyClass = (difficulty: string) => {
@@ -74,7 +59,7 @@ const FloatingChallengeCard = ({
               </span>
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
                 <Users className="w-3 h-3" />
-                {challenge.solvedBy.toLocaleString()}
+                {challenge.solvedBy.length.toLocaleString()}
               </div>
             </div>
           </div>
@@ -99,18 +84,18 @@ const FloatingChallengeCard = ({
           <div className="flex items-center gap-1">
             <Award className="w-4 h-4 text-neon-green" />
             <span className="text-neon-green font-semibold">
-              +{challenge.xp} XP
+              +{xp[challenge.difficulty.toLowerCase()]} XP
             </span>
           </div>
           <div className="flex items-center gap-1">
             <Clock className="w-4 h-4" />
-            <span>~{challenge.timeEstimate}</span>
+            <span>~{times[challenge.difficulty.toLowerCase()]}</span>
           </div>
         </div>
 
         {/* Tags */}
         <div className="flex flex-wrap gap-2 mb-4">
-          {challenge.tags.slice(0, 3).map((tag) => (
+          {challenge.tags.map((tag) => (
             <motion.span
               key={tag}
               className="px-2 py-1 bg-secondary text-xs rounded-full text-muted-foreground border border-border"
@@ -119,14 +104,14 @@ const FloatingChallengeCard = ({
                 borderColor: "rgba(0, 255, 163, 0.5)",
               }}
             >
-              #{tag}
+              {tag}
             </motion.span>
           ))}
         </div>
 
         {/* Action Button */}
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Link to={"/signin"}>
+          <Link to={`/problems/${challenge.id}`} className="w-full">
             <Button className="w-full btn-primary group">
               Start Challenge
               <motion.div

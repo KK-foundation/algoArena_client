@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { CheckCircle, Circle, Award } from "lucide-react";
+import { xp } from "@/constents/achivements";
 
 const missions = [
-  { id: 1, title: "Solve 2 Easy", reward: 50, completed: true, type: "daily" },
+  { id: 1, title: "Solve Easy", reward: xp["easy"], completed: true, type: "daily" },
   {
     id: 2,
     title: "Complete 1 Medium",
-    reward: 100,
+    reward: xp["medium"],
+    completed: false,
+    type: "daily",
+  },
+  {
+    id: 2,
+    title: "Complete 1 Hard",
+    reward: xp["hard"],
     completed: false,
     type: "daily",
   },
@@ -20,15 +28,15 @@ const missions = [
   },
   {
     id: 4,
-    title: "Solve in < 30 min",
-    reward: 75,
+    title: "Complete 1 Challenge",
+    reward: xp["challenge"],
     completed: false,
     type: "bonus",
   },
   {
     id: 5,
-    title: "First Try Success",
-    reward: 150,
+    title: "Participate in a Contest",
+    reward: 300,
     completed: false,
     type: "bonus",
   },
@@ -46,16 +54,13 @@ const XPMissions = () => {
   };
 
   return (
-    <div className="overflow-x-auto pb-4">
+    <div className="overflow-x-auto pt-4 pb-4 pr-1 pl-1">
       <div className="flex gap-4 min-w-max">
         {missions.map((mission, index) => (
           <motion.div
             key={mission.id}
-            className={`glass-card rounded-lg p-4 min-w-[200px] border transition-all duration-300 ${
-              completedMissions.includes(mission.id)
-                ? "border-neon-green/50 bg-neon-green/10"
-                : "border-border hover:border-neon-green/30"
-            }`}
+            className={`glass-card rounded-lg p-4 min-w-[200px] border transition-all duration-300 "border-border hover:border-neon-green/30"
+            `}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: index * 0.1 }}
@@ -63,11 +68,7 @@ const XPMissions = () => {
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-2">
-                {completedMissions.includes(mission.id) ? (
-                  <CheckCircle className="w-5 h-5 text-neon-green" />
-                ) : (
-                  <Circle className="w-5 h-5 text-muted-foreground" />
-                )}
+                
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${
                     mission.type === "bonus"
@@ -92,7 +93,7 @@ const XPMissions = () => {
                 </span>
               </div>
 
-              {completedMissions.includes(mission.id) && (
+              {/* {completedMissions.includes(mission.id) && (
                 <motion.div
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
@@ -100,10 +101,10 @@ const XPMissions = () => {
                 >
                   CLAIMED
                 </motion.div>
-              )}
+              )} */}
             </div>
 
-            {!completedMissions.includes(mission.id) && mission.completed && (
+            {/* {!completedMissions.includes(mission.id) && mission.completed && (
               <motion.button
                 onClick={() => handleClaimXP(mission.id)}
                 className="w-full mt-3 bg-neon-gradient text-black px-4 py-2 rounded font-semibold hover:shadow-neon transition-all"
@@ -112,7 +113,7 @@ const XPMissions = () => {
               >
                 Claim XP
               </motion.button>
-            )}
+            )} */}
           </motion.div>
         ))}
       </div>

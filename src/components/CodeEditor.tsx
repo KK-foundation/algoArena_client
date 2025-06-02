@@ -27,9 +27,9 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
   };
 
   const handleEditorChange = (value: string | undefined) => {
-    if (value !== undefined) {
+
       onChange(value);
-    }
+    
   };
 
   return (

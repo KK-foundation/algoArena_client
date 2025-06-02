@@ -59,29 +59,20 @@ const Leaderboard = () => {
   };
 
   const tabs = [
-    { key: "daily", label: "Daily" },
-    { key: "weekly", label: "Weekly" },
-    { key: "allTime", label: "All Time" },
+    { key: "Name", label: "Name" },
+    { key: "tier", label: "Tier" },
+    { key: "level", label: "Level" },
+    { key: "xp", label: "XP" },
   ];
 
   return (
     <div className="glass-card p-6 rounded-xl">
       {/* Tabs */}
-      <div className="flex space-x-1 mb-6 bg-secondary p-1 rounded-lg">
+      <div className="flex justify-between px-4 text-white space-x-1 mb-6 bg-secondary p-1 rounded-lg">
         {tabs.map((tab) => (
-          <Button
-            key={tab.key}
-            variant={activeTab === tab.key ? "default" : "ghost"}
-            size="sm"
-            onClick={() => setActiveTab(tab.key as typeof activeTab)}
-            className={`flex-1 ${
-              activeTab === tab.key
-                ? "bg-neon-green text-black font-semibold"
-                : "text-muted-foreground"
-            }`}
-          >
-            {tab.label}
-          </Button>
+          <div className="flex ">
+            <span>{tab.label}</span>
+          </div>
         ))}
       </div>
 
@@ -93,14 +84,15 @@ const Leaderboard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 text-white ${
+            className={`flex justify-between p-3 rounded-lg transition-all duration-300 text-white ${
               user.rank <= 3
                 ? "bg-gradient-to-r from-neon-green/5 to-transparent border border-neon-green/20"
                 : ""
             }`}
           >
             {/* Rank */}
-            <div
+            <div className="flex items-center gap-3 flex-1">
+              <div
               className={`text-lg font-bold w-8 text-center ${getRankColor(
                 user.rank
               )}`}
@@ -109,7 +101,7 @@ const Leaderboard = () => {
             </div>
 
             {/* Avatar & Name */}
-            <div className="flex items-center gap-3 flex-1">
+            <div className="flex items-center gap-3">
               <span className="text-2xl">{user.avatar}</span>
               <div>
                 <div className="font-medium text-sm">{user.name}</div>
@@ -122,6 +114,17 @@ const Leaderboard = () => {
                   </Badge>
                 </div>
               </div>
+            </div>
+            </div>
+
+            {/* Avatar & Name */}
+            <div className="flex flex-1">
+              <span>Grandmaster</span>
+            </div>
+
+            {/* level  */}
+            <div className=" flex flex-1">
+              <span>50</span>
             </div>
 
             {/* XP */}
@@ -136,7 +139,7 @@ const Leaderboard = () => {
       </div>
 
       {/* View Profile Button */}
-      <motion.div
+      {/* <motion.div
         className="mt-6 pt-4 border-t border-border"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -148,7 +151,7 @@ const Leaderboard = () => {
         >
           View Full Rankings
         </Button>
-      </motion.div>
+      </motion.div> */}
     </div>
   );
 };

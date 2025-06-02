@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
+import { useNavigate } from "react-router-dom";
 
-const tags = [
-  { name: "binary-search", count: 156, color: "neon-green" },
-  { name: "dynamic-programming", count: 89, color: "neon-blue" },
-  { name: "dfs", count: 234, color: "accent" },
-  { name: "graph", count: 178, color: "neon-green" },
-  { name: "recursion", count: 145, color: "neon-blue" },
-  { name: "sliding-window", count: 92, color: "accent" },
-  { name: "heap", count: 67, color: "neon-green" },
-  { name: "greedy", count: 123, color: "neon-blue" },
-  { name: "backtracking", count: 78, color: "accent" },
-  { name: "two-pointers", count: 134, color: "neon-green" },
-];
+// const tags = [
+//   { name: "binary-search", count: 156, color: "neon-green" },
+//   { name: "dynamic-programming", count: 89, color: "neon-blue" },
+//   { name: "dfs", count: 234, color: "accent" },
+//   { name: "graph", count: 178, color: "neon-green" },
+//   { name: "recursion", count: 145, color: "neon-blue" },
+//   { name: "sliding-window", count: 92, color: "accent" },
+//   { name: "heap", count: 67, color: "neon-green" },
+//   { name: "greedy", count: 123, color: "neon-blue" },
+//   { name: "backtracking", count: 78, color: "accent" },
+//   { name: "two-pointers", count: 134, color: "neon-green" },
+// ];
 
-const TagExplorer = () => {
+const TagExplorer = ({tags}) => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const navigate = useNavigate();
+  const handlerClickTag = (tagName: string) => {
+    navigate(`/problems?tag=${tagName}`);
+  }
+
 
   return (
     <div className="space-y-4">
@@ -24,11 +30,9 @@ const TagExplorer = () => {
           {tags.map((tag, index) => (
             <motion.button
               key={tag.name}
-              onClick={() =>
-                setSelectedTag(selectedTag === tag.name ? null : tag.name)
-              }
+              onClick={() => handlerClickTag(tag.tag)}
               className={`pill-shaped px-4 py-2 rounded-full border transition-all duration-300 whitespace-nowrap ${
-                selectedTag === tag.name
+                selectedTag === tag.tag
                   ? "bg-neon-green text-black border-neon-green"
                   : "bg-secondary backdrop-blur border-border text-foreground hover:border-neon-green/50 hover:bg-neon-green/10"
               }`}
@@ -38,16 +42,16 @@ const TagExplorer = () => {
               whileHover={{ scale: 1.05, y: -2 }}
               whileTap={{ scale: 0.95 }}
             >
-              <span className="text-sm font-medium">#{tag.name}</span>
+              <span className="text-sm font-medium">#{tag.tag}</span>
               <span className="ml-2 text-xs opacity-75">{tag.count}</span>
-              {selectedTag === tag.name && (
+              {/* {selectedTag === tag.name && (
                 <motion.div
                   className="absolute inset-0 rounded-full bg-neon-green/20"
                   layoutId="tagGlow"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 />
-              )}
+              )} */}
             </motion.button>
           ))}
         </div>

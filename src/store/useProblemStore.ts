@@ -109,32 +109,59 @@ interface pagination {
   };
 }
 
+
 interface ProblemState {
   problems: pagination;
   problem: Problem;
   solvedProblems: ProblemSolved[];
+  createdByUserProblems: Problem[];
+  top3Problems: Problem[];
+  companiesChallenges: [];
+  tags: string[];
+  isCreatingProblem: boolean;
   isProblemsLoading: boolean;
   isProblemLoading: boolean;
-  isCreatingProblem: boolean;
-  createdByUserProblems: Problem[];
+  isTop3ProblemsLoading: boolean;
 
-
+  createProblem: (problem: FormData) => Promise<any>;
+  getProblemById: (id: string) => Promise<void>;
   getAllProblems: (page: number) => Promise<void>;
   getSolvedProblemByUser: () => Promise<void>;
   getAllProblemCreatedByUser: () => Promise<void>;
-  getProblemById: (id: string) => Promise<void>;
-  createProblem: (problem: FormData) => Promise<any>;
+  getTop3Problems: () => Promise<void>;
+  getAllCompaniesChallenges: () => Promise<any>;
+  getAllTags: () => Promise<any>;
 }
 
 export const useProblemStore = create<ProblemState>((set) => ({
   problems: null,
   problem: null,
   solvedProblems: [],
+  createdByUserProblems: [],
+  top3Problems: [],
+  companiesChallenges: [],
+  tags: [],
   isProblemsLoading: false,
   isProblemLoading: false,
-  createdByUserProblems: [],
-  isCreatingProblem:false,
+  isCreatingProblem: false,
+  isTop3ProblemsLoading: false,
 
+  // createProblem
+  createProblem: async (problem) => {
+    try {
+      set({ isCreatingProblem: true });
+      const res = await axiosInstance.post("/problems/create-problem", problem);
+      toast.success(res.data.message);
+      return res.data;
+    } catch (error) {
+      toast.error(error.response.data.message || "Failed to create problem");
+      throw error;
+    } finally {
+      set({ isCreatingProblem: false });
+    }
+  },
+  // updateProblem
+  // deleteProblem
   // get all problems
   getAllProblems: async (page) => {
     try {
@@ -150,24 +177,7 @@ export const useProblemStore = create<ProblemState>((set) => ({
       set({ isProblemsLoading: false });
     }
   },
-  getSolvedProblemByUser: async () => {
-    try {
-      const res = await axiosInstance.get("/problems/get-solved-problems");
-      set({ solvedProblems: res.data.data });
-    } catch (error) {
-      toast.error(error.response.message);
-    }
-  },
-  getAllProblemCreatedByUser: async () => {
-    try {
-      const res = await axiosInstance.get("/problems/problem-created-by-user");
-      set({
-        createdByUserProblems: res.data.data,
-      });
-    } catch (error) {
-      toast.error(error.response.message);
-    }
-  },
+  // get problem by id
   getProblemById: async (id) => {
     try {
       set({ isProblemLoading: true });
@@ -179,17 +189,60 @@ export const useProblemStore = create<ProblemState>((set) => ({
       set({ isProblemLoading: false });
     }
   },
-  createProblem: async (problem) => {
+  // get solved problems by user
+  getSolvedProblemByUser: async () => {
     try {
-      set({ isCreatingProblem: true });
-      const res = await axiosInstance.post("/problems/create-problem", problem);
-      toast.success(res.data.message);
-      return res.data;
+      const res = await axiosInstance.get("/problems/get-solved-problems");
+      set({ solvedProblems: res.data.data });
     } catch (error) {
-      toast.error(error.response.data.message || "Failed to create problem");
-      throw error;
+      toast.error(error.response.message);
+    }
+  },
+  // get all problems created by user
+  getAllProblemCreatedByUser: async () => {
+    try {
+      const res = await axiosInstance.get("/problems/problem-created-by-user");
+      set({
+        createdByUserProblems: res.data.data,
+      });
+    } catch (error) {
+      toast.error(error.response.message);
+    }
+  },
+  // get top 3 problems
+  getTop3Problems: async () => {
+    try {
+      set({ isTop3ProblemsLoading: true });
+      const res = await axiosInstance.get("/problems/get-most-solved-3problem");
+      set({ top3Problems: res.data.data });
+    } catch (error) {
+      toast.error(error.response.message);
     } finally {
-      set({ isCreatingProblem: false });
+      set({ isTop3ProblemsLoading: false });
+    }
+  },
+  // get all companies challenges
+  getAllCompaniesChallenges: async () => {
+    try {
+      const res = await axiosInstance.get(
+        "/problems/get-all-companies-challenges"
+      );
+      set({ companiesChallenges: res.data.data });
+      return res.data.data;
+    } catch (error) {
+      toast.error(error.response.message);
+      throw error;
+    }
+  },
+  // get all tags
+  getAllTags: async () => {
+    try {
+      const res = await axiosInstance.get("/problems/get-all-tags");
+      set({ tags: res.data.data });
+      return res.data.data;
+    } catch (error) {
+      toast.error(error.response.message);
+      throw error;
     }
   },
 }));
