@@ -22,40 +22,19 @@ import { useLeaderboardStore } from "@/store/useLeaderboard";
 const Index = () => {
   const [isCodePanelOpen, setIsCodePanelOpen] = useState(false);
   const { potd, getPotd, isPotdGetting } = usePotdStore();
-  const { getTop3Problems, isTop3ProblemsLoading, top3Problems,tags,companiesChallenges,getAllTags,getAllCompaniesChallenges } =
-    useProblemStore();
-  const {leaderboard,getLeaderboard,isLeaderboardGetting} = useLeaderboardStore();
+  const {
+    getTop3Problems,
+    isTop3ProblemsLoading,
+    top3Problems,
+    tags,
+    companiesChallenges,
+    getAllTags,
+    getAllCompaniesChallenges,
+  } = useProblemStore();
+  const { leaderboard, getLeaderboard, isLeaderboardGetting } =
+    useLeaderboardStore();
 
-  // Sample challenges data
-  const sampleChallenges = [
-    {
-      id: "1",
-      title: "Two Sum",
-      difficulty: "easy" as const,
-      xp: 50,
-      timeEstimate: "15 min",
-      solvedBy: 15420,
-      tags: ["array", "hash-table"],
-    },
-    {
-      id: "2",
-      title: "Merge Intervals",
-      difficulty: "medium" as const,
-      xp: 120,
-      timeEstimate: "30 min",
-      solvedBy: 8340,
-      tags: ["array", "sorting"],
-    },
-    {
-      id: "3",
-      title: "Word Ladder",
-      difficulty: "hard" as const,
-      xp: 200,
-      timeEstimate: "45 min",
-      solvedBy: 3210,
-      tags: ["bfs", "string"],
-    },
-  ];
+
 
   const tabsData = [
     {
@@ -89,19 +68,31 @@ const Index = () => {
     if (!potd) {
       getPotd();
     }
+  }, [potd, getPotd]);
+
+  useEffect(() => {
     if (top3Problems.length === 0) {
       getTop3Problems();
     }
-    if(tags.length === 0) {
+  }, [top3Problems, getTop3Problems]);
+
+  useEffect(() => {
+    if (tags.length === 0) {
       getAllTags();
     }
-    if(companiesChallenges.length === 0) {
+  }, [tags, getAllTags]);
+
+  useEffect(() => {
+    if (companiesChallenges.length === 0) {
       getAllCompaniesChallenges();
     }
-    if(leaderboard.length <= 0){
+  }, [companiesChallenges, getAllCompaniesChallenges]);
+
+  useEffect(() => {
+    if (leaderboard.length === 0) {
       getLeaderboard();
     }
-  }, [potd, getPotd, getTop3Problems, top3Problems,tags, getAllTags, companiesChallenges, getAllCompaniesChallenges]);
+  }, [leaderboard, getLeaderboard]);
 
   return (
     <>
@@ -125,7 +116,7 @@ const Index = () => {
         >
           <HeroBanner />
         </motion.section>
-        <br/>
+        <br />
         <br />
         <br />
 
@@ -151,7 +142,7 @@ const Index = () => {
             <h2 className="text-2xl font-orbitron font-bold mb-6">
               <span className="hero-text">Explore by Tags</span>
             </h2>
-            <TagExplorer tags={tags}/>
+            <TagExplorer tags={tags} />
           </motion.section>
 
           {/* Featured Challenge */}
@@ -189,7 +180,7 @@ const Index = () => {
             <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
               <span className="hero-text">Topics to Explore</span>
             </h2>
-            <TopicGrid tags={tags}/>
+            <TopicGrid tags={tags} />
           </motion.section>
 
           {/* Trending Challenges */}
@@ -218,7 +209,11 @@ const Index = () => {
               <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
                 <span className="hero-text">Leaderboard</span>
               </h2>
-              {isLeaderboardGetting ? "Loading.." : <Leaderboard leaderboard={leaderboard}/>}
+              {isLeaderboardGetting ? (
+                "Loading.."
+              ) : (
+                <Leaderboard leaderboard={leaderboard} />
+              )}
             </motion.section>
           </div>
         </div>

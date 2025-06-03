@@ -24,6 +24,7 @@ import Index from "./pages/Index";
 import { Outlet } from "react-router-dom";
 import AuthCheck from "./components/AuthCheck";
 import VerifyAccountPage from "./pages/VerifyAccountPage";
+import CreateSheetPage from "./pages/CreateSheetPage";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -43,6 +44,7 @@ const App = () => {
               <Route path="/problems" element={<ProblemsPage />} />
               <Route path="/problems/create" element={<CreateProblemPage />} />
               <Route path="/sheets" element={<SheetsPage />} />
+              <Route path="/sheets/create" element={<CreateSheetPage />} />
               <Route path="/contests" element={<ContestsPage />} />
               <Route path="/interview" element={<InterviewPage />} />
               <Route path="/problem/:id" element={<ProblemSolvePage />} />

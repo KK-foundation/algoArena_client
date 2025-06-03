@@ -7,32 +7,28 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useProblemStore } from "@/store/useProblemStore";
 import { useEffect } from "react";
 import { useQueryStore } from "@/store/useQueryStore";
-// import { parseJSON } from "date-fns";
-// 
+
+
 const ProblemsPage = () => {
   const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
   const { setPage } = useQueryStore();
   const [searchParams] = useSearchParams();
-  const {
-    problems,
-    isProblemsLoading,
-    applyFilters,
-    filteredProblems,
-  } = useProblemStore();
+  const { problems, isProblemsLoading, applyFilters, filteredProblems } =
+    useProblemStore();
+
+  const handleLoadMore = () => {
+    if (problems) {
+      setPage(Number(problems.pagination.currentPage + 1));
+    }
+  };
 
   useEffect(() => {
     const query: Record<string, string> = {};
     for (const [key, value] of searchParams.entries()) {
       query[key] = value;
     }
-    applyFilters(query,userInfo.id);
+    applyFilters(query, userInfo.id);
   }, [searchParams, applyFilters]);
-
-  const handleLoadMore = () => {
-    if (problems) {
-      setPage(problems.pagination.currentPage + 1);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -78,24 +74,25 @@ const ProblemsPage = () => {
               </div>
             )}
             {!isProblemsLoading &&
-              (searchParams ? filteredProblems : problems.problems)?.map((problem) => (
-                <ProblemCard key={problem.id} problem={problem} />
-              ))}
+              (searchParams.size ? filteredProblems : problems.problems)?.map(
+                (problem) => <ProblemCard key={problem.id} problem={problem} />
+              )}
           </div>
         </div>
 
         {/* Load More */}
-        {problems && problems.pagination.currentPage < problems.pagination.totalPages && (
-          <div className="text-center mt-8">
-            <Button
-              variant="outline"
-              className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent transition-all duration-200"
-              onClick={handleLoadMore}
-            >
-              Load More Problems
-            </Button>
-          </div>
-        )}
+        {problems &&
+          problems.pagination.currentPage < problems.pagination.totalPages && (
+            <div className="text-center mt-8">
+              <Button
+                variant="outline"
+                className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent transition-all duration-200"
+                onClick={handleLoadMore}
+              >
+                Load More Problems
+              </Button>
+            </div>
+          )}
       </div>
     </div>
   );

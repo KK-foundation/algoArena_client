@@ -25,4 +25,7 @@ dist-ssr
 *.sw?
 pnpm-lock.yaml
 .env
-/.env
+/.env.env
+.env.test
+.env.production
+.env.*.local
