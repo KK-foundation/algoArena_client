@@ -5,18 +5,33 @@ import { create } from "zustand";
 export const useSheetStore = create((set, get) => ({
   mySheets: [],
   publicSheets: [],
+  currentSheet: {},
   isSheetCreating: false,
   isGettingSheets: false,
+  isGettingSheetById: false,
+  isUpdatingSheet: false,
+
+  handleError: (error) => {
+    const message = error?.response?.data?.message || "Something went wrong!";
+    toast.error(message);
+  },
+
+  updateSheetInStore: (updatedSheet) => {
+    const mySheets = get().mySheets;
+    const updatedSheets = mySheets.map((sheet) =>
+      sheet.id === updatedSheet.id ? { ...sheet, ...updatedSheet } : sheet
+    );
+    set({ mySheets: updatedSheets });
+  },
 
   createSheet: async (finalData) => {
     try {
       set({ isSheetCreating: true });
       const res = await axiosInstance.post("/sheets/create-sheet", finalData);
-      const sheets = get().mySheets;
-      set({ mySheets: [...sheets, res.data.data] });
+      set((state) => ({ mySheets: [...state.mySheets, res.data.data] }));
       return res;
     } catch (error) {
-      toast.error(error.response.data.message);
+      get().handleError(error);
     } finally {
       set({ isSheetCreating: false });
     }
@@ -29,11 +44,12 @@ export const useSheetStore = create((set, get) => ({
       set({ publicSheets: res.data.data });
       return res;
     } catch (error) {
-      toast.error(error.response.data.message);
+      get().handleError(error);
     } finally {
       set({ isGettingSheets: false });
     }
   },
+
   getAllMySheets: async () => {
     try {
       set({ isGettingSheets: true });
@@ -41,9 +57,64 @@ export const useSheetStore = create((set, get) => ({
       set({ mySheets: res.data.data });
       return res;
     } catch (error) {
-      toast.error(error.response.data.message);
+      get().handleError(error);
     } finally {
       set({ isGettingSheets: false });
+    }
+  },
+
+  getMySheetById: async (sheetId) => {
+    try {
+      set({ isGettingSheetById: true });
+      const res = await axiosInstance.get(`sheets/${sheetId}`);
+      set({ currentSheet: res.data.data });
+      return res;
+    } catch (error) {
+      get().handleError(error);
+    } finally {
+      set({ isGettingSheetById: false });
+    }
+  },
+
+  updateSheet: async (sheetId,formData) => {
+    try {
+      set({ isUpdatingSheet: true });
+      const res = await axiosInstance.post(`sheets/update-sheet/${sheetId}`, formData);
+      get().updateSheetInStore(res.data.data);
+      return res;
+    } catch (error) {
+      get().handleError(error);
+    } finally {
+      set({ isUpdatingSheet: false });
+    }
+  },
+
+  deleteSheet: async (sheetId) => {
+    try {
+      await axiosInstance.delete(`sheets/${sheetId}`);
+      const mySheets = get().mySheets;
+      const updatedSheets = mySheets.filter((item) => item.id !== sheetId);
+      set({ mySheets: updatedSheets });
+    } catch (error) {
+      get().handleError(error);
+    }
+  },
+
+  addProblemsInSheets: async (sheetId, problemIds) => {
+    try {
+      const res = await axiosInstance.post(`sheets/add-problems/${sheetId}`, problemIds);
+      get().updateSheetInStore(res.data.data);
+    } catch (error) {
+      get().handleError(error);
+    }
+  },
+
+  removeProblemsInSheets: async (sheetId, problemIds) => {
+    try {
+      const res = await axiosInstance.post(`/remove-problems/${sheetId}`, problemIds);
+      get().updateSheetInStore(res.data.data);
+    } catch (error) {
+      get().handleError(error);
     }
   },
 }));

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
@@ -7,21 +7,20 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import MarkdownEditor from "@/components/MarkdownEditor";
-import { Save, Eye, Send, X, Code2, CheckCircle2, Loader } from "lucide-react";
-
+import { Send } from "lucide-react";
 import { availableTags } from "@/constents/tags";
 import { useSheetStore } from "@/store/useSheetStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
-type visibility = "Public" | "Private";
+type Visibility = "Public" | "Private";
+
 export interface FormData {
   name: string;
   description: string;
   tags: string[];
-  visibility: visibility;
+  visibility: Visibility;
 }
 
-// Zod validation schema
 const problemSchema = z.object({
   name: z.string().min(1, "Name is required").max(200, "Name too long"),
   description: z.string().min(1, "Description is required"),
@@ -31,7 +30,18 @@ const problemSchema = z.object({
 
 const CreateSheetPage = () => {
   const navigate = useNavigate();
-  const {createSheet,isSheetCreating} = useSheetStore();
+  const [searchParams] = useSearchParams();
+  const sheetId = searchParams.get("edit");
+
+  const {
+    createSheet,
+    isSheetCreating,
+    getMySheetById,
+    currentSheet,
+    updateSheet,
+    isSheetUpdating,
+  } = useSheetStore();
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     description: "",
@@ -40,8 +50,27 @@ const CreateSheetPage = () => {
   });
 
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
-  
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
+
+  // Fetch sheet if editing
+  useEffect(() => {
+    if (sheetId) {
+      getMySheetById(sheetId);
+    }
+  }, [sheetId, getMySheetById]);
+
+  // Set formData if currentSheet is fetched
+  useEffect(() => {
+    if (sheetId && currentSheet) {
+      setFormData({
+        name: currentSheet.name ?? "",
+        description: currentSheet.description ?? "",
+        tags: currentSheet.tags ?? [],
+        visibility: currentSheet.visibility ?? "Private",
+      });
+      setSelectedTags(currentSheet.tags ?? []);
+    }
+  }, [currentSheet, sheetId]);
 
   const handleTagToggle = (tag: string) => {
     setSelectedTags((prev) =>
@@ -55,62 +84,53 @@ const CreateSheetPage = () => {
         ...formData,
         tags: selectedTags,
       };
-
       problemSchema.parse(dataToValidate);
       setValidationErrors([]);
       return true;
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const errors = error.errors.map(
-          (err) => `${err.path.join(".")}: ${err.message}`
+        setValidationErrors(
+          error.errors.map((err) => `${err.path.join(".")}: ${err.message}`)
         );
-        setValidationErrors(errors);
       }
       return false;
     }
   };
 
-  const handleSubmit = async (action: "preview" | "submit") => {
-    const finalData = {
-      ...formData,
-      tags: selectedTags,
-    };
+  const handleSubmit = async () => {
+    const finalData = { ...formData, tags: selectedTags };
 
-    if (action === "submit") {
-      if (!validateForm()) {
-        console.error("Validation failed:", validationErrors);
-        return;
-      }
+    if (!validateForm()) return;
+    console.log("helle")
 
-      const res = await createSheet(finalData);
-      if(res.data.success){
-        navigate("/sheets")
-      }
-    }
+    const res = sheetId
+      ? await updateSheet(sheetId, finalData)
+      : await createSheet(finalData);
+
+    if (res?.data?.success) navigate("/sheets");
   };
 
   const isFormValid =
-    formData.name && formData.description && selectedTags.length > 0;
-
-  // --- End Sample Data and Load Functionality ---
-
+    formData?.name?.trim() &&
+    formData?.description?.trim() &&
+    selectedTags?.length > 0;
 
   return (
     <div className="min-h-screen bg-craft-bg">
       <Header />
 
       <div className="container mx-auto px-6 py-8">
-        {/* heading  */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-craft-text-primary mb-2">
-            Create Sheet
+            {sheetId ? "Edit Sheet" : "Create Sheet"}
           </h1>
           <p className="text-craft-text-secondary">
-            Design a new Sheet for the community
+            {sheetId
+              ? "Update your existing Sheet"
+              : "Design a new Sheet for the community"}
           </p>
         </div>
 
-        {/* top validation error line  */}
         {validationErrors.length > 0 && (
           <Card className="bg-craft-error/10 border-craft-error/30 p-4 mb-6">
             <h3 className="text-craft-error font-semibold mb-2">
@@ -124,17 +144,14 @@ const CreateSheetPage = () => {
           </Card>
         )}
 
-        <div className="grid grid-cols-1  gap-8">
-          <div className="lg:col-span-2 space-y-6">
-            {/* Basic Information */}
+        <div className="grid grid-cols-1 gap-8">
+          <div className="space-y-6">
+            {/* Basic Info */}
             <Card className="bg-craft-panel border-craft-border p-6">
-              {/* heading 2  */}
               <h2 className="text-xl font-semibold text-craft-text-primary mb-4">
                 Basic Information
               </h2>
-
               <div className="space-y-4">
-                {/* Name */}
                 <div>
                   <Label htmlFor="title" className="text-craft-text-primary">
                     Sheet Name *
@@ -153,24 +170,25 @@ const CreateSheetPage = () => {
                   />
                 </div>
 
-                {/* Description */}
                 <MarkdownEditor
                   label="Problem Description *"
                   value={formData.description}
                   onChange={(value) =>
-                    setFormData((prev) => ({ ...prev, description: value }))
+                    setFormData((prev) => ({
+                      ...prev,
+                      description: value,
+                    }))
                   }
-                  placeholder="Describe the problem in detail. You can use markdown formatting..."
+                  placeholder="Describe the problem in detail..."
                 />
               </div>
             </Card>
 
-            {/* Tags */}
+            {/* Tags & Visibility */}
             <Card className="bg-craft-panel border-craft-border p-6">
               <h3 className="text-lg font-semibold text-craft-text-primary mb-4">
                 Tags
               </h3>
-
               <div className="flex flex-wrap gap-2">
                 {availableTags.map((tag) => (
                   <Badge
@@ -187,12 +205,12 @@ const CreateSheetPage = () => {
                   </Badge>
                 ))}
               </div>
-              <br />
-              <div>
-                <h3 className="text-lg font-semibold text-craft-text-primary mb-4">
+
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold text-craft-text-primary mb-2">
                   Visibility
                 </h3>
-                <div className="flex space-x-2 mt-2">
+                <div className="flex space-x-2">
                   {(["Private", "Public"] as const).map((level) => (
                     <Button
                       key={level}
@@ -202,10 +220,7 @@ const CreateSheetPage = () => {
                       }
                       size="sm"
                       onClick={() =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          visibility: level,
-                        }))
+                        setFormData((prev) => ({ ...prev, visibility: level }))
                       }
                       className={
                         formData.visibility === level
@@ -220,23 +235,23 @@ const CreateSheetPage = () => {
               </div>
             </Card>
 
-            {/* Actions */}
+            {/* Submit */}
             <Card className="bg-craft-panel border-craft-border p-6">
               <h3 className="text-lg font-semibold text-craft-text-primary mb-4">
                 Actions
               </h3>
-
-              <div className="space-y-3">
-
-                <Button
-                  onClick={() => handleSubmit("submit")}
-                  className="w-full bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
-                  disabled={!isFormValid || isSheetCreating}
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  {isSheetCreating ? "Loading..." : "Create Sheet"}
-                </Button>
-              </div>
+              <Button
+                onClick={handleSubmit}
+                className="w-full bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
+                disabled={!isFormValid || isSheetCreating || isSheetUpdating}
+              >
+                <Send className="w-4 h-4 mr-2" />
+                {isSheetCreating || isSheetUpdating
+                  ? "Saving..."
+                  : sheetId
+                  ? "Update Sheet"
+                  : "Create Sheet"}
+              </Button>
 
               {!isFormValid && (
                 <p className="text-craft-error text-sm mt-2">

@@ -4,24 +4,30 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Users, Heart, Share, Copy, Delete, Edit } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useSheetStore } from "@/store/useSheetStore";
 import { useEffect } from "react";
 // import { userInfo } from "os";
 
 const SheetsPage = () => {
+  const navigate = useNavigate();
   const {
     isGettingSheets,
     getAllMySheets,
     getAllPublicSheets,
     mySheets,
     publicSheets,
+    deleteSheet
   } = useSheetStore();
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-  const handleDelete = (id) => {};
+  const handleDelete = (id) => {
+    deleteSheet(id);
+  };
 
-  const handleEdit = (id) => {};
+  const handleEdit = (id) => {
+    navigate(`/sheets/create?edit=${id}`)
+  };
 
   const SheetCard = ({
     sheet,
