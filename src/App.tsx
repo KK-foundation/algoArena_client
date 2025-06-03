@@ -25,6 +25,9 @@ import { Outlet } from "react-router-dom";
 import AuthCheck from "./components/AuthCheck";
 import VerifyAccountPage from "./pages/VerifyAccountPage";
 import CreateSheetPage from "./pages/CreateSheetPage";
+import InterviewSessionPage from "./pages/InterviewSessionPage";
+import InterviewAnalysisPage from "./pages/InterviewAnalysisPage";
+import SheetProblemManagerPage from "./pages/SheetProblemManagerPage";
 const queryClient = new QueryClient();
 
 const App = () => {
@@ -45,13 +48,23 @@ const App = () => {
               <Route path="/problems/create" element={<CreateProblemPage />} />
               <Route path="/sheets" element={<SheetsPage />} />
               <Route path="/sheets/create" element={<CreateSheetPage />} />
+              <Route path="/sheet/:id" element={<SheetProblemManagerPage />} />
+
               <Route path="/contests" element={<ContestsPage />} />
               <Route path="/interview" element={<InterviewPage />} />
+              <Route
+                path="/interview-session"
+                element={<InterviewSessionPage />}
+              />
+              <Route
+                path="/interview-analysis"
+                element={<InterviewAnalysisPage />}
+              />
               <Route path="/problem/:id" element={<ProblemSolvePage />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/signin" element={<SignInPage />} />
-              <Route path="/signup" element={<SignUpPage />} />
             </Route>
+            <Route path="/signup" element={<SignUpPage />} />
 
             {/* <Route
               path="/signin"

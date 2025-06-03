@@ -7,8 +7,37 @@ import { AxiosResponse } from "axios";
 export interface User {
   id: string;
   name: string;
+  username: string;
   email: string;
-  // Add other user fields as needed
+  image?: string;
+  role?: string;
+  localPassword?: string;
+  bio?: string;
+  currentStreak?: number;
+  maxStreak?: number;
+  lastSubmission?: Date | string;
+  isVerified?: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
+  problems?: any[]; // Replace `any` with specific problem type if available
+  submission?: any[]; // Replace `any` with specific submission type if available
+  problemSolved?: number;
+  sheets?: any[]; // Replace with actual type if available
+  links?: {
+    [key: string]: string;
+  };
+  yearlyGrid?: {
+    [year: string]: {
+      [day: string]: number;
+    };
+  };
+  achievements?: any[]; // Replace with actual achievement type if available
+  badges?: any[]; // Replace with actual badge type if available
+  xp?: string;
+  level?: string;
+  tier?: string;
+  hintsUsed?: number;
+  editorialUsed?: number;
 }
 
 interface SignupData {

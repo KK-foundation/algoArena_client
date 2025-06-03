@@ -121,6 +121,7 @@ interface ProblemState {
   companiesChallenges: any[];
   filteredProblems: Problem[];
   tags: string[];
+  randomProblem: Problem,
   isCreatingProblem: boolean;
   isProblemsLoading: boolean;
   isProblemLoading: boolean;
@@ -135,6 +136,7 @@ interface ProblemState {
   getAllCompaniesChallenges: () => Promise<any>;
   getAllTags: () => Promise<any>;
   applyFilters: (query: FilterQuery,currentUserId:string) => void;
+  getRandomProblem: () => Promise<any>;
 }
 
 export const useProblemStore = create<ProblemState>((set, get) => ({
@@ -146,6 +148,7 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
   companiesChallenges: [],
   filteredProblems: [],
   tags: [],
+  randomProblem:null,
   isProblemsLoading: false,
   isProblemLoading: false,
   isCreatingProblem: false,
@@ -291,4 +294,13 @@ export const useProblemStore = create<ProblemState>((set, get) => ({
 
     set({ filteredProblems: filtered });
   },
+
+  getRandomProblem: async () => {
+    try {
+      const res = await axiosInstance.get("problems/random-problem");
+      set({randomProblem: res.data.data});
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  }
 }));
