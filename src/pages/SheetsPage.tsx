@@ -9,35 +9,28 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Plus,
-  Users,
-  Heart,
-  Share,
-  Copy,
-  Delete,
-  Edit,
-  MoreVertical,
-} from "lucide-react";
+import { Plus, Users, Heart, Delete, Edit, MoreVertical } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSheetStore } from "@/store/useSheetStore";
-import { useEffect } from "react";
+import {
+  useMySheets,
+  usePublicSheets,
+  useDeleteSheet,
+} from "@/hooks/useSheets";
 // import { userInfo } from "os";
 
 const SheetsPage = () => {
   const navigate = useNavigate();
-  const {
-    isGettingSheets,
-    getAllMySheets,
-    getAllPublicSheets,
-    mySheets,
-    publicSheets,
-    deleteSheet,
-  } = useSheetStore();
-  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
-  const handleDelete = (id) => {
-    deleteSheet(id);
+  // React Query hooks
+  const { data: mySheets = [], isLoading: isLoadingMySheets } = useMySheets();
+  const { data: publicSheets = [], isLoading: isLoadingPublicSheets } =
+    usePublicSheets();
+  const deleteSheetMutation = useDeleteSheet();
+
+  const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+
+  const handleDelete = (id: string) => {
+    deleteSheetMutation.mutate(id);
   };
 
   const handleEdit = (id) => {
@@ -165,14 +158,6 @@ const SheetsPage = () => {
     </Link>
   );
 
-  useEffect(() => {
-    if (mySheets) {
-      getAllMySheets();
-    }
-    if (publicSheets) {
-      getAllPublicSheets();
-    }
-  }, [getAllMySheets, getAllPublicSheets]);
   return (
     <div className="min-h-screen bg-craft-bg">
       <Header />
@@ -212,37 +197,37 @@ const SheetsPage = () => {
             </TabsTrigger>
           </TabsList>
 
-          {isGettingSheets ? (
-            "Loading..."
-          ) : (
-            <TabsContent value="my-sheets">
+          <TabsContent value="my-sheets">
+            {isLoadingMySheets ? (
+              <div className="text-center py-8">Loading my sheets...</div>
+            ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
                 {mySheets.map((sheet) => {
                   return (
-                    <div className="h-full">
-                      <SheetCard key={sheet.id} sheet={sheet} isOwned={true} />
+                    <div key={sheet.id} className="h-full">
+                      <SheetCard sheet={sheet} isOwned={true} />
                     </div>
                   );
                 })}
               </div>
-            </TabsContent>
-          )}
+            )}
+          </TabsContent>
 
-          {isGettingSheets ? (
-            "Loading..."
-          ) : (
-            <TabsContent value="public-sheets">
+          <TabsContent value="public-sheets">
+            {isLoadingPublicSheets ? (
+              <div className="text-center py-8">Loading public sheets...</div>
+            ) : (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
                 {publicSheets.map((sheet) => {
                   return (
-                    <div className="h-full">
-                      <SheetCard key={sheet.id} sheet={sheet} isOwned={false} />
+                    <div key={sheet.id} className="h-full">
+                      <SheetCard sheet={sheet} isOwned={false} />
                     </div>
                   );
                 })}
               </div>
-            </TabsContent>
-          )}
+            )}
+          </TabsContent>
         </Tabs>
       </div>
     </div>

@@ -9,17 +9,23 @@ import { Label } from "@/components/ui/label";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { Send } from "lucide-react";
 import { availableTags } from "@/constants/tags";
-import { useSheetStore } from "@/store/useSheetStore";
+import { useSheet, useCreateSheet, useUpdateSheet } from "@/hooks/useSheets";
+import { FormData } from "@/api/sheets";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
-type Visibility = "Public" | "Private";
-
-export interface FormData {
-  name: string;
-  description: string;
-  tags: string[];
-  visibility: Visibility;
-}
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Checkbox } from "@/components/ui/checkbox";
+import { useProblems } from "@/hooks/useProblems";
 
 const problemSchema = z.object({
   name: z.string().min(1, "Name is required").max(200, "Name too long"),
@@ -28,19 +34,21 @@ const problemSchema = z.object({
   visibility: z.enum(["Public", "Private"]),
 });
 
+const FormSchema = z.object({
+  items: z.array(z.string()).refine((value) => value.some((item) => item), {
+    message: "You have to select at least one item.",
+  }),
+});
+
 const CreateSheetPage = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const sheetId = searchParams.get("edit");
 
-  const {
-    createSheet,
-    isSheetCreating,
-    getMySheetById,
-    currentSheet,
-    updateSheet,
-    isSheetUpdating,
-  } = useSheetStore();
+  // React Query hooks
+  const { data: currentSheet } = useSheet(sheetId || "");
+  const createSheetMutation = useCreateSheet();
+  const updateSheetMutation = useUpdateSheet();
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
@@ -49,15 +57,12 @@ const CreateSheetPage = () => {
     visibility: "Private",
   });
 
+  const { data } = useProblems();
+
+  // data.problems.map
+
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-
-  // Fetch sheet if editing
-  useEffect(() => {
-    if (sheetId) {
-      getMySheetById(sheetId);
-    }
-  }, [sheetId, getMySheetById]);
 
   // Set formData if currentSheet is fetched
   useEffect(() => {
@@ -66,7 +71,8 @@ const CreateSheetPage = () => {
         name: currentSheet.name ?? "",
         description: currentSheet.description ?? "",
         tags: currentSheet.tags ?? [],
-        visibility: currentSheet.visibility ?? "Private",
+        visibility:
+          (currentSheet.visibility as "Public" | "Private") ?? "Private",
       });
       setSelectedTags(currentSheet.tags ?? []);
     }
@@ -101,19 +107,36 @@ const CreateSheetPage = () => {
     const finalData = { ...formData, tags: selectedTags };
 
     if (!validateForm()) return;
-    console.log("helle");
-
-    const res = sheetId
-      ? await updateSheet(sheetId, finalData)
-      : await createSheet(finalData);
-
-    if (res?.data?.success) navigate("/sheets");
+    try {
+      if (sheetId) {
+        await updateSheetMutation.mutateAsync({ sheetId, formData: finalData });
+      } else {
+        await createSheetMutation.mutateAsync(finalData);
+      }
+      navigate("/sheets");
+    } catch (error) {
+      // Error handling is done in the mutation hooks
+      console.error("Submit error:", error);
+    }
   };
 
   const isFormValid =
     formData?.name?.trim() &&
     formData?.description?.trim() &&
     selectedTags?.length > 0;
+
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+  });
+  function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast("You submitted the following values", {
+      description: (
+        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
+          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+        </pre>
+      ),
+    });
+  }
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -235,6 +258,69 @@ const CreateSheetPage = () => {
               </div>
             </Card>
 
+            {/* add problems  */}
+            <Card className="bg-craft-panel border-craft-border p-6">
+              <h3 className="text-lg font-semibold text-craft-text-primary mb-4">
+                Add Problems
+              </h3>
+              <Form {...form}>
+                <form
+                  onSubmit={form.handleSubmit(onSubmit)}
+                  className="space-y-8 text-white"
+                >
+                  <FormField
+                    control={form.control}
+                    name="items"
+                    render={() => (
+                      <FormItem>
+                        {data.problems.map((problem) => (
+                          <FormField
+                            key={problem.id}
+                            control={form.control}
+                            name="items"
+                            render={({ field }) => {
+                              return (
+                                <FormItem
+                                  key={problem.id}
+                                  className="flex flex-row items-center gap-2"
+                                >
+                                  <FormControl>
+                                    <Checkbox
+                                      checked={field.value?.includes(
+                                        problem.id
+                                      )}
+                                      onCheckedChange={(checked) => {
+                                        return checked
+                                          ? field.onChange([
+                                              ...field.value,
+                                              problem.id,
+                                            ])
+                                          : field.onChange(
+                                              field.value?.filter(
+                                                (value) => value !== problem.id
+                                              )
+                                            );
+                                      }}
+                                    />
+                                  </FormControl>
+                                  <FormLabel className="text-sm font-normal">
+                                    {problem.title}
+                                  </FormLabel>
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        ))}
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                  <Button type="submit">Submit</Button>
+                  <Button type="submit">load more</Button>
+                </form>
+              </Form>
+            </Card>
+
             {/* Submit */}
             <Card className="bg-craft-panel border-craft-border p-6">
               <h3 className="text-lg font-semibold text-craft-text-primary mb-4">
@@ -243,10 +329,14 @@ const CreateSheetPage = () => {
               <Button
                 onClick={handleSubmit}
                 className="w-full bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
-                disabled={!isFormValid || isSheetCreating || isSheetUpdating}
+                disabled={
+                  !isFormValid ||
+                  createSheetMutation.isPending ||
+                  updateSheetMutation.isPending
+                }
               >
                 <Send className="w-4 h-4 mr-2" />
-                {isSheetCreating || isSheetUpdating
+                {createSheetMutation.isPending || updateSheetMutation.isPending
                   ? "Saving..."
                   : sheetId
                   ? "Update Sheet"
