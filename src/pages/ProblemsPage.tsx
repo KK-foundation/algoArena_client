@@ -74,7 +74,7 @@ const ProblemsPage = () => {
               </div>
             )}
             {!isProblemsLoading &&
-              (searchParams.size ? filteredProblems : problems.problems)?.map(
+              (searchParams.size ? filteredProblems : problems?.problems)?.map(
                 (problem) => <ProblemCard key={problem.id} problem={problem} />
               )}
           </div>

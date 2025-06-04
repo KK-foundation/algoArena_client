@@ -48,7 +48,7 @@ const App = () => {
               <Route path="/problems/create" element={<CreateProblemPage />} />
               <Route path="/sheets" element={<SheetsPage />} />
               <Route path="/sheets/create" element={<CreateSheetPage />} />
-              <Route path="/sheet/:id" element={<SheetProblemManagerPage />} />
+              <Route path="/sheet/:sheetId" element={<SheetProblemManagerPage />} />
 
               <Route path="/contests" element={<ContestsPage />} />
               <Route path="/interview" element={<InterviewPage />} />
