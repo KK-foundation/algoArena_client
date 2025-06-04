@@ -15,26 +15,23 @@ import CodePreviewPanel from "../components/CodePreviewPanel";
 import FloatingChallengeCard from "../components/FloatingChallengeCard";
 import AnimatedTabs from "../components/AnimatedTabs";
 import CodeRainBackground from "../components/CodeRainBackground";
-import { usePotdStore } from "@/store/usePotdStore";
-import { useProblemStore } from "@/store/useProblemStore";
+import { usePotd } from "@/hooks/usePotd";
+import {
+  useTop3Problems,
+  useTags,
+  useCompaniesChallenges,
+} from "@/hooks/useProblems";
 import { useLeaderboardStore } from "@/store/useLeaderboard";
 
 const Index = () => {
   const [isCodePanelOpen, setIsCodePanelOpen] = useState(false);
-  const { potd, getPotd, isPotdGetting } = usePotdStore();
-  const {
-    getTop3Problems,
-    isTop3ProblemsLoading,
-    top3Problems,
-    tags,
-    companiesChallenges,
-    getAllTags,
-    getAllCompaniesChallenges,
-  } = useProblemStore();
+  const { data: potd, isLoading: isPotdGetting } = usePotd();
+  const { data: top3Problems, isLoading: isTop3ProblemsLoading } =
+    useTop3Problems();
+  const { data: tags } = useTags();
+  const { data: companiesChallenges } = useCompaniesChallenges();
   const { leaderboard, getLeaderboard, isLeaderboardGetting } =
     useLeaderboardStore();
-
-
 
   const tabsData = [
     {
@@ -42,7 +39,7 @@ const Index = () => {
       label: "🔥 Trending",
       content: (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {top3Problems.map((challenge) => (
+          {(top3Problems || []).map((challenge) => (
             <FloatingChallengeCard
               key={challenge.id}
               challenge={challenge}
@@ -65,34 +62,8 @@ const Index = () => {
   ];
 
   useEffect(() => {
-    if (!potd) {
-      getPotd();
-    }
-  }, [potd, getPotd]);
-
-  useEffect(() => {
-    if (top3Problems.length === 0) {
-      getTop3Problems();
-    }
-  }, [top3Problems, getTop3Problems]);
-
-  useEffect(() => {
-    if (tags.length === 0) {
-      getAllTags();
-    }
-  }, [tags, getAllTags]);
-
-  useEffect(() => {
-    if (companiesChallenges.length === 0) {
-      getAllCompaniesChallenges();
-    }
-  }, [companiesChallenges, getAllCompaniesChallenges]);
-
-  useEffect(() => {
-    if (leaderboard.length === 0) {
-      getLeaderboard();
-    }
-  }, [leaderboard, getLeaderboard]);
+    // getLeaderboard();
+  }, [getLeaderboard]);
 
   return (
     <>
@@ -104,21 +75,15 @@ const Index = () => {
         animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
-        <br />
-        <br />
-        <br />
-        <br />
         {/* Hero Section with enhanced animations */}
         <motion.section
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, ease: "easeOut" }}
+          viewport={{ once: true }}
         >
           <HeroBanner />
         </motion.section>
-        <br />
-        <br />
-        <br />
 
         {/* Main Content */}
         <div className="container mx-auto px-4 space-y-12 pb-16">
@@ -156,7 +121,7 @@ const Index = () => {
           </motion.section>
 
           {/* Animated Tabs Section */}
-          {top3Problems.length > 0 && (
+          {(top3Problems || []).length > 0 && (
             <motion.section
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -171,20 +136,22 @@ const Index = () => {
           )}
 
           {/* Topics to Explore */}
-          <motion.section
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
-              <span className="hero-text">Topics to Explore</span>
-            </h2>
-            <TopicGrid tags={tags} />
-          </motion.section>
+          {(tags || []).length > 0 && (
+            <motion.section
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+            >
+              <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
+                <span className="hero-text">Topics to Explore</span>
+              </h2>
+              <TopicGrid tags={tags || []} />
+            </motion.section>
+          )}
 
           {/* Trending Challenges */}
-          {top3Problems.length > 0 && (
+          {(top3Problems || []).length > 0 && (
             <motion.section
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -194,7 +161,7 @@ const Index = () => {
               <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
                 <span className="hero-text">Trending Challenges</span>
               </h2>
-              <TrendingCarousel top3Problems={top3Problems} />
+              <TrendingCarousel top3Problems={top3Problems || []} />
             </motion.section>
           )}
 

@@ -10,10 +10,10 @@ import {
   validateUsername,
 } from "../lib/validation";
 import { toast } from "@/hooks/use-toast";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useLogin } from "@/hooks/useAuth";
 
 const SignIn = () => {
-  const { signin, isLoggingIn } = useAuthStore();
+  const { mutate: signin, isPending: isLoggingIn } = useLogin();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     data: "",
@@ -52,23 +52,7 @@ const SignIn = () => {
 
     if (!validateForm()) return;
 
-    try {
-      const res = await signin(formData);
-      console.log(res);
-      if (res && res.data.success) {
-        console.log("Navigating to Dashboard")
-        navigate("/dashboard");
-      }
-    } catch (error) {
-      toast({
-        title: "Sign in failed",
-        description:
-          error instanceof Error
-            ? error.message
-            : "Please check your credentials and try again.",
-        variant: "destructive",
-      });
-    }
+    signin(formData);
   };
 
   const handleGoogleSignIn = async () => {

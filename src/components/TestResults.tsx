@@ -1,4 +1,3 @@
-
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
@@ -31,20 +30,28 @@ const TestResults = ({ results }: TestResultsProps) => {
           )}
           <span>Test Results</span>
         </h3>
-        
-        <Badge className={overallPassed ? 
-          "bg-craft-success/20 text-craft-success border-craft-success/30" : 
-          "bg-craft-error/20 text-craft-error border-craft-error/30"
-        }>
+
+        <Badge
+          className={
+            overallPassed
+              ? "bg-craft-success/20 text-craft-success border-craft-success/30 font-normal"
+              : "bg-craft-error/20 text-craft-error border-craft-error/30 font-normal"
+          }
+        >
           {results.passed}/{results.total} passed
         </Badge>
       </div>
 
       <div className="space-y-3">
         {results.cases.map((testCase, index) => (
-          <Card key={index} className={`bg-craft-bg border ${
-            testCase.passed ? 'border-craft-success/30' : 'border-craft-error/30'
-          }`}>
+          <Card
+            key={index}
+            className={`bg-craft-bg border ${
+              testCase.passed
+                ? "border-craft-success/30"
+                : "border-craft-error/30"
+            }`}
+          >
             <div className="p-3">
               <div className="flex items-center justify-between mb-2">
                 <div className="flex items-center space-x-2">
@@ -57,7 +64,7 @@ const TestResults = ({ results }: TestResultsProps) => {
                     Test Case {index + 1}
                   </span>
                 </div>
-                
+
                 <div className="flex items-center space-x-1 text-craft-text-secondary text-xs">
                   <Clock className="w-3 h-3" />
                   <span>{testCase.time}</span>
@@ -71,19 +78,23 @@ const TestResults = ({ results }: TestResultsProps) => {
                     {testCase.input}
                   </code>
                 </div>
-                
+
                 <div>
                   <span className="text-craft-text-secondary">Expected: </span>
                   <code className="text-craft-success font-mono bg-craft-panel px-1 rounded">
                     {testCase.expected}
                   </code>
                 </div>
-                
+
                 <div>
                   <span className="text-craft-text-secondary">Actual: </span>
-                  <code className={`font-mono bg-craft-panel px-1 rounded ${
-                    testCase.passed ? 'text-craft-success' : 'text-craft-error'
-                  }`}>
+                  <code
+                    className={`font-mono bg-craft-panel px-1 rounded ${
+                      testCase.passed
+                        ? "text-craft-success"
+                        : "text-craft-error"
+                    }`}
+                  >
                     {testCase.actual}
                   </code>
                 </div>

@@ -1,20 +1,18 @@
-import { useAuthStore } from "@/store/useAuthStore";
-import { Link, useNavigate } from "react-router-dom";
+import { useCurrentUser, useLogout } from "@/hooks/useAuth";
 
 interface ProfileHeaderProps {
   onEditClick: () => void;
 }
 
 export const ProfileHeader = ({ onEditClick }: ProfileHeaderProps) => {
-  const { logout } = useAuthStore();
-  const navigate = useNavigate();
+  const { mutate: logout } = useLogout();
 
   const handleLogout = async () => {
-    const res = await logout();
-    if (res && res.data.success) {
-      navigate("/signin");
-    }
+    logout();
   };
+  const authUser = useCurrentUser();
+  if (authUser === null) return null;
+  const { name, username, level, bio } = authUser;
 
   return (
     <div className="bg-craft-panel rounded-2xl p-6 border border-gray-800 hover:border-[#00FFA3]/30 transition-all duration-300">
@@ -31,15 +29,15 @@ export const ProfileHeader = ({ onEditClick }: ProfileHeaderProps) => {
             </div>
           </div>
           <div className="absolute -top-1 -right-1 w-6 h-6 bg-[#00FFA3] rounded-full flex items-center justify-center shadow-lg shadow-[#00FFA3]/50">
-            <span className="text-xs font-bold text-black">12</span>
+            <span className="text-xs font-bold text-black">{level}</span>
           </div>
         </div>
 
         {/* User Info */}
         <h1 className="text-xl font-bold mb-1 bg-gradient-to-r from-[#00FFA3] to-[#4DFFDF] bg-clip-text text-transparent">
-          Alex Chen
+          {name}
         </h1>
-        <p className="text-[#A0A0A0] text-sm mb-3">@alexcodes</p>
+        <p className="text-[#A0A0A0] text-sm mb-3">@{username}</p>
 
         {/* Status Chip */}
         <div className="inline-flex items-center gap-2 bg-[#00FFA3]/10 border border-[#00FFA3]/30 rounded-full px-3 py-1 mb-4">
@@ -51,8 +49,10 @@ export const ProfileHeader = ({ onEditClick }: ProfileHeaderProps) => {
 
         {/* Bio */}
         <p className="text-[#A0A0A0] text-sm leading-relaxed mb-4">
-          Full-stack developer passionate about clean code and innovative
-          solutions. Currently exploring AI/ML.
+          {bio
+            ? bio
+            : `Full-stack developer passionate about clean code and innovative
+          solutions. Currently exploring AI/ML.`}
         </p>
 
         {/* Edit Profile Button */}

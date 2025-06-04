@@ -1,33 +1,31 @@
 import { Outlet } from "react-router-dom";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "@/store/useAuthStore";
-import { useProblemStore } from "@/store/useProblemStore";
-import { useQueryStore } from "@/store/useQueryStore";
+import { useAuthCheck } from "@/hooks/useAuth";
+import { useProblems } from "@/hooks/useProblems";
 
 function AuthCheck() {
   const navigate = useNavigate();
-  const { checkAuth, authUser, isCheckingAuth } = useAuthStore();
-  const {getAllProblems} = useProblemStore();
+  const { data: authUser, isLoading: isCheckingAuth, error } = useAuthCheck();
   const userInfo = localStorage.getItem("userInfo");
-  const {page} = useQueryStore();
-  
- 
+
+  // Prefetch problems when user is authenticated
+  useProblems(1);
 
   useEffect(() => {
-    checkAuth();
-    if (!userInfo && !authUser) {
+    if (error && !userInfo && !authUser) {
       navigate("/signin");
     }
-  }, [userInfo, navigate]);
+  }, [error, userInfo, authUser, navigate]);
 
-  useEffect(() => {
-    if (userInfo) {
-      getAllProblems(page);
-    }
-  },[getAllProblems]);
+  if (isCheckingAuth) {
+    return (
+      <div className="min-h-screen bg-craft-bg flex items-center justify-center">
+        <div className="text-white text-lg">Loading...</div>
+      </div>
+    );
+  }
 
-  console.log(page)
   return (
     <>
       <Outlet />

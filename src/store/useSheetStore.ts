@@ -5,12 +5,11 @@ import { create } from "zustand";
 export const useSheetStore = create((set, get) => ({
   mySheets: [],
   publicSheets: [],
-  currentSheet: null,
+  currentSheet: {},
   isSheetCreating: false,
   isGettingSheets: false,
   isGettingSheetById: false,
   isUpdatingSheet: false,
-  isGettingSheetById: false,
 
   handleError: (error) => {
     const message = error?.response?.data?.message || "Something went wrong!";
@@ -118,24 +117,4 @@ export const useSheetStore = create((set, get) => ({
       get().handleError(error);
     }
   },
-
-  getSheetById: async (sheetId) => {
-    try {
-      set({isGettingSheetById:true});
-      const res = await axiosInstance.get(`/sheets/get-sheet-by-id/${sheetId}`)
-      set({currentSheet: res.data.data});
-    } catch (error) {
-      toast.error(error.response.data.message);
-    } finally {
-      set({isGettingSheetById: false});
-    }
-  },
-  liked: async (userId,sheetId) => {
-    try {
-      await axiosInstance.post("/sheets/liked",{userId,sheetId});
-    } catch (error) {
-      toast.error(error.response.data.message);
-    }
-  }
-
 }));

@@ -2,8 +2,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { CheckCircle } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Problem } from "@/store/useProblemStore";
-import { useAuthStore } from "@/store/useAuthStore";
+import { Problem } from "@/api/problems";
+import { useCurrentUser } from "@/hooks/useAuth";
 
 const difficultyColors = {
   Easy: "bg-craft-success/20 text-craft-success border-craft-success/30",
@@ -14,8 +14,18 @@ const difficultyColors = {
 
 const ProblemCard = ({ problem }: { problem: Problem }) => {
   const { id, title, tags, difficulty } = problem;
-  const { authUser } = useAuthStore();
-  const solved = problem.solvedBy.some((solvedProblem) => solvedProblem.user.id === authUser?.id);
+  const authUser = useCurrentUser();
+  const solved = problem.solvedBy.some(
+    (solvedProblem) => solvedProblem.user.id === authUser?.id
+  );
+  const diffPercent =
+    difficulty == "EASY"
+      ? 92.73
+      : difficulty == "MEDIUM"
+      ? 76.92
+      : difficulty == "HARD"
+      ? 61.54
+      : 0;
   return (
     <Link to={`/problem/${id}`}>
       <Card className="bg-craft-panel border-craft-border hover:border-craft-accent/50 transition-all duration-300 hover:shadow-lg hover:shadow-craft-accent/10 group cursor-pointer">
@@ -53,7 +63,9 @@ const ProblemCard = ({ problem }: { problem: Problem }) => {
           </div>
 
           <div className="flex items-center justify-between text-sm">
-            <span className="text-craft-text-secondary"></span>
+            <span className="text-craft-text-secondary">
+              Acceptance: <span className="text-white">{diffPercent}%</span>
+            </span>
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-craft-accent rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
               <span className="text-craft-text-secondary group-hover:text-craft-accent transition-colors">

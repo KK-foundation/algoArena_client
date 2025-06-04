@@ -4,64 +4,47 @@ import XPProgressBar from "@/components/XPProgressBar";
 import StatsCard from "@/components/StatsCard";
 import FilterBar from "@/components/FilterBar";
 import { Button } from "@/components/ui/button";
-import { Zap, Target, Trophy, Users, TrendingUp } from "lucide-react";
+import { Zap, Target, Trophy, Users, TrendingUp, Code } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { useProblemStore } from "@/store/useProblemStore";
-import { useQueryStore } from "@/store/useQueryStore";
-import { useAuthStore } from "@/store/useAuthStore";
-import { levels } from "@/constents/achivements";
+import { useEffect } from "react";
+import { useProblems, useRandomProblem } from "@/hooks/useProblems";
+import { useCurrentUser } from "@/hooks/useAuth";
+import { useNextLevelXp } from "@/hooks/useNextLevelXp";
 import { useContestStore } from "@/store/useContestStore";
 import { toast } from "sonner";
-import { usePotdStore } from "@/store/usePotdStore";
+import { usePotd } from "@/hooks/usePotd";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { problems, isProblemsLoading,randomProblem,getRandomProblem } = useProblemStore();
-  const { authUser } = useAuthStore();
-  const { latestRating } = useContestStore();
-  const {potd,getPotd} = usePotdStore();
+  const { data: problems, isLoading: isProblemsLoading } = useProblems(1);
+  const { data: randomProblem, refetch: getRandomProblem } = useRandomProblem();
+  const authUser = useCurrentUser();
+  // const { latestRating } = useContestStore();
+  const { data: potd } = usePotd();
 
-  // const { query } = useQueryStore();
-
-  const [nextLevelXp, setNextLevelXp] = useState(0);
-
-  useEffect(() => {
-    if (authUser?.level != null) {
-      const levelData = levels.find((level) => level.level === Number(authUser.level) + 1);
-      if (levelData) setNextLevelXp(levelData.requiredXP);
-    }
-    if(!randomProblem){
-      getRandomProblem();
-    }
-    if(!potd){
-      getPotd();
-    }
-    console.log(nextLevelXp);
-  }, [authUser]);
+  const nextLevelXp = useNextLevelXp();
 
   const handleRandomProblemClick = async () => {
     try {
-      if(!randomProblem){
-        await getRandomProblem();
+      if (!randomProblem) {
+        const result = await getRandomProblem();
+        if (result.data) {
+          navigate(`/problem/${result.data.id}`);
+        }
+      } else {
         navigate(`/problem/${randomProblem.id}`);
-      }
-      else{
-        navigate(`/problem/${randomProblem.id}`)
       }
     } catch (err) {
       console.error("Error fetching random problem:", err);
-      alert("Something went wrong. Try again later.");
+      toast.error("Something went wrong. Try again later.");
     }
   };
 
-  const handleDailyChallengeClick = async () => {
-    if(!potd){
-      await getPotd();
-      navigate(`/problem/${potd.problemId}`)
-    }
-    else{
+  const handleDailyChallengeClick = () => {
+    if (potd) {
       navigate(`/problem/${potd.problemId}`);
+    } else {
+      toast.error("Daily challenge not available");
     }
   };
 
@@ -70,8 +53,9 @@ const Index = () => {
   };
 
   // const handleQuerySearch = () => {
-   
+
   // };
+  console.log({ authUser });
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -83,7 +67,7 @@ const Index = () => {
           <div className="flex items-center space-x-2 mb-4">
             <Zap className="w-6 h-6 text-craft-accent animate-glow-pulse" />
             <h1 className="text-3xl font-bold text-craft-text-primary">
-              Welcome back, {authUser?.name || "Coder"}!
+              Welcome {authUser?.name || "Coder"}!
             </h1>
           </div>
           <p className="text-craft-text-secondary text-lg">
@@ -111,10 +95,18 @@ const Index = () => {
           />
           <StatsCard
             title="Contest Rating"
-            value={latestRating || 0}
+            value={0}
             subtitle="Latest Contest"
             badge="⭐"
             icon={<Trophy className="w-5 h-5" />}
+            glowColor="craft-accent"
+          />
+          <StatsCard
+            title="SOMETHING"
+            value={0}
+            subtitle="SUBTITLE"
+            badge="⭐"
+            icon={<Code className="w-5 h-5" />}
             glowColor="craft-accent"
           />
         </div>
@@ -131,7 +123,9 @@ const Index = () => {
               </p>
             </div>
             <div className="w-12 h-12 bg-gradient-to-br from-craft-accent to-craft-accent-secondary rounded-full flex items-center justify-center">
-              <span className="text-craft-bg font-bold">{authUser?.level || 0}</span>
+              <span className="text-craft-bg font-bold">
+                {authUser?.level || 0}
+              </span>
             </div>
           </div>
           <XPProgressBar
@@ -175,7 +169,9 @@ const Index = () => {
         {/* Problems List */}
         <div className="mt-8">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-craft-text-primary">Problems</h2>
+            <h2 className="text-2xl font-bold text-craft-text-primary">
+              Problems
+            </h2>
             <span className="text-sm text-craft-text-secondary">
               {problems?.pagination?.message || ""}
             </span>
@@ -191,7 +187,9 @@ const Index = () => {
                 <ProblemCard key={problem.id} problem={problem} />
               ))
             ) : (
-              <div className="text-craft-text-secondary text-center">No problems found.</div>
+              <div className="text-craft-text-secondary text-center">
+                No problems found.
+              </div>
             )}
           </div>
         </div>

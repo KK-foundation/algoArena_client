@@ -2,22 +2,23 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
 
-
-const TagExplorer = ({tags}) => {
+const TagExplorer = ({ tags }: { tags: { tag: string; count: number }[] }) => {
   const [selectedTag, setSelectedTag] = useState<string | null>(null);
   const navigate = useNavigate();
   const handlerClickTag = (tagName: string) => {
     navigate(`/problems?tags=${tagName}`);
+  };
+  if (!tags || !Array.isArray(tags) || tags.length === 0) {
+    return null;
   }
-
 
   return (
     <div className="space-y-4">
       <div className="overflow-x-auto pb-4">
         <div className="flex gap-3 min-w-max">
-          {tags.map((tag, index) => (
+          {(tags || []).map((tag, index) => (
             <motion.button
-              key={tag.name}
+              key={tag.tag}
               onClick={() => handlerClickTag(tag.tag)}
               className={`pill-shaped px-4 py-2 rounded-full border transition-all duration-300 whitespace-nowrap ${
                 selectedTag === tag.tag

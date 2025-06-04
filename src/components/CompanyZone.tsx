@@ -59,7 +59,7 @@ const CompanyZone = () => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      {companies.map((company, index) => (
+      {(companies || []).map((company, index) => (
         <motion.div
           key={company.name}
           className="relative"

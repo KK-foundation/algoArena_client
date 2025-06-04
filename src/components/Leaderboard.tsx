@@ -27,7 +27,7 @@ const leaderboardData = {
   ],
 };
 
-const Leaderboard = ({leaderboard}) => {
+const Leaderboard = ({ leaderboard }) => {
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "allTime">(
     "daily"
   );
@@ -70,7 +70,7 @@ const Leaderboard = ({leaderboard}) => {
       {/* Tabs */}
       <div className="flex justify-between px-4 text-white space-x-1 mb-6 bg-secondary p-1 rounded-lg">
         {tabs.map((tab) => (
-          <div className="flex ">
+          <div className="flex " key={tab.key}>
             <span>{tab.label}</span>
           </div>
         ))}
@@ -78,7 +78,7 @@ const Leaderboard = ({leaderboard}) => {
 
       {/* Leaderboard List */}
       <div className="space-y-3">
-        {leaderboardData[activeTab].map((user, index) => (
+        {(leaderboardData[activeTab] || []).map((user, index) => (
           <motion.div
             key={`${activeTab}-${user.rank}`}
             initial={{ opacity: 0, y: 20 }}
@@ -93,28 +93,28 @@ const Leaderboard = ({leaderboard}) => {
             {/* Rank */}
             <div className="flex items-center gap-3 flex-1">
               <div
-              className={`text-lg font-bold w-8 text-center ${getRankColor(
-                user.rank
-              )}`}
-            >
-              {user.rank <= 3 ? getRankIcon(user.rank) : user.rank}
-            </div>
+                className={`text-lg font-bold w-8 text-center ${getRankColor(
+                  user.rank
+                )}`}
+              >
+                {user.rank <= 3 ? getRankIcon(user.rank) : user.rank}
+              </div>
 
-            {/* Avatar & Name */}
-            <div className="flex items-center gap-3">
-              <span className="text-2xl">{user.avatar}</span>
-              <div>
-                <div className="font-medium text-sm">{user.name}</div>
-                <div className="flex items-center gap-2">
-                  <Badge
-                    variant="outline"
-                    className="border-neon-green/30 text-neon-green text-xs"
-                  >
-                    🏆 {user.badges}
-                  </Badge>
+              {/* Avatar & Name */}
+              <div className="flex items-center gap-3">
+                <span className="text-2xl">{user.avatar}</span>
+                <div>
+                  <div className="font-medium text-sm">{user.name}</div>
+                  <div className="flex items-center gap-2">
+                    <Badge
+                      variant="outline"
+                      className="border-neon-green/30 text-neon-green text-xs"
+                    >
+                      🏆 {user.badges}
+                    </Badge>
+                  </div>
                 </div>
               </div>
-            </div>
             </div>
 
             {/* Avatar & Name */}

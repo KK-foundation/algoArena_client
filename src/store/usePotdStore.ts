@@ -1,6 +1,6 @@
-import { create } from "zustand";
 import { axiosInstance } from "../lib/axios";
-import { Problem } from "./useProblemStore";
+import { toast } from "sonner";
+import { Problem } from "../api/problems";
 
 export interface Potd {
   id: string;
@@ -13,26 +13,17 @@ export interface Potd {
   solvedUsers: string[];
 }
 
-interface PotdState {
-  potd: Potd;
-  isPotdGetting: boolean;
-
-  getPotd: () => Promise<void>;
-}
-
-export const usePotdStore = create<PotdState>((set) => ({
-  isPotdGetting: false,
-  potd: null,
-
-  getPotd: async () => {
+// Pure API functions - no state storage, no loading states
+export const potdAPI = {
+  // Get problem of the day
+  getPotd: async (): Promise<Potd> => {
     try {
-      set({ isPotdGetting: true });
       const res = await axiosInstance.get("/potd/get-potd");
-      set({ potd: res.data.data });
-    } catch (error) {
+      return res.data.data;
+    } catch (error: any) {
       console.error("Error fetching POTD:", error);
-    } finally {
-      set({ isPotdGetting: false });
+      toast.error("Failed to fetch problem of the day");
+      throw error;
     }
   },
-}));
+};

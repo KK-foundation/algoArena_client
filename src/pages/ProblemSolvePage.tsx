@@ -13,7 +13,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
-import { useProblemStore } from "@/store/useProblemStore";
+import { problemsAPI } from "@/api/problems";
 import { useEffect } from "react";
 import {
   DropdownMenu,
@@ -25,8 +25,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { CodeFormatter } from '@/utils/codeFormatter';
-
+import { CodeFormatter } from "@/utils/codeFormatter";
+import { useProblem } from "@/hooks/useProblems";
 
 const langMap = {
   CPP: "cpp",
@@ -75,7 +75,8 @@ const ProblemSolvePage = () => {
   });
   const [isRunning, setIsRunning] = useState(false);
 
-  const { getProblemById, problem, isProblemLoading } = useProblemStore();
+  const { getProblemById } = problemsAPI;
+  const { data: problem, isLoading: isProblemLoading } = useProblem(id);
 
   useEffect(() => {
     getProblemById(id);
@@ -138,11 +139,10 @@ const ProblemSolvePage = () => {
 
   if (isProblemLoading) return <div>Loading...</div>;
 
-  const handleFormat = ( ) => {
-    const formattedCode = CodeFormatter.formatForJudge0(code,language);
+  const handleFormat = () => {
+    const formattedCode = CodeFormatter.formatForJudge0(code, language);
     setCode(formattedCode);
-  }
-  
+  };
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -200,12 +200,12 @@ const ProblemSolvePage = () => {
                         <select
                           value={language}
                           onChange={(e) => setLanguage(e.target.value)}
-                          className="bg-craft-bg border border-craft-border rounded px-3 py-1 text-craft-text-primary focus:border-craft-accent"
+                          className="bg-craft-bg border px-2 border-craft-border rounded py-1 text-craft-text-primary focus:border-craft-accent"
                         >
-                          <option value="PYTHON">python</option>
-                          <option value="JAVASCRIPT">javascript</option>
-                          <option value="JAVA">java</option>
-                          <option value="CPP">c++</option>
+                          <option value="PYTHON">Python</option>
+                          <option value="JAVASCRIPT">Javascript</option>
+                          <option value="JAVA">Java</option>
+                          <option value="CPP">C++</option>
                         </select>
                         <DropdownMenu>
                           <DropdownMenuTrigger>
@@ -220,7 +220,9 @@ const ProblemSolvePage = () => {
                           <DropdownMenuContent className="bg-craft-bg border-craft-border text-craft-text-primary hover:bg-craft-bg/80">
                             <DropdownMenuLabel>Settings</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem onClick={handleFormat}>Format</DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleFormat}>
+                              Format
+                            </DropdownMenuItem>
                             <DropdownMenuItem>Reset</DropdownMenuItem>
                             <DropdownMenuItem>FullScreen</DropdownMenuItem>
                           </DropdownMenuContent>

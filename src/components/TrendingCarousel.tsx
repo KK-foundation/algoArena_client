@@ -6,9 +6,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { times, xp } from "@/constents/achivements";
 
-
-
-const TrendingCarousel = ({top3Problems}) => {
+const TrendingCarousel = ({ top3Problems }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
 
@@ -109,7 +107,8 @@ const TrendingCarousel = ({top3Problems}) => {
                     {top3Problems[currentIndex].difficulty}
                   </Badge>
                   <div className="text-neon-green font-orbitron font-bold">
-                    +{xp[top3Problems[currentIndex].difficulty.toLowerCase()]} XP
+                    +{xp[top3Problems[currentIndex].difficulty.toLowerCase()]}{" "}
+                    XP
                   </div>
                 </div>
 
@@ -118,7 +117,7 @@ const TrendingCarousel = ({top3Problems}) => {
                 </h3>
 
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {top3Problems[currentIndex].tags.map((tag) => (
+                  {(top3Problems[currentIndex]?.tags || []).map((tag) => (
                     <Badge
                       key={tag}
                       variant="outline"
@@ -130,15 +129,24 @@ const TrendingCarousel = ({top3Problems}) => {
                 </div>
 
                 <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                  <span>⏱️ {times[top3Problems[currentIndex].difficulty.toLowerCase()]}</span>
                   <span>
-                    👥 {top3Problems[currentIndex].solvedBy.length.toLocaleString()}{" "}
+                    ⏱️{" "}
+                    {times[top3Problems[currentIndex].difficulty.toLowerCase()]}
+                  </span>
+                  <span>
+                    👥{" "}
+                    {(
+                      top3Problems[currentIndex]?.solvedBy || []
+                    ).length.toLocaleString()}{" "}
                     solved
                   </span>
                 </div>
               </div>
 
-              <Link to={`/problem/${top3Problems[currentIndex].id}`} className="w-full">
+              <Link
+                to={`/problem/${top3Problems[currentIndex].id}`}
+                className="w-full"
+              >
                 <Button className="btn-primary w-full">Solve Challenge</Button>
               </Link>
             </div>
@@ -148,7 +156,7 @@ const TrendingCarousel = ({top3Problems}) => {
 
       {/* Indicators */}
       <div className="flex justify-center mt-6 space-x-2">
-        {top3Problems.map((_, index) => (
+        {(top3Problems || []).map((_, index) => (
           <button
             key={index}
             onClick={() => {

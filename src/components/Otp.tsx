@@ -18,7 +18,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useVerify } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 
 const FormSchema = z.object({
@@ -28,7 +28,7 @@ const FormSchema = z.object({
 });
 
 export default function Otp() {
-  const { verify, isSigninUp } = useAuthStore();
+  const { mutate: verify, isPending: isSigninUp } = useVerify();
   const navigate = useNavigate();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -39,17 +39,9 @@ export default function Otp() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     console.log(data);
-    try {
-      const res = await verify({
-        otp: data.pin,
-      });
-      if (res && res.data.success) {
-        toast.success("Verification successful");
-        navigate("/signin");
-      }
-    } catch (error) {
-      toast.error("Verification failed");
-    }
+    verify({
+      otp: data.pin,
+    });
   }
 
   return (

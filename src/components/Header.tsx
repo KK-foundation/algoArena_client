@@ -4,9 +4,11 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { User, Menu, Zap, Trophy, Target, Code } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "./Logo";
+import { useCurrentUser } from "@/hooks/useAuth";
 
 const Header = () => {
   const location = useLocation();
+  const authUser = useCurrentUser();
 
   const navItems = [
     { name: "Problems", path: "/problems", icon: Code },
@@ -49,9 +51,11 @@ const Header = () => {
           <div className="flex items-center space-x-4">
             <div className="hidden sm:flex items-center space-x-2">
               <Badge className="bg-craft-accent/20 text-craft-accent border-craft-accent/30">
-                Level 12
+                Level {authUser?.level || 0}
               </Badge>
-              <span className="text-craft-text-secondary text-sm">247 XP</span>
+              <span className="text-craft-text-secondary text-sm">
+                {authUser?.xp || 0} XP
+              </span>
             </div>
 
             {/* Profile Button */}

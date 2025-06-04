@@ -9,10 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import TestCaseManager from "@/components/TestCaseManager";
-import { Save, Eye, Send, X, Code2, CheckCircle2, Loader } from "lucide-react";
+import { Eye, Send, X, Code2, CheckCircle2, Loader } from "lucide-react";
 import { Editor } from "@monaco-editor/react";
-import { useProblemStore } from "@/store/useProblemStore";
+// Removed problemsAPI import - using React Query hook instead
+import { useCreateProblem } from "@/hooks/useProblems";
 import { useNavigate } from "react-router-dom";
+import { useCurrentUser } from "@/hooks/useAuth";
 import { sampledData, sampleStringProblem } from "@/constents/smaple";
 import { availableTags } from "@/constents/tags";
 
@@ -61,7 +63,7 @@ interface Editorial {
   codeLanguage: Language;
 }
 
-export interface FormData {
+export interface ProblemFormData {
   title: string;
   description: string;
   difficulty: Difficulty;
@@ -123,8 +125,10 @@ const problemSchema = z.object({
 
 const CreateProblemPage = () => {
   const navigate = useNavigate();
-  const { createProblem, isCreatingProblem } = useProblemStore();
-  const [formData, setFormData] = useState<FormData>({
+  const authUser = useCurrentUser();
+  const { mutate: createProblem, isPending: isCreatingProblem } =
+    useCreateProblem();
+  const [formData, setFormData] = useState<ProblemFormData>({
     title: "",
     description: "",
     difficulty: "Easy",
@@ -165,8 +169,6 @@ const CreateProblemPage = () => {
   const [testCases, setTestCases] = useState<TestCase[]>([]);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
-
-  
 
   const handleTagToggle = (tag: string) => {
     setSelectedTags((prev) =>
@@ -215,10 +217,11 @@ const CreateProblemPage = () => {
         return;
       }
 
-      const res = await createProblem(finalData);
-      if (res && res.data.success) {
-        navigate("/problems");
-      }
+      createProblem(finalData, {
+        onSuccess: () => {
+          navigate("/problems");
+        },
+      });
     }
 
     if (action === "preview") {
@@ -243,8 +246,6 @@ const CreateProblemPage = () => {
   const isFormValid =
     formData.title && formData.description && selectedTags.length > 0;
 
-
-
   const loadSampleData = (sampleType: "DP" | "String") => {
     const sampleData = sampleType === "DP" ? sampledData : sampleStringProblem;
 
@@ -252,7 +253,7 @@ const CreateProblemPage = () => {
     setSelectedTags(sampleData.tags);
     setTestCases(
       sampleData.testcases.map((tc) => ({
-        id: Math.random().toString(36).substr(2, 9), // Generate a simple ID
+        id: Math.random().toString(36).substring(2, 11), // Generate a simple ID
         input: tc.input,
         expectedOutput: tc.output,
       }))
@@ -575,6 +576,7 @@ const CreateProblemPage = () => {
                   ))}
                   <Button
                     type="button"
+                    variant="outline"
                     onClick={() =>
                       setFormData((prev) => ({
                         ...prev,
@@ -634,6 +636,7 @@ const CreateProblemPage = () => {
                               roundedSelection: false,
                               scrollBeyondLastLine: false,
                               automaticLayout: true,
+                              padding: { top: 12 },
                             }}
                           />
                         </div>
@@ -667,6 +670,7 @@ const CreateProblemPage = () => {
                               roundedSelection: false,
                               scrollBeyondLastLine: false,
                               automaticLayout: true,
+                              padding: { top: 12 },
                             }}
                           />
                         </div>
@@ -938,13 +942,14 @@ const CreateProblemPage = () => {
               <div className="space-y-3">
                 <Button
                   onClick={() => loadSampleData("DP")}
-                  className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                  variant="outline"
+                  className="w-full "
                 >
                   Load DP Problem Sample
                 </Button>
                 <Button
                   onClick={() => loadSampleData("String")}
-                  className="w-full bg-green-600 hover:bg-green-700 text-white"
+                  className="w-full bg-craft-accent/80 hover:bg-craft-accent/60 text-black"
                 >
                   Load String Problem Sample
                 </Button>

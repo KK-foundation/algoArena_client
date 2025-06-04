@@ -4,7 +4,13 @@ import { CheckCircle, Circle, Award } from "lucide-react";
 import { xp } from "@/constents/achivements";
 
 const missions = [
-  { id: 1, title: "Solve Easy", reward: xp["easy"], completed: true, type: "daily" },
+  {
+    id: 1,
+    title: "Solve Easy",
+    reward: xp["easy"],
+    completed: true,
+    type: "daily",
+  },
   {
     id: 2,
     title: "Complete 1 Medium",
@@ -13,28 +19,28 @@ const missions = [
     type: "daily",
   },
   {
-    id: 2,
+    id: 3,
     title: "Complete 1 Hard",
     reward: xp["hard"],
     completed: false,
     type: "daily",
   },
   {
-    id: 3,
+    id: 4,
     title: "Review 1 Solution",
     reward: 25,
     completed: false,
     type: "daily",
   },
   {
-    id: 4,
+    id: 5,
     title: "Complete 1 Challenge",
     reward: xp["challenge"],
     completed: false,
     type: "bonus",
   },
   {
-    id: 5,
+    id: 6,
     title: "Participate in a Contest",
     reward: 300,
     completed: false,
@@ -68,7 +74,6 @@ const XPMissions = () => {
           >
             <div className="flex items-start justify-between mb-3">
               <div className="flex items-center gap-2">
-                
                 <span
                   className={`text-xs px-2 py-1 rounded-full ${
                     mission.type === "bonus"

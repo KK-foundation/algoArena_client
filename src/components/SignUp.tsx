@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import AuthLayout from "../components/AuthLayout";
-import FormInput from "../components/FormInput";
-import LoadingButton from "../components/LoadingButton";
-import GoogleSignInButton from "../components/GoogleSignInButton";
+import AuthLayout from "./AuthLayout";
+import FormInput from "./FormInput";
+import LoadingButton from "./LoadingButton";
+import GoogleSignInButton from "./GoogleSignInButton";
 import {
   validateEmail,
   validatePassword,
   validateUsername,
 } from "../lib/validation";
 import { toast } from "@/hooks/use-toast";
-import { useAuthStore } from "@/store/useAuthStore";
+import { useSignup } from "@/hooks/useAuth";
 
 const SignUp = () => {
-  const { signup, isSigninUp } = useAuthStore();
+  const { mutate: signup, isPending: isSigninUp } = useSignup();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
@@ -43,7 +43,6 @@ const SignUp = () => {
     const passwordError = validatePassword(formData.password);
     if (passwordError) newErrors.password = passwordError;
 
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -53,24 +52,10 @@ const SignUp = () => {
 
     if (!validateForm()) return;
 
- 
-    try {
-      const res = await signup(formData);
-      if (res && res.data.success) {
-        navigate("/verify-account");
-      }
-    } catch (error) {
-      toast({
-        title: "Sign up failed",
-        description:
-          error instanceof Error ? error.message : "Please try again later.",
-        variant: "destructive",
-      });
-    } 
+    signup(formData);
   };
 
   const handleGoogleSignIn = async () => {
-  
     try {
       toast({
         title: "Welcome!",
@@ -83,7 +68,7 @@ const SignUp = () => {
         description: "Please try again later.",
         variant: "destructive",
       });
-    } 
+    }
   };
 
   const isFormValid =

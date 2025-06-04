@@ -4,31 +4,76 @@ import FilterBar from "@/components/FilterBar";
 import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { Link, useSearchParams } from "react-router-dom";
-import { useProblemStore } from "@/store/useProblemStore";
-import { useEffect } from "react";
-import { useQueryStore } from "@/store/useQueryStore";
-
+import { useProblems } from "@/hooks/useProblems";
+import { useCurrentUser } from "@/hooks/useAuth";
+import { useMemo } from "react";
 
 const ProblemsPage = () => {
-  const userInfo = JSON.parse(localStorage.getItem("user") || "{}");
-  const { setPage } = useQueryStore();
   const [searchParams] = useSearchParams();
-  const { problems, isProblemsLoading, applyFilters, filteredProblems } =
-    useProblemStore();
+  const { data: problemsData, isLoading: isProblemsLoading } = useProblems(1);
+  const authUser = useCurrentUser();
 
-  const handleLoadMore = () => {
-    if (problems) {
-      setPage(Number(problems.pagination.currentPage + 1));
-    }
-  };
+  // Get problems array from the response
+  const allProblems = useMemo(() => {
+    return problemsData?.problems || [];
+  }, [problemsData]);
 
-  useEffect(() => {
+  // Apply client-side filtering
+  const filteredProblems = useMemo(() => {
     const query: Record<string, string> = {};
     for (const [key, value] of searchParams.entries()) {
       query[key] = value;
     }
-    applyFilters(query, userInfo.id);
-  }, [searchParams, applyFilters]);
+
+    let filtered = [...allProblems];
+
+    if (query.search) {
+      const s = query.search.toLowerCase();
+      filtered = filtered.filter((p) => p.title.toLowerCase().includes(s));
+    }
+
+    if (query.difficulty) {
+      filtered = filtered.filter(
+        (p) => p.difficulty.toLowerCase() === query.difficulty.toLowerCase()
+      );
+    }
+
+    if (query.tags) {
+      const tagList = query.tags.split(",").map((t) => t.trim().toLowerCase());
+      filtered = filtered.filter((p) =>
+        tagList.every((tag) => p.tags.map((t) => t.toLowerCase()).includes(tag))
+      );
+    }
+
+    if (query.filter && authUser) {
+      const filterList = query.filter
+        .split(",")
+        .map((f) => f.trim().toLowerCase());
+
+      filtered = filtered.filter((p) => {
+        const isSolved = p.solvedBy?.includes(authUser.id);
+
+        if (filterList.includes("solved") && isSolved) return true;
+        if (filterList.includes("unsolved") && !isSolved) return true;
+        return false;
+      });
+    }
+
+    return filtered;
+  }, [allProblems, searchParams, authUser]);
+
+  const handleLoadMore = () => {
+    // TODO: Implement pagination with React Query
+    console.log("Load more functionality to be implemented");
+  };
+
+  if (isProblemsLoading) {
+    return (
+      <div className="min-h-screen bg-craft-bg flex items-center justify-center">
+        <div className="text-white text-lg">Loading problems...</div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -63,36 +108,42 @@ const ProblemsPage = () => {
               All Problems
             </h2>
             <div className="flex items-center space-x-2 text-sm text-craft-text-secondary">
-              {problems && <span>{problems.pagination.message}</span>}
+              <span>
+                {searchParams.size > 0
+                  ? `${filteredProblems.length} filtered problems`
+                  : `${allProblems.length} problems`}
+              </span>
             </div>
           </div>
 
           <div className="grid gap-4">
-            {isProblemsLoading && (
-              <div className="flex items-center justify-center text-white">
-                Loading...
+            {(searchParams.size > 0 ? filteredProblems : allProblems).map(
+              (problem) => (
+                <ProblemCard key={problem.id} problem={problem} />
+              )
+            )}
+
+            {filteredProblems.length === 0 && searchParams.size > 0 && (
+              <div className="text-center py-8 text-craft-text-secondary">
+                No problems found matching your filters.
               </div>
             )}
-            {!isProblemsLoading &&
-              (searchParams.size ? filteredProblems : problems?.problems)?.map(
-                (problem) => <ProblemCard key={problem.id} problem={problem} />
-              )}
           </div>
         </div>
 
         {/* Load More */}
-        {problems &&
-          problems.pagination.currentPage < problems.pagination.totalPages && (
-            <div className="text-center mt-8">
-              <Button
-                variant="outline"
-                className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent transition-all duration-200"
-                onClick={handleLoadMore}
-              >
-                Load More Problems
-              </Button>
-            </div>
-          )}
+        {problemsData?.pagination?.hasNextPage && (
+          <div className="text-center mt-8">
+            <Button
+              variant="outline"
+              className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent transition-all duration-200"
+              onClick={handleLoadMore}
+              disabled={isProblemsLoading}
+            >
+              {isProblemsLoading ? "Loading..." : "Load More Problems"}
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

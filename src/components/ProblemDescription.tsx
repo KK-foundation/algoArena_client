@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Heart, Bookmark, Share, Lightbulb } from "lucide-react";
-import { Problem } from "@/store/useProblemStore";
+import { Problem } from "@/api/problems";
 import { useState } from "react";
 import Code from "./Code";
 
@@ -50,32 +50,31 @@ const ProblemDescription = ({ problem }: ProblemDescriptionProps) => {
         </Button>
       </div>
 
-      <Tabs defaultValue="description" className="overflow-auto h-[calc(100vh-200px)]">
-        
-          <TabsList className="bg-craft-bg border border-craft-border gap-2 max-sm:gap-0 w-full grid grid-cols-3 px-1">
-            <TabsTrigger
-              value="description"
-              className="data-[state=active]:bg-craft-border data-[state=active]:text-craft-text-primary"
-            >
-              Description
-            </TabsTrigger>
-            <TabsTrigger
-              value="hints"
-              className="data-[state=active]:bg-craft-border data-[state=active]:text-craft-text-primary"
-            >
-              <Lightbulb className="w-4 h-4 mr-1" />
-              Hints
-            </TabsTrigger>
-            <TabsTrigger
-              value="editorial"
-              className="data-[state=active]:bg-craft-border data-[state=active]:text-craft-text-primary"
-            >
-              Editorial
-            </TabsTrigger>
-          </TabsList>
-       
+      <Tabs defaultValue="description" className="h-[calc(100vh-200px)]">
+        <TabsList className="bg-craft-bg border border-craft-border gap-2 max-sm:gap-0 w-full grid grid-cols-3 px-1">
+          <TabsTrigger
+            value="description"
+            className="data-[state=active]:bg-craft-border data-[state=active]:text-craft-text-primary"
+          >
+            Description
+          </TabsTrigger>
+          <TabsTrigger
+            value="hints"
+            className="data-[state=active]:bg-craft-border data-[state=active]:text-craft-text-primary"
+          >
+            <Lightbulb className="w-4 h-4 mr-1" />
+            Hints
+          </TabsTrigger>
+          <TabsTrigger
+            value="editorial"
+            className="data-[state=active]:bg-craft-border data-[state=active]:text-craft-text-primary"
+          >
+            Editorial
+          </TabsTrigger>
+        </TabsList>
+
         {/* description  */}
-        <TabsContent value="description" className="space-y-6 mt-6 ">
+        <TabsContent value="description" className="space-y-6 mt-6 p-4 ">
           {/* Problem Statement */}
           <div>
             <p className="text-craft-text-primary leading-relaxed whitespace-pre-line">
@@ -131,7 +130,9 @@ const ProblemDescription = ({ problem }: ProblemDescriptionProps) => {
             <h3 className="text-craft-text-primary font-semibold mb-4">
               Constraints
             </h3>
-            <p className="px-4 text-craft-accent font-mono text-sm">{problem?.constraints}</p>
+            <p className="px-4 text-craft-accent font-mono text-sm">
+              {problem?.constraints}
+            </p>
             <br />
             <br />
           </div>
@@ -194,7 +195,7 @@ const ProblemDescription = ({ problem }: ProblemDescriptionProps) => {
           </div>
         </TabsContent>
       </Tabs>
-      <br/>
+      <br />
     </div>
   );
 };

@@ -3,7 +3,22 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, Users, Heart, Share, Copy, Delete, Edit } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
+  Plus,
+  Users,
+  Heart,
+  Share,
+  Copy,
+  Delete,
+  Edit,
+  MoreVertical,
+} from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSheetStore } from "@/store/useSheetStore";
 import { useEffect } from "react";
@@ -17,7 +32,7 @@ const SheetsPage = () => {
     getAllPublicSheets,
     mySheets,
     publicSheets,
-    deleteSheet
+    deleteSheet,
   } = useSheetStore();
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
@@ -26,7 +41,7 @@ const SheetsPage = () => {
   };
 
   const handleEdit = (id) => {
-    navigate(`/sheets/create?edit=${id}`)
+    navigate(`/sheets/create?edit=${id}`);
   };
 
   const SheetCard = ({
@@ -36,20 +51,58 @@ const SheetsPage = () => {
     sheet: any;
     isOwned?: boolean;
   }) => (
-    <Card className="bg-craft-panel border-craft-border hover:border-craft-accent/50 transition-all duration-300 group cursor-pointer">
-      <div className="p-6">
-        <div className="flex items-start justify-between mb-4">
-          <div className="flex-1">
-            <h3 className="text-craft-text-primary font-semibold text-lg group-hover:text-craft-accent transition-colors mb-2">
-              {sheet.name}
-            </h3>
-            <p className="text-craft-text-secondary text-sm mb-3">
-              {sheet.description}
-            </p>
-            {sheet.author && (
-              <p className="text-craft-text-secondary text-xs">
-                by {sheet.author}
+    <Link to={`/sheet/${sheet.id}`} className="block h-full">
+      <Card className="bg-craft-panel border-craft-border hover:border-craft-accent/50 transition-all duration-300 group cursor-pointer h-full flex flex-col">
+        <div className="p-6 flex-1 flex flex-col">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h3 className="text-craft-text-primary font-semibold text-lg group-hover:text-craft-accent transition-colors mb-2">
+                {sheet.name}
+              </h3>
+              <p className="text-craft-text-secondary text-sm mb-3">
+                {sheet.description}
               </p>
+              {sheet.author && (
+                <p className="text-craft-text-secondary text-xs">
+                  by {sheet.author}
+                </p>
+              )}
+            </div>
+            {sheet.userId === userInfo.id && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-craft-text-secondary hover:text-craft-accent"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <MoreVertical className="w-4 h-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="bg-craft-panel border-craft-border">
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleEdit(sheet.id);
+                    }}
+                    className="text-craft-text-secondary hover:text-craft-accent hover:bg-craft-bg cursor-pointer"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={(e) => {
+                      e.preventDefault();
+                      handleDelete(sheet.id);
+                    }}
+                    className="text-craft-text-secondary hover:text-red-600 hover:bg-craft-bg cursor-pointer"
+                  >
+                    <Delete className="w-4 h-4 mr-2" />
+                    Delete
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             )}
           </div>
           <div className="flex items-center space-x-2">
@@ -60,81 +113,56 @@ const SheetsPage = () => {
               </div>
             )}
           </div>
-        </div>
 
-        <div className="flex flex-wrap gap-2 mb-4">
-          {sheet.tags?.map((tag: string) => (
-            <Badge
-              key={tag}
-              variant="outline"
-              className="text-xs text-craft-text-secondary border-craft-border"
-            >
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        <div className="items-center space-x-4 text-sm">
-          
-          <div className="h-2 bg-craft-bg rounded-full overflow-hidden w-full">
-            <div
-              className="h-full bg-gradient-to-r from-craft-accent to-craft-accent-secondary"
-              style={{
-                width: `${
-                  (sheet.problems.map((problem) =>
-                    problem.solvedBy.includes(userInfo.id)
-                  ).length /
-                    sheet.problems.length) *
-                  100
-                }%`,
-              }}
-            ></div>
-          </div>
-          <div className="text-craft-text-secondary text-end pt-1">
-            {
-              sheet.problems.map((problem) =>
-                problem.solvedBy.includes(userInfo.id)
-              ).length
-            }
-            /{sheet.problems.length} solved
-          </div>
-        </div>
-        <br />
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2 ">
-            {sheet.userId === userInfo.id && (
-              <>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
-                  onClick={() => handleEdit(sheet.id)}
-                >
-                  <Edit className="w-3 h-3 mr-1" />
-                  Edit
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="border-craft-border text-craft-text-secondary hover:border-red-600 hover:text-red-600"
-                  onClick={() => handleDelete(sheet.id)}
-                >
-                  <Delete className="w-3 h-3 mr-1" />
-                  Delete
-                </Button>
-              </>
-            )}
-            <Link to={`/sheet/${sheet.id}`}>
-              <Button
-                size="sm"
-                className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
+          <div className="flex flex-wrap gap-2 mb-4">
+            {sheet.tags?.slice(0, 3).map((tag: string) => (
+              <Badge
+                key={tag}
+                variant="outline"
+                className="text-xs text-craft-text-secondary border-craft-border"
               >
-                Open
-              </Button>
-            </Link>
+                {tag}
+              </Badge>
+            ))}
+            {sheet.tags?.length > 3 && (
+              <Badge
+                variant="outline"
+                className="text-xs text-craft-text-secondary border-craft-border"
+              >
+                +{sheet.tags.length - 3} more
+              </Badge>
+            )}
+          </div>
+
+          <div className="mt-auto">
+            <div className="items-center space-x-4 text-sm">
+              <div className="h-2 bg-craft-bg rounded-full overflow-hidden w-full">
+                <div
+                  className="h-full bg-gradient-to-r from-craft-accent to-craft-accent-secondary"
+                  style={{
+                    width: `${
+                      (sheet.problems.map((problem) =>
+                        problem.solvedBy.includes(userInfo.id)
+                      ).length /
+                        sheet.problems.length) *
+                      100
+                    }%`,
+                  }}
+                ></div>
+              </div>
+              <div className="text-craft-text-secondary text-end pt-1">
+                {
+                  sheet.problems.map((problem) =>
+                    problem.solvedBy.includes(userInfo.id)
+                  ).length
+                }
+                /{sheet.problems.length} solved
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </Link>
   );
 
   useEffect(() => {
@@ -188,10 +216,10 @@ const SheetsPage = () => {
             "Loading..."
           ) : (
             <TabsContent value="my-sheets">
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
                 {mySheets.map((sheet) => {
                   return (
-                    <div>
+                    <div className="h-full">
                       <SheetCard key={sheet.id} sheet={sheet} isOwned={true} />
                     </div>
                   );
@@ -204,10 +232,12 @@ const SheetsPage = () => {
             "Loading..."
           ) : (
             <TabsContent value="public-sheets">
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
                 {publicSheets.map((sheet) => {
                   return (
-                    <SheetCard key={sheet.id} sheet={sheet} isOwned={false} />
+                    <div className="h-full">
+                      <SheetCard key={sheet.id} sheet={sheet} isOwned={false} />
+                    </div>
                   );
                 })}
               </div>
