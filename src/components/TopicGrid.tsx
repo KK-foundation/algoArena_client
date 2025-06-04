@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "motion/react";
-import { iconMap } from "@/constents/tags";
+import { iconMap } from "@/constants/tags";
 
 const TopicGrid = ({ tags }) => {
   if (!tags || !Array.isArray(tags) || tags.length === 0) {

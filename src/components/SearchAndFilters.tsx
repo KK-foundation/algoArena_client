@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Search, Filter, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { landingPage } from "@/constents/landingPage";
+import { landingPage } from "@/constants/landingPage";
 import { useNavigate } from "react-router-dom";
 
 const SearchAndFilters = () => {

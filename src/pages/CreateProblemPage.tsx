@@ -15,8 +15,8 @@ import { Editor } from "@monaco-editor/react";
 import { useCreateProblem } from "@/hooks/useProblems";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "@/hooks/useAuth";
-import { sampledData, sampleStringProblem } from "@/constents/smaple";
-import { availableTags } from "@/constents/tags";
+import { sampledData, sampleStringProblem } from "@/constants/sample";
+import { availableTags } from "@/constants/tags";
 
 const langMap = {
   CPP: "cpp",

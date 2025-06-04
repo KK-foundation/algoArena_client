@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import { Send } from "lucide-react";
-import { availableTags } from "@/constents/tags";
+import { availableTags } from "@/constants/tags";
 import { useSheetStore } from "@/store/useSheetStore";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -101,7 +101,7 @@ const CreateSheetPage = () => {
     const finalData = { ...formData, tags: selectedTags };
 
     if (!validateForm()) return;
-    console.log("helle")
+    console.log("helle");
 
     const res = sheetId
       ? await updateSheet(sheetId, finalData)

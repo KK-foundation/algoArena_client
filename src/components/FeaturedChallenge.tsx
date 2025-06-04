@@ -3,9 +3,9 @@ import { motion } from "motion/react";
 import { ChevronRight, Clock, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { times, xp } from "@/constents/achivements";
+import { times, xp } from "@/constants/achivements";
 
-const FeaturedChallenge = ({potd}) => {
+const FeaturedChallenge = ({ potd }) => {
   return (
     <motion.div
       className="relative overflow-hidden rounded-xl bg-gradient-to-r from-neon-green/20 to-neon-blue/20 border border-neon-green/30 p-8"
@@ -44,17 +44,21 @@ const FeaturedChallenge = ({potd}) => {
             </h3>
 
             <p className="text-muted-foreground mb-4 max-w-2xl">
-             {potd.problem.description}
+              {potd.problem.description}
             </p>
 
             <div className="flex items-center gap-6 mb-6">
               <div className="flex items-center gap-2">
                 <Award className="w-4 h-4 text-neon-green" />
-                <span className="text-neon-green font-semibold">+{xp[potd.problem.difficulty.toLowerCase()]} XP</span>
+                <span className="text-neon-green font-semibold">
+                  +{xp[potd.problem.difficulty.toLowerCase()]} XP
+                </span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-4 h-4 text-yellow-400" />
-                <span className="text-foreground">~{times[potd.problem.difficulty.toLowerCase()]} min</span>
+                <span className="text-foreground">
+                  ~{times[potd.problem.difficulty.toLowerCase()]} min
+                </span>
               </div>
               <div className="text-sm text-muted-foreground">
                 Solved by {potd.solvedUsers.length} developers

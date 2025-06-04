@@ -221,16 +221,15 @@ export class CodeFormatter {
    */
   static getJudge0LanguageId(language) {
     const languageMap = {
-      'python': 71,    // Python 3.8.1
-      'py': 71,
-      'cpp': 54,       // C++ (GCC 9.2.0)
-      'c++': 54,
-      'cxx': 54,
-      'java': 62,      // Java (OpenJDK 13.0.1)
-      'javascript': 63, // JavaScript (Node.js 12.14.0)
-      'js': 63
+      'python': 109,    // Python 3.8.1
+      'py': 109,
+      'cpp': 105,       // C++ (GCC 9.2.0)
+      'c++': 105,
+      'cxx': 105,
+      'java': 91,      // Java (OpenJDK 13.0.1)
+      'javascript': 102, // JavaScript (Node.js 12.14.0)
+      'js': 102
     };
-    
     return languageMap[language.toLowerCase()] || null;
   }
 

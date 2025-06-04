@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { CheckCircle, Circle, Award } from "lucide-react";
-import { xp } from "@/constents/achivements";
+import { xp } from "@/constants/achivements";
 
 const missions = [
   {

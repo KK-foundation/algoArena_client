@@ -1,13 +1,16 @@
-import {
-  useSearchParams,
-  useNavigate,
-} from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Search } from "lucide-react";
-import { availableTags } from "@/constents/tags";
+import { availableTags } from "@/constants/tags";
 
 const FilterBar = () => {
   const [searchParams] = useSearchParams();
@@ -45,15 +48,21 @@ const FilterBar = () => {
     }
 
     if (params.search !== undefined) {
-      params.search ? current.set("search", params.search) : current.delete("search");
+      params.search
+        ? current.set("search", params.search)
+        : current.delete("search");
     }
 
     if (params.difficulty !== undefined) {
-      params.difficulty ? current.set("difficulty", params.difficulty) : current.delete("difficulty");
+      params.difficulty
+        ? current.set("difficulty", params.difficulty)
+        : current.delete("difficulty");
     }
 
     if (params.filter !== undefined) {
-      params.filter ? current.set("filter", params.filter) : current.delete("filter");
+      params.filter
+        ? current.set("filter", params.filter)
+        : current.delete("filter");
     }
 
     navigate(`?${current.toString()}`);
@@ -85,10 +94,13 @@ const FilterBar = () => {
         </div>
 
         <div className="flex gap-2">
-          <Select value={difficulty} onValueChange={(value) => {
-            setDifficulty(value);
-            updateQuery({ difficulty: value });
-          }}>
+          <Select
+            value={difficulty}
+            onValueChange={(value) => {
+              setDifficulty(value);
+              updateQuery({ difficulty: value });
+            }}
+          >
             <SelectTrigger className="w-32 bg-craft-bg border-craft-border text-craft-text-primary">
               <SelectValue placeholder="Difficulty" />
             </SelectTrigger>
@@ -99,10 +111,13 @@ const FilterBar = () => {
             </SelectContent>
           </Select>
 
-          <Select value={filter} onValueChange={(value) => {
-            setFilter(value);
-            updateQuery({ filter: value });
-          }}>
+          <Select
+            value={filter}
+            onValueChange={(value) => {
+              setFilter(value);
+              updateQuery({ filter: value });
+            }}
+          >
             <SelectTrigger className="w-32 bg-craft-bg border-craft-border text-craft-text-primary">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -115,7 +130,9 @@ const FilterBar = () => {
       </div>
 
       <div className="space-y-2">
-        <h3 className="text-craft-text-secondary text-sm font-medium">Popular Tags</h3>
+        <h3 className="text-craft-text-secondary text-sm font-medium">
+          Popular Tags
+        </h3>
         <div className="flex flex-wrap gap-2">
           {availableTags.map((tag) => (
             <Badge

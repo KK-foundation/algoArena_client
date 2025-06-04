@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { Clock, Award, Users, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { times, xp } from "@/constents/achivements";
+import { times, xp } from "@/constants/achivements";
 
 const FloatingChallengeCard = ({ challenge, onPreview }) => {
   const [isHovered, setIsHovered] = useState(false);

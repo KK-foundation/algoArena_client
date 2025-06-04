@@ -3,7 +3,7 @@ import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { landingPage } from "@/constents/landingPage";
+import { landingPage } from "@/constants/landingPage";
 
 const HeroBanner = () => {
   return (
@@ -62,7 +62,7 @@ const HeroBanner = () => {
               className="btn-primary animate-glow-pulse text-lg px-8 py-4 group text-[rgb(13,13,13)] rounded-none"
               size="lg"
             >
-             {landingPage.hero.buttonText}
+              {landingPage.hero.buttonText}
               <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { times, xp } from "@/constents/achivements";
+import { times, xp } from "@/constants/achivements";
 
 const TrendingCarousel = ({ top3Problems }) => {
   const [currentIndex, setCurrentIndex] = useState(0);

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useCurrentUser } from "@/hooks/useAuth";
-import { levels } from "@/constents/achivements";
+import { levels } from "@/constants/achivements";
 
 /**
  * Custom hook to calculate the XP required for the next level
