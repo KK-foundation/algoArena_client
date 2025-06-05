@@ -102,10 +102,10 @@ const Index = () => {
             glowColor="craft-accent"
           />
           <StatsCard
-            title="SOMETHING"
+            title="Code Reviews"
             value={0}
-            subtitle="SUBTITLE"
-            badge="⭐"
+            subtitle="This month"
+            badge="New"
             icon={<Code className="w-5 h-5" />}
             glowColor="craft-accent"
           />
