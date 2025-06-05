@@ -12,19 +12,16 @@ import { availableTags } from "@/constants/tags";
 import { useSheet, useCreateSheet, useUpdateSheet } from "@/hooks/useSheets";
 import { FormData } from "@/api/sheets";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { useProblems } from "@/hooks/useProblems";
 
 const problemSchema = z.object({
@@ -32,12 +29,6 @@ const problemSchema = z.object({
   description: z.string().min(1, "Description is required"),
   tags: z.array(z.string()).min(1, "At least one tag is required"),
   visibility: z.enum(["Public", "Private"]),
-});
-
-const FormSchema = z.object({
-  items: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
 });
 
 const CreateSheetPage = () => {
@@ -59,9 +50,8 @@ const CreateSheetPage = () => {
 
   const { data } = useProblems();
 
-  // data.problems.map
-
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedProblems, setSelectedProblems] = useState<string[]>([]);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
   // Set formData if currentSheet is fetched
@@ -84,6 +74,27 @@ const CreateSheetPage = () => {
     );
   };
 
+  const handleProblemToggle = (problemId: string) => {
+    setSelectedProblems((prev) =>
+      prev.includes(problemId)
+        ? prev.filter((id) => id !== problemId)
+        : [...prev, problemId]
+    );
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty.toLowerCase()) {
+      case "easy":
+        return "bg-green-500/20 text-green-400 border-green-500/30";
+      case "medium":
+        return "bg-yellow-500/20 text-yellow-400 border-yellow-500/30";
+      case "hard":
+        return "bg-red-500/20 text-red-400 border-red-500/30";
+      default:
+        return "bg-craft-bg text-craft-text-secondary border-craft-border";
+    }
+  };
+
   const validateForm = (): boolean => {
     try {
       const dataToValidate = {
@@ -104,7 +115,11 @@ const CreateSheetPage = () => {
   };
 
   const handleSubmit = async () => {
-    const finalData = { ...formData, tags: selectedTags };
+    const finalData = {
+      ...formData,
+      tags: selectedTags,
+      problemIds: selectedProblems.length > 0 ? selectedProblems : undefined,
+    };
 
     if (!validateForm()) return;
     try {
@@ -124,19 +139,6 @@ const CreateSheetPage = () => {
     formData?.name?.trim() &&
     formData?.description?.trim() &&
     selectedTags?.length > 0;
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
-  });
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    toast("You submitted the following values", {
-      description: (
-        <pre className="mt-2 w-[320px] rounded-md bg-neutral-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-      ),
-    });
-  }
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -258,67 +260,100 @@ const CreateSheetPage = () => {
               </div>
             </Card>
 
-            {/* add problems  */}
+            {/* Add Problems */}
             <Card className="bg-craft-panel border-craft-border p-6">
-              <h3 className="text-lg font-semibold text-craft-text-primary mb-4">
-                Add Problems
-              </h3>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8 text-white"
-                >
-                  <FormField
-                    control={form.control}
-                    name="items"
-                    render={() => (
-                      <FormItem>
-                        {data.problems.map((problem) => (
-                          <FormField
-                            key={problem.id}
-                            control={form.control}
-                            name="items"
-                            render={({ field }) => {
-                              return (
-                                <FormItem
-                                  key={problem.id}
-                                  className="flex flex-row items-center gap-2"
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-craft-text-primary">
+                  Add Problems
+                </h3>
+                {selectedProblems.length > 0 && (
+                  <Badge
+                    variant="outline"
+                    className="border-craft-accent text-craft-accent"
+                  >
+                    {selectedProblems.length} selected
+                  </Badge>
+                )}
+              </div>
+
+              {(data?.problems || []).length === 0 ? (
+                <div className="text-center py-8">
+                  <p className="text-craft-text-secondary">
+                    No problems available
+                  </p>
+                </div>
+              ) : (
+                <div className="border-craft-border border-2 rounded-lg overflow-hidden">
+                  <Table>
+                    <TableHeader>
+                      <TableRow className="border-craft-border hover:bg-craft-bg/50 bg-craft-bg/70">
+                        <TableHead className="w-12 text-craft-text-primary">
+                          <span className="sr-only">Select</span>
+                        </TableHead>
+                        <TableHead className="text-craft-text-primary">
+                          Problem
+                        </TableHead>
+                        <TableHead className="text-craft-text-primary">
+                          Difficulty
+                        </TableHead>
+                        <TableHead className="text-craft-text-primary">
+                          Tags
+                        </TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {(data?.problems || []).map((problem) => (
+                        <TableRow
+                          key={problem.id}
+                          className="border-craft-border hover:bg-craft-bg/30 transition-colors cursor-pointer"
+                          onClick={() => handleProblemToggle(problem.id)}
+                        >
+                          <TableCell onClick={(e) => e.stopPropagation()}>
+                            <Checkbox
+                              checked={selectedProblems.includes(problem.id)}
+                              onCheckedChange={() =>
+                                handleProblemToggle(problem.id)
+                              }
+                              className="border-craft-border data-[state=checked]:bg-craft-accent data-[state=checked]:border-craft-accent"
+                            />
+                          </TableCell>
+                          <TableCell className="font-medium text-craft-text-primary">
+                            {problem.title}
+                          </TableCell>
+                          <TableCell>
+                            <Badge
+                              className={getDifficultyColor(problem.difficulty)}
+                            >
+                              {problem.difficulty}
+                            </Badge>
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex flex-wrap gap-1">
+                              {(problem.tags || []).slice(0, 3).map((tag) => (
+                                <Badge
+                                  key={tag}
+                                  variant="outline"
+                                  className="text-xs border-craft-border text-craft-text-secondary"
                                 >
-                                  <FormControl>
-                                    <Checkbox
-                                      checked={field.value?.includes(
-                                        problem.id
-                                      )}
-                                      onCheckedChange={(checked) => {
-                                        return checked
-                                          ? field.onChange([
-                                              ...field.value,
-                                              problem.id,
-                                            ])
-                                          : field.onChange(
-                                              field.value?.filter(
-                                                (value) => value !== problem.id
-                                              )
-                                            );
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormLabel className="text-sm font-normal">
-                                    {problem.title}
-                                  </FormLabel>
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        ))}
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit">Submit</Button>
-                  <Button type="submit">load more</Button>
-                </form>
-              </Form>
+                                  {tag}
+                                </Badge>
+                              ))}
+                              {(problem.tags || []).length > 3 && (
+                                <Badge
+                                  variant="outline"
+                                  className="text-xs border-craft-border text-craft-text-secondary"
+                                >
+                                  +{(problem.tags || []).length - 3}
+                                </Badge>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              )}
             </Card>
 
             {/* Submit */}

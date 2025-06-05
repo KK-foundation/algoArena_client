@@ -1,8 +1,8 @@
 import Header from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import TagsList from "@/components/TagsList";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -107,27 +107,14 @@ const SheetsPage = () => {
             )}
           </div>
 
-          <div className="flex flex-wrap gap-2 mb-4">
-            {sheet.tags?.slice(0, 3).map((tag: string) => (
-              <Badge
-                key={tag}
-                variant="outline"
-                className="text-xs text-craft-text-secondary border-craft-border"
-              >
-                {tag}
-              </Badge>
-            ))}
-            {sheet.tags?.length > 3 && (
-              <Badge
-                variant="outline"
-                className="text-xs text-craft-text-secondary border-craft-border"
-              >
-                +{sheet.tags.length - 3} more
-              </Badge>
-            )}
-          </div>
+          <TagsList
+            tags={sheet.tags || []}
+            maxVisible={3}
+            className="mb-4"
+            tagClassName="text-craft-text-secondary border-craft-border"
+          />
 
-          <div className="mt-auto">
+          {/* <div className="mt-auto">
             <div className="items-center space-x-4 text-sm">
               <div className="h-2 bg-craft-bg rounded-full overflow-hidden w-full">
                 <div
@@ -152,7 +139,7 @@ const SheetsPage = () => {
                 /{sheet.problems.length} solved
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
       </Card>
     </Link>

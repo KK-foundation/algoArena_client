@@ -24,7 +24,7 @@ interface ProblemSolved {
   problem: Problem;
 }
 
-interface ProblemInSheet {
+export interface ProblemInSheet {
   id: string;
   sheetId: string;
   problemId: string;

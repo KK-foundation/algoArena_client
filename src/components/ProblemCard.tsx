@@ -13,9 +13,10 @@ const difficultyColors = {
 };
 
 const ProblemCard = ({ problem }: { problem: Problem }) => {
+  console.log(problem);
   const { id, title, tags, difficulty } = problem;
   const authUser = useCurrentUser();
-  const solved = problem.solvedBy.some(
+  const solved = problem?.solvedBy?.some(
     (solvedProblem) => solvedProblem.user.id === authUser?.id
   );
   const diffPercent =
@@ -43,7 +44,7 @@ const ProblemCard = ({ problem }: { problem: Problem }) => {
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">
-            {tags.slice(0, 3).map((topic) => (
+            {tags?.slice(0, 3).map((topic) => (
               <Badge
                 key={topic}
                 variant="outline"
@@ -52,12 +53,12 @@ const ProblemCard = ({ problem }: { problem: Problem }) => {
                 {topic}
               </Badge>
             ))}
-            {tags.length > 3 && (
+            {tags?.length > 3 && (
               <Badge
                 variant="outline"
                 className="text-xs text-craft-text-secondary border-craft-border"
               >
-                +{tags.length - 3}
+                +{tags?.length - 3}
               </Badge>
             )}
           </div>
