@@ -17,7 +17,7 @@ const ProblemCard = ({ problem }: { problem: Problem }) => {
   const { id, title, tags, difficulty } = problem;
   const authUser = useCurrentUser();
   const solved = problem?.solvedBy?.some(
-    (solvedProblem) => solvedProblem.user.id === authUser?.id
+    (solvedProblem) => solvedProblem.userId === authUser?.id
   );
   const diffPercent =
     difficulty == "EASY"

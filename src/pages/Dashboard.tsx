@@ -16,13 +16,14 @@ import { usePotd } from "@/hooks/usePotd";
 
 const Index = () => {
   const navigate = useNavigate();
-  const { data: problems, isLoading: isProblemsLoading } = useProblems(1);
+  const { data, isLoading: isProblemsLoading } = useProblems(1);
   const { data: randomProblem, refetch: getRandomProblem } = useRandomProblem();
   const authUser = useCurrentUser();
   // const { latestRating } = useContestStore();
   const { data: potd } = usePotd();
 
   const nextLevelXp = useNextLevelXp();
+  // console.log(problems)
 
   const handleRandomProblemClick = async () => {
     try {
@@ -56,6 +57,7 @@ const Index = () => {
 
   // };
   console.log({ authUser });
+  console.log(data?.problems)
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -173,7 +175,7 @@ const Index = () => {
               Problems
             </h2>
             <span className="text-sm text-craft-text-secondary">
-              {problems?.pagination?.message || ""}
+              {data?.pagination?.message || ""}
             </span>
           </div>
 
@@ -182,8 +184,8 @@ const Index = () => {
               <div className="flex items-center justify-center text-white">
                 Loading...
               </div>
-            ) : problems?.problems?.length > 0 ? (
-              problems.problems.map((problem) => (
+            ) : data?.problems?.length > 0 ? (
+              data?.problems.map((problem) => (
                 <ProblemCard key={problem.id} problem={problem} />
               ))
             ) : (
