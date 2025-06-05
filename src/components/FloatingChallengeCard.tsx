@@ -111,7 +111,7 @@ const FloatingChallengeCard = ({ challenge, onPreview }) => {
 
         {/* Action Button */}
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-          <Link to={`/problems/${challenge.id}`} className="w-full">
+          <Link to={`/problem/${challenge.id}`} className="w-full">
             <Button className="w-full btn-primary group">
               Start Challenge
               <motion.div
