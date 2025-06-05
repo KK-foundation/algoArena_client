@@ -17,6 +17,7 @@ import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "@/hooks/useAuth";
 import { sampledData, sampleStringProblem } from "@/constants/sample";
 import { availableTags } from "@/constants/tags";
+import { problemSet } from "@/constants/code";
 
 const langMap = {
   CPP: "cpp",
@@ -35,7 +36,7 @@ interface TestCase {
 interface Example {
   input: string;
   output: string;
-  explanation: string;
+  explanation?: string;
 }
 
 interface CodeSnippets {
@@ -247,7 +248,8 @@ const CreateProblemPage = () => {
     formData.title && formData.description && selectedTags.length > 0;
 
   const loadSampleData = (sampleType: "DP" | "String") => {
-    const sampleData = sampleType === "DP" ? sampledData : sampleStringProblem;
+    // const sampleData = sampleType === "DP" ? sampledData : sampleStringProblem;
+    const sampleData = problemSet[0];
 
     setFormData(sampleData);
     setSelectedTags(sampleData.tags);
@@ -259,6 +261,7 @@ const CreateProblemPage = () => {
       }))
     );
   };
+
 
   // --- End Sample Data and Load Functionality ---
 

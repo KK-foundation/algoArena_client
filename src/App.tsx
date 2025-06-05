@@ -22,6 +22,8 @@ import CreateSheetPage from "./pages/CreateSheetPage";
 import InterviewSessionPage from "./pages/InterviewSessionPage";
 import InterviewAnalysisPage from "./pages/InterviewAnalysisPage";
 import SheetProblemManagerPage from "./pages/SheetProblemManagerPage";
+import LiveContestPage from "./pages/LiveContestPage";
+import ResultsPage from "./pages/ResultsPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -69,6 +71,8 @@ const App = () => {
               />
 
               <Route path="/contests" element={<ContestsPage />} />
+              <Route path="/live-contest/:id" element={<LiveContestPage />} />
+              <Route path="/results/:id" element={<ResultsPage />} />
               <Route path="/interview" element={<InterviewPage />} />
               <Route
                 path="/interview-session"

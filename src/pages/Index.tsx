@@ -76,6 +76,10 @@ const Index = () => {
         transition={{ duration: 0.5 }}
       >
         {/* Hero Section with enhanced animations */}
+        <br />
+        <br />
+        <br />
+
         <motion.section
           initial={{ y: 40, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -84,6 +88,10 @@ const Index = () => {
         >
           <HeroBanner />
         </motion.section>
+
+        <br />
+        <br />
+        <br />
 
         {/* Main Content */}
         <div className="container mx-auto px-4 space-y-12 pb-16">
