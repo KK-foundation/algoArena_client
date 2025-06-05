@@ -42,6 +42,7 @@
     "@radix-ui/react-tooltip": "^1.1.4",
     "@tanstack/react-query": "^5.80.2",
     "@tanstack/react-query-devtools": "^5.80.2",
+    "@tanstack/react-table": "^8.21.3",
     "@wasm-fmt/ruff_fmt": "^0.10.0",
     "axios": "^1.9.0",
     "class-variance-authority": "^0.7.1",
