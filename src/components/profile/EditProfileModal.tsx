@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
+import { useCurrentUser, useUpdateUser } from "@/hooks/useAuth";
 
 interface EditProfileModalProps {
   isOpen: boolean;
@@ -10,26 +11,52 @@ export const EditProfileModal = ({
   isOpen,
   onClose,
 }: EditProfileModalProps) => {
+  const currentUser = useCurrentUser();
+  const { mutate: updateUser, isPending } = useUpdateUser();
+
   const [formData, setFormData] = useState({
-    fullName: "Alex Chen",
-    username: "alexcodes",
-    bio: "Full-stack developer passionate about clean code and innovative solutions. Currently exploring AI/ML.",
-    status: "🔥 Active Coder",
+    fullName: currentUser?.name || "",
+    username: currentUser?.username || "",
+    bio: currentUser?.bio || "",
   });
 
-  const statusOptions = [
-    "🔥 Active Coder",
-    "🌙 Night Owl",
-    "🌿 Chill Mode",
-    "⚡ Speed Demon",
-    "🎯 Focused",
-  ];
+  // Update form data when currentUser changes
+  React.useEffect(() => {
+    if (currentUser) {
+      setFormData({
+        fullName: currentUser.name || "",
+        username: currentUser.username || "",
+        bio: currentUser.bio || "",
+      });
+    }
+  }, [currentUser]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Profile updated:", formData);
-    onClose();
+
+    // Prepare update data - only include fields that have changed
+    const updateData: { name?: string; username?: string; bio?: string } = {};
+
+    if (formData.fullName !== currentUser?.name) {
+      updateData.name = formData.fullName;
+    }
+    if (formData.username !== currentUser?.username) {
+      updateData.username = formData.username;
+    }
+    if (formData.bio !== currentUser?.bio) {
+      updateData.bio = formData.bio;
+    }
+
+    // Only update if there are changes
+    if (Object.keys(updateData).length > 0) {
+      updateUser(updateData, {
+        onSuccess: () => {
+          onClose();
+        },
+      });
+    } else {
+      onClose();
+    }
   };
 
   const handleKeyDown = (e: KeyboardEvent) => {
@@ -80,7 +107,7 @@ export const EditProfileModal = ({
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Profile Picture */}
-          <div className="flex flex-col items-center mb-6">
+          {/* <div className="flex flex-col items-center mb-6">
             <div className="relative mb-4">
               <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00FFA3] to-[#4DFFDF] p-1">
                 <div className="w-full h-full rounded-full bg-craft-panel flex items-center justify-center">
@@ -97,8 +124,8 @@ export const EditProfileModal = ({
               className="text-[#00FFA3] hover:text-[#4DFFDF] transition-colors duration-200 text-sm font-medium"
             >
               Change Photo
-            </button>
-          </div>
+            </button> */}
+          {/* </div> */}
 
           {/* Full Name */}
           <div>
@@ -149,26 +176,6 @@ export const EditProfileModal = ({
             </p>
           </div>
 
-          {/* Status */}
-          <div>
-            <label className="block text-white text-sm font-medium mb-2">
-              Status
-            </label>
-            <select
-              value={formData.status}
-              onChange={(e) =>
-                setFormData({ ...formData, status: e.target.value })
-              }
-              className="w-full bg-craft-bg border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-[#00FFA3] focus:outline-none transition-colors duration-200"
-            >
-              {statusOptions.map((status) => (
-                <option key={status} value={status} className="bg-craft-bg">
-                  {status}
-                </option>
-              ))}
-            </select>
-          </div>
-
           {/* Buttons */}
           <div className="flex gap-4 pt-4">
             <button
@@ -180,9 +187,10 @@ export const EditProfileModal = ({
             </button>
             <button
               type="submit"
-              className="flex-1 bg-gradient-to-r from-[#00FFA3] to-[#4DFFDF] text-black py-3 rounded-lg font-medium hover:shadow-lg hover:shadow-[#00FFA3]/50 transition-all duration-200 hover:scale-105"
+              disabled={isPending}
+              className="flex-1 bg-gradient-to-r from-[#00FFA3] to-[#4DFFDF] text-black py-3 rounded-lg font-medium hover:shadow-lg hover:shadow-[#00FFA3]/50 transition-all duration-200 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              Save Changes
+              {isPending ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>

@@ -185,3 +185,23 @@ export const useLogout = () => {
     },
   });
 };
+
+// Update user mutation
+export const useUpdateUser = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: authAPI.updateUser,
+    onSuccess: (updatedUser) => {
+      // Update the auth query cache with the updated user data
+      queryClient.setQueryData(authKeys.user(), updatedUser);
+
+      // Optionally refetch to ensure data consistency
+      queryClient.invalidateQueries({ queryKey: authKeys.user() });
+    },
+    onError: (error: any) => {
+      // Error is already handled in authAPI.updateUser
+      console.error("Update user error:", error);
+    },
+  });
+};

@@ -68,6 +68,13 @@ interface ForgotPasswordData {
   email: string;
 }
 
+export interface UpdateUserData {
+  name?: string;
+  username?: string;
+  bio?: string;
+  image?: string;
+}
+
 export const authAPI = {
   checkAuth: async (): Promise<User> => {
     try {
@@ -167,6 +174,19 @@ export const authAPI = {
     } catch (error: any) {
       console.log(error);
       toast.error("Error logging out");
+      throw error;
+    }
+  },
+
+  updateUser: async (data: UpdateUserData): Promise<User> => {
+    try {
+      const res = await axiosInstance.post("/user/update-profile", data);
+      toast.success("Profile updated successfully!");
+      return res.data.data;
+    } catch (error: any) {
+      const message =
+        error?.response?.data?.message || "Failed to update profile";
+      toast.error(message);
       throw error;
     }
   },
