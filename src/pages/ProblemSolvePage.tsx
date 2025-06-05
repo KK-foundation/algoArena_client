@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import CodeEditor from "@/components/CodeEditor";
 import ProblemDescription from "@/components/ProblemDescription";
-import TestResults from "@/components/TestResults";
+import TestResults, { TestResultsT } from "@/components/TestResults";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Play, Send, Settings, ChevronLeft, ChevronRight } from "lucide-react";
@@ -39,40 +39,7 @@ const ProblemSolvePage = () => {
   const { id } = useParams();
   const [code, setCode] = useState("");
   const [language, setLanguage] = useState("PYTHON");
-  const [testResults, setTestResults] = useState({
-    passed: 2,
-    total: 4,
-    cases: [
-      {
-        input: "1 2",
-        expected: "3",
-        actual: "3",
-        passed: true,
-        time: "12ms",
-      },
-      {
-        input: "10 15",
-        expected: "25",
-        actual: "20",
-        passed: false,
-        time: "8ms",
-      },
-      {
-        input: "0 0",
-        expected: "0",
-        actual: "0",
-        passed: true,
-        time: "5ms",
-      },
-      {
-        input: "-5 -5",
-        expected: "-10",
-        actual: "-9",
-        passed: false,
-        time: "9ms",
-      },
-    ],
-  });
+  const [testResults, setTestResults] = useState<TestResultsT | null>(null);
   const [isRunning, setIsRunning] = useState(false);
 
   const { getProblemById } = problemsAPI;
@@ -92,49 +59,128 @@ const ProblemSolvePage = () => {
     setIsRunning(true);
     toast("Running code...");
 
-    // Simulate API call
-    setTimeout(() => {
-      setTestResults({
-        passed: 2,
-        total: 3,
-        cases: [
-          {
-            input: "[2,7,11,15], 9",
-            expected: "[0,1]",
-            actual: "[0,1]",
-            passed: true,
-            time: "1ms",
-          },
-          {
-            input: "[3,2,4], 6",
-            expected: "[1,2]",
-            actual: "[1,2]",
-            passed: true,
-            time: "1ms",
-          },
-          {
-            input: "[3,3], 6",
-            expected: "[0,1]",
-            actual: "Time Limit Exceeded",
-            passed: false,
-            time: ">1000ms",
-          },
-        ],
-      });
+    try {
+      // Validate inputs
+      if (!code.trim()) {
+        toast.error("Please write some code before running");
+        setIsRunning(false);
+        return;
+      }
+
+      if (!id) {
+        toast.error("Problem ID not found");
+        setIsRunning(false);
+        return;
+      }
+
+      // Get language ID for the API
+      const languageId = CodeFormatter.getJudge0LanguageId(langMap[language]);
+      if (!languageId) {
+        toast.error(`Unsupported language: ${language}`);
+        setIsRunning(false);
+        return;
+      }
+
+      // Prepare the API call data
+      const runData = {
+        source_code: code,
+        language_id: languageId,
+        problemId: id,
+      };
+
+      console.log("Running code with data:", runData);
+
+      // Make the actual API call
+      const response = await problemsAPI.runCode(runData);
+      console.log("Run code response:", response);
+
+      // Process the response and format for TestResults component
+      if (response && response.data) {
+        const results = response.data;
+        console.log({ results });
+
+        // Format the results to match TestResults component expectations
+        const formattedCases = (results || []).map((testCase) => ({
+          input: testCase.stdin,
+          expected: testCase.expected,
+          actual: testCase.actual || "No output",
+          passed: testCase.passed,
+          time: testCase.time || "0ms",
+        }));
+
+        const passedCount = formattedCases.filter(
+          (tc: any) => tc.passed
+        ).length;
+
+        console.log({ formattedCases });
+        setTestResults({
+          passed: passedCount,
+          total: formattedCases.length,
+          cases: formattedCases,
+        });
+
+        toast.success("Code execution completed");
+      } else {
+        toast.error("Invalid response from server");
+      }
+    } catch (error: any) {
+      console.error("Error running code:", error);
+      toast.error(error.message || "Failed to run code");
+    } finally {
       setIsRunning(false);
-      toast("Code execution completed");
-    }, 2000);
+    }
   };
 
   const handleSubmit = async () => {
     setIsRunning(true);
     toast("Submitting solution...");
 
-    // Simulate submission
-    setTimeout(() => {
-      toast.success("Solution accepted! +15 XP");
+    try {
+      // Validate inputs
+      if (!code.trim()) {
+        toast.error("Please write some code before submitting");
+        setIsRunning(false);
+        return;
+      }
+
+      if (!id) {
+        toast.error("Problem ID not found");
+        setIsRunning(false);
+        return;
+      }
+
+      // Get language ID for the API
+      const languageId = CodeFormatter.getJudge0LanguageId(langMap[language]);
+      if (!languageId) {
+        toast.error(`Unsupported language: ${language}`);
+        setIsRunning(false);
+        return;
+      }
+
+      // Prepare the API call data
+      const submitData = {
+        source_code: code,
+        language_id: languageId,
+        problemId: id,
+      };
+
+      console.log("Submitting solution with data:", submitData);
+
+      // Make the actual API call
+      const response = await problemsAPI.submitSolution(submitData);
+      console.log("Submit solution response:", response);
+
+      // Handle successful submission
+      if (response && response.data) {
+        // You can add additional logic here based on the response
+        // For example, redirect to problems page or show detailed results
+      }
+    } catch (error: any) {
+      console.error("Error submitting solution:", error);
+      // Error toast is already handled in the API function
+    } finally {
       setIsRunning(false);
-    }, 3000);
+    }
   };
 
   if (isProblemLoading) return <div>Loading...</div>;
@@ -264,9 +310,21 @@ const ProblemSolvePage = () => {
                 </div>
               </ResizablePanel>
               <ResizableHandle />
-              {testResults && (
+              {testResults ? (
                 <ResizablePanel>
                   <TestResults results={testResults} />
+                </ResizablePanel>
+              ) : (
+                <ResizablePanel>
+                  <div className="bg-craft-panel border-t border-craft-border p-4 h-full flex items-center justify-center">
+                    <div className="text-craft-text-secondary text-center">
+                      <p className="mb-2">Run your code to see test results</p>
+                      <p className="text-sm">
+                        Click the "Run" button to execute your code against the
+                        test cases
+                      </p>
+                    </div>
+                  </div>
                 </ResizablePanel>
               )}
             </ResizablePanelGroup>

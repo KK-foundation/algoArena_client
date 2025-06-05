@@ -225,4 +225,35 @@ export const problemsAPI = {
       throw error;
     }
   },
+
+  // Run code against test cases
+  runCode: async (data: {
+    source_code: string;
+    language_id: number;
+    problemId: string;
+  }): Promise<any> => {
+    try {
+      const res = await axiosInstance.post("/execute-code/run", data);
+      return res.data;
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to run code");
+      throw error;
+    }
+  },
+
+  // Submit solution
+  submitSolution: async (data: {
+    source_code: string;
+    language_id: number;
+    problemId: string;
+  }): Promise<any> => {
+    try {
+      const res = await axiosInstance.post("/execute-code/submit", data);
+      toast.success(res.data.message || "Solution submitted successfully!");
+      return res.data;
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || "Failed to submit solution");
+      throw error;
+    }
+  },
 };

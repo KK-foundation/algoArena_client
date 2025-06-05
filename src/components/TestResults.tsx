@@ -2,21 +2,24 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { CheckCircle, XCircle, Clock } from "lucide-react";
 
+export interface TestResultsT {
+  passed: number;
+  total: number;
+  cases: Array<{
+    input: string;
+    expected: string;
+    actual: string;
+    passed: boolean;
+    time: string;
+  }>;
+}
+
 interface TestResultsProps {
-  results: {
-    passed: number;
-    total: number;
-    cases: Array<{
-      input: string;
-      expected: string;
-      actual: string;
-      passed: boolean;
-      time: string;
-    }>;
-  };
+  results: TestResultsT;
 }
 
 const TestResults = ({ results }: TestResultsProps) => {
+  console.log({ results });
   const overallPassed = results.passed === results.total;
 
   return (
