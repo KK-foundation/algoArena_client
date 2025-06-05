@@ -33,22 +33,19 @@ const CodeEditor = ({ value, onChange, language }: CodeEditorProps) => {
   };
 
   return (
-    <div className="h-full bg-craft-bg">
+    <div className="h-full bg-craft-bg overflow-hidden w-full">
       <Editor
         height="100%"
         language={language}
         value={value}
         onChange={handleEditorChange}
-        onMount={handleEditorDidMount}
         theme="vs-dark"
         options={{
           fontSize: 14,
-          fontFamily: 'Fira Code, JetBrains Mono, monospace',
           lineNumbers: 'on',
           minimap: { enabled: false },
           scrollBeyondLastLine: false,
           wordWrap: 'on',
-          tabSize: 4,
           automaticLayout: true,
           padding: { top: 16, bottom: 16 },
         }}
