@@ -34,7 +34,7 @@ const ContestsPage = () => {
       id: 2,
       title: "Biweekly Contest 125",
       status: "upcoming",
-      startTime: "2024-01-15T14:30:00Z",
+      startTime: "2025-01-15T14:30:00Z",
       duration: "1h 30m",
       problems: 4,
       rating: "All levels"
@@ -43,7 +43,7 @@ const ContestsPage = () => {
       id: 3,
       title: "CodeCraft Monthly Championship",
       status: "upcoming", 
-      startTime: "2024-01-20T10:00:00Z",
+      startTime: "2025-01-20T10:00:00Z",
       duration: "3h 00m",
       problems: 6,
       rating: "Expert+"
@@ -62,7 +62,7 @@ const ContestsPage = () => {
     },
     {
       id: 5,
-      title: "New Year Contest 2024",
+      title: "New Year Contest 2025",
       status: "finished",
       participants: 28945,
       myRank: 892,

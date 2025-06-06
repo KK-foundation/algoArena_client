@@ -16,11 +16,11 @@ interface SkillsDistributionChartProps {
 const SkillsDistributionChart = ({ skills }: SkillsDistributionChartProps) => {
   const data = [
     { name: 'Communication', value: skills.communication, color: '#3b82f6' },
-    { name: 'Confidence', value: skills.confidence, color: '#10b981' },
-    { name: 'Clarity', value: skills.clarity, color: '#f59e0b' },
-    { name: 'Structure', value: skills.structure, color: '#ef4444' },
-    { name: 'Enthusiasm', value: skills.enthusiasm, color: '#8b5cf6' },
-    { name: 'Technical', value: skills.technicalKnowledge, color: '#06b6d4' },
+    { name: 'Confidence', value:( skills.confidence || 0), color: '#10b981' },
+    { name: 'Clarity', value: (skills.clarity || 0), color: '#f59e0b' },
+    { name: 'Structure', value: (skills.structure || 0), color: '#ef4444' },
+    { name: 'Enthusiasm', value: (skills.enthusiasm || 0), color: '#8b5cf6' },
+    { name: 'Technical', value: (skills.technicalKnowledge || 0), color: '#06b6d4' },
   ];
 
   return (

@@ -58,7 +58,7 @@ const PermissionModal = ({ open, onOpenChange }: PermissionModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md bg-craft-panel text-white">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Camera className="w-5 h-5 text-blue-500" />
@@ -93,7 +93,7 @@ const PermissionModal = ({ open, onOpenChange }: PermissionModalProps) => {
         </div>
 
         <DialogFooter className="flex gap-2">
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} className="text-black">
             Cancel
           </Button>
           <Button 

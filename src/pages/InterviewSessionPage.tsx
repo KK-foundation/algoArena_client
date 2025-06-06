@@ -148,21 +148,21 @@ const InterviewSessionPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+    <div className="min-h-screen text-white bg-craft-bg">
       <div className="container mx-auto px-6 py-8">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">AI Interview Session</h1>
-            <p className="text-gray-600">Question {currentQuestion + 1} of {questions.length}</p>
+            <h1 className="text-3xl font-bold">AI Interview Session</h1>
+            <p className="">Question {currentQuestion + 1} of {questions.length}</p>
           </div>
           <TimerCountdown timeLeft={timeLeft} onTimeUp={onTimeUp} setTimeLeft={setTimeLeft} />
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Video Feed */}
-          <Card className="p-6">
-            <div className="aspect-video bg-gray-900 rounded-lg overflow-hidden mb-4">
+          <Card className="p-6 bg-craft-panel">
+            <div className="aspect-video  rounded-lg overflow-hidden mb-4">
               <video
                 ref={videoRef}
                 autoPlay
@@ -177,6 +177,7 @@ const InterviewSessionPage = () => {
                   variant={isRecording ? "destructive" : "default"}
                   size="sm"
                   onClick={isRecording ? stopRecording : startRecording}
+                  className="bg-craft-accent text-black"
                 >
                   {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
                   {isRecording ? "Stop" : "Start"} Recording
@@ -201,14 +202,15 @@ const InterviewSessionPage = () => {
             <div className="flex gap-3">
               <Button
                 onClick={nextQuestion}
-                className="flex-1"
+                className="flex-1 hover:outline cursor-pointer"
                 disabled={!transcript.trim()}
+              
               >
                 {currentQuestion < questions.length - 1 ? "Next Question" : "Finish Interview"}
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
               
-              <Button variant="outline" onClick={endInterview}>
+              <Button variant="outline" onClick={endInterview} className="text-black">
                 End Early
               </Button>
             </div>

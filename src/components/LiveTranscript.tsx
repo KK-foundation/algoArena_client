@@ -9,10 +9,10 @@ interface LiveTranscriptProps {
 
 const LiveTranscript = ({ transcript }: LiveTranscriptProps) => {
   return (
-    <Card className="p-4">
+    <Card className="p-4 bg-craft-panel text-white">
       <div className="flex items-center gap-2 mb-3">
         <Mic className="w-4 h-4 text-green-600" />
-        <h3 className="font-semibold text-gray-900">Live Transcript</h3>
+        <h3 className="font-semibold">Live Transcript</h3>
       </div>
       
       <ScrollArea className="h-32">

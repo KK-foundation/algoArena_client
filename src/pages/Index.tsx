@@ -22,6 +22,8 @@ import {
   useCompaniesChallenges,
 } from "@/hooks/useProblems";
 import { useLeaderboardStore } from "@/store/useLeaderboard";
+import Footer from "@/components/Footer";
+import TestimonialsSection from "@/components/TestimonialsSection";
 
 const Index = () => {
   const [isCodePanelOpen, setIsCodePanelOpen] = useState(false);
@@ -173,8 +175,28 @@ const Index = () => {
             </motion.section>
           )}
 
+          {/* Weekly Pick  */}
+          <motion.section
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <WeeklyPick />
+          </motion.section>
+
+          {/* Testimonials Section */}
+          <motion.section
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+          >
+            <TestimonialsSection />
+          </motion.section>
+
           {/* Leaderboard */}
-          <div className="grid grid-cols-1 gap-8">
+          <div id="leaderboard" className="grid grid-cols-1 gap-8">
             <motion.section
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -189,9 +211,12 @@ const Index = () => {
               ) : (
                 <Leaderboard leaderboard={leaderboard} />
               )}
+
+              {/* Footer  */}
             </motion.section>
           </div>
         </div>
+        <Footer />
 
         {/* VS Code-like Code Preview Panel */}
         <CodePreviewPanel

@@ -55,12 +55,12 @@ const InterviewAnalysisPage = () => {
       technicalKnowledge: Math.min(100, Math.max(40, 60 + Math.random() * 30))
     };
 
-    const overallScore = Math.round(Object.values(skillsAnalysis).reduce((a: number, b: number) => a + b, 0) / Object.keys(skillsAnalysis).length);
+    const overallScore = (Math.round(Object.values(skillsAnalysis).reduce((a: number, b: number) => a + b, 0) / Object.keys(skillsAnalysis).length)) || 0;
 
     const insights = {
       overallScore,
       totalWords,
-      avgResponseTime: Math.round(avgResponseTime),
+      avgResponseTime: (Math.round(avgResponseTime) || 0),
       questionsAnswered: data.questions.length,
       skills: skillsAnalysis,
       strengths: [
@@ -165,7 +165,7 @@ const InterviewAnalysisPage = () => {
         </div>
 
         <div className="mb-8">
-          <ResponseTimeChart questions={analysisData.questions} />
+          {analysisData.questions.length > 0 && <ResponseTimeChart questions={analysisData.questions} />}
         </div>
 
         {/* Feedback Section */}

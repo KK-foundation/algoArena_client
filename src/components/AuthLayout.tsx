@@ -30,7 +30,7 @@ const AuthLayout = ({ children, title, subtitle }: AuthLayoutProps) => {
         {/* Footer */}
         <div className="text-center mt-6">
           <p className="text-gray-500 text-sm">
-            © 2024 AlgoArena. All rights reserved.
+            © 2025 AlgoArena. All rights reserved.
           </p>
         </div>
       </div>
