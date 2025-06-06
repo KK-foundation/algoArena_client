@@ -7,9 +7,15 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import TestCaseManager from "@/components/TestCaseManager";
-import { Eye, Send, X, Code2, CheckCircle2, Loader } from "lucide-react";
+import { Eye, Send, X, Code2, CheckCircle2, Loader, Import } from "lucide-react";
 import { Editor } from "@monaco-editor/react";
 // Removed problemsAPI import - using React Query hook instead
 import { useCreateProblem } from "@/hooks/useProblems";
@@ -18,6 +24,7 @@ import { useCurrentUser } from "@/hooks/useAuth";
 import { sampledData, sampleStringProblem } from "@/constants/sample";
 import { availableTags } from "@/constants/tags";
 import { problemSet } from "@/constants/code";
+import { toast } from "sonner";
 
 const langMap = {
   CPP: "cpp",
@@ -166,6 +173,8 @@ const CreateProblemPage = () => {
     companyTag: "",
   });
 
+  const [importDialogOpen, setImportDialogOpen] = useState(false);
+  const [importJsonContent, setImportJsonContent] = useState("");
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [testCases, setTestCases] = useState<TestCase[]>([]);
   const [isPreviewMode, setIsPreviewMode] = useState(false);
@@ -262,6 +271,41 @@ const CreateProblemPage = () => {
     );
   };
 
+  const handleImportJson = () => {
+    try {
+      const parsedJson = JSON.parse(importJsonContent);
+
+      // Convert test cases format
+      const convertedTestCases = parsedJson.testcases.map((tc: any) => ({
+        id: Math.random().toString(36).substring(2, 11),
+        input: tc.input,
+        expectedOutput: tc.output,
+      }));
+
+      setFormData({
+        ...parsedJson,
+        codeSnippets: parsedJson.codeSnippets || {
+          JAVASCRIPT: "",
+          JAVA: "",
+          CPP: "",
+          PYTHON: "",
+        },
+        referenceSolutions: parsedJson.referenceSolutions || {
+          JAVASCRIPT: "",
+          JAVA: "",
+          CPP: "",
+          PYTHON: "",
+        },
+      });
+      setSelectedTags(parsedJson.tags || []);
+      setTestCases(convertedTestCases);
+      setImportDialogOpen(false);
+      toast.success("Problem data imported successfully!");
+    } catch (error) {
+      toast.error("Error importing JSON. Please check the format.");
+      console.error("Import error:", error);
+    }
+  };
 
   // --- End Sample Data and Load Functionality ---
 
@@ -390,6 +434,15 @@ const CreateProblemPage = () => {
 
             <div className="space-y-3">
               <Button
+                onClick={() => setImportDialogOpen(true)}
+                variant="outline"
+                className="w-full border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
+              >
+                <Import className="w-4 h-4 mr-2" />
+                Import Problem
+              </Button>
+
+              <Button
                 onClick={() => handleSubmit("preview")}
                 variant="outline"
                 className="w-full border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
@@ -417,8 +470,7 @@ const CreateProblemPage = () => {
 
             {!isFormValid && (
               <p className="text-craft-error text-sm mt-2">
-                Please fill in all required fields (title, description, and at
-                least one tag) before submitting.
+                Please fill in all required fields before submitting.
               </p>
             )}
 
@@ -441,6 +493,7 @@ const CreateProblemPage = () => {
         </div>
       </div>
     );
+
   }
 
   return (
@@ -967,6 +1020,15 @@ const CreateProblemPage = () => {
 
               <div className="space-y-3">
                 <Button
+                  onClick={() => setImportDialogOpen(true)}
+                  variant="outline"
+                  className="w-full border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
+                >
+                  <Import className="w-4 h-4 mr-2" />
+                  Import Problem
+                </Button>
+
+                <Button
                   onClick={() => handleSubmit("preview")}
                   variant="outline"
                   className="w-full border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
@@ -994,7 +1056,54 @@ const CreateProblemPage = () => {
             </Card>
           </div>
         </div>
-      </div>
+      </div>      {/* Import JSON Dialog */}
+      <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
+        <DialogContent className="max-w-4xl p-6 mx-auto bg-craft-bg border border-craft-border rounded-lg">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold text-craft-text-primary">
+              Import Problem from JSON
+            </DialogTitle>
+          </DialogHeader>
+
+          <div className="mt-4 border rounded-md overflow-hidden">
+            <Editor
+              height="500px"
+              language="json"
+              theme="vs-dark"
+              value={importJsonContent}
+              onChange={(value) => setImportJsonContent(value || "")}
+              options={{
+                minimap: { enabled: false },
+                fontSize: 14,
+                lineNumbers: "on",
+                roundedSelection: false,
+                scrollBeyondLastLine: false,
+                automaticLayout: true,
+                padding: { top: 12 },
+                formatOnPaste: true,
+                formatOnType: true,
+              }}
+            />
+          </div>
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button
+              onClick={() => setImportDialogOpen(false)}
+              variant="outline"
+              className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleImportJson}
+              className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
+            >
+              <Import className="w-4 h-4 mr-2" />
+              Import JSON
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
