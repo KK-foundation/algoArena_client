@@ -93,7 +93,7 @@ const TestimonialsSection = () => {
                   <div className="relative z-10">
                     <Quote className="w-8 h-8 text-neon-green mb-4 opacity-60" />
 
-                    <p className="text-foreground mb-6 text-lg leading-relaxed">
+                    <p className="text-foreground mb-6 text-lg leading-relaxed line-clamp-3 h-20">
                       "{testimonial.quote}"
                     </p>
 

@@ -126,7 +126,7 @@ export const sheetsAPI = {
   ): Promise<any> => {
     try {
       const res = await axiosInstance.post(
-        `sheets/add-problems/${sheetId}`,
+        `sheets/${sheetId}/add-problems`,
         problemIds
       );
       toast.success("Problems added to sheet successfully!");

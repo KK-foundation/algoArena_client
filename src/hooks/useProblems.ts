@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { problemsAPI } from "@/api/problems";
+import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from "@tanstack/react-query";
+import { PaginationData, Problem, problemsAPI } from "@/api/problems";
 
 // Query keys
 export const problemKeys = {
@@ -17,16 +17,36 @@ export const problemKeys = {
 };
 
 // Get all problems with pagination using React Query
-export const useProblems = (page: number = 1) => {
-  return useQuery({
-    queryKey: problemKeys.list(page),
-    queryFn: () => problemsAPI.getAllProblems(page),
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    refetchOnWindowFocus: false,
-    refetchOnMount: true,
+export const useProblems = () => {
+  return useInfiniteQuery<
+    PaginationData,
+    Error,
+    { problems: Problem[]; pagination: PaginationData["pagination"] }, // ← Transformed shape
+    [string],
+    number
+  >({
+    queryKey: ["problems"],
+    queryFn: ({ pageParam = 1 }) => problemsAPI.getAllProblems(pageParam),
+    getNextPageParam: (lastPage) => {
+      const currentPage = Number(lastPage.pagination.currentPage);
+      const totalPages = Number(lastPage.pagination.totalPages);
+
+      return currentPage < totalPages ? currentPage + 1 : undefined;
+    },
+    initialPageParam: 1,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+
+    // 👇 This transforms the raw infinite `pages` into one flat object
+    select: (data) => {
+      return {
+        problems: data.pages.flatMap((page) => page.problems),
+        pagination: data.pages[data.pages.length - 1].pagination, // Use latest page's pagination
+      };
+    },
   });
 };
+
 
 // Get problem by ID
 export const useProblem = (id: string) => {

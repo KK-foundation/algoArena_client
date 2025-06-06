@@ -23,12 +23,12 @@ const TagsList = ({
   const remainingCount = tags.length - maxVisible;
 
   return (
-    <div className={`flex flex-wrap gap-1 ${className}`}>
+    <div className={`flex flex-wrap gap-1 text-craft-text-secondary ${className}`}>
       {visibleTags.map((tag) => (
         <Badge
           key={tag}
           variant={variant}
-          className={`text-xs ${tagClassName}`}
+          className={`text-xs ${tagClassName} text-xs text-craft-text-secondary border-craft-border hover:border-craft-accent/50 hover:text-craft-accent transition-all`}
         >
           {tag}
         </Badge>
@@ -36,7 +36,7 @@ const TagsList = ({
       {remainingCount > 0 && (
         <Badge
           variant={variant}
-          className={`text-xs ${tagClassName}`}
+          className={`text-xs text-craft-text-secondary border-craft-border hover:border-craft-accent/50 hover:text-craft-accent transition-all ${tagClassName}`}
         >
           +{remainingCount} more
         </Badge>

@@ -28,6 +28,7 @@ import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
 import ContactUs from "./pages/ContactUs";
 import TermsPrivacy from "./pages/Terms";
+import DemoInterviewAnalysisPage from "./pages/DemoInterviewAnalysisPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -87,6 +88,10 @@ const App = () => {
               <Route
                 path="/interview-analysis"
                 element={<InterviewAnalysisPage />}
+              />
+              <Route
+                path="/interview-analysis/demo"
+                element={<DemoInterviewAnalysisPage />}
               />
               <Route path="/problem/:id" element={<ProblemSolvePage />} />
               <Route path="/profile" element={<Profile />} />

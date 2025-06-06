@@ -104,10 +104,10 @@ const FilterBar = () => {
             <SelectTrigger className="w-32 bg-craft-bg border-craft-border text-craft-text-primary">
               <SelectValue placeholder="Difficulty" />
             </SelectTrigger>
-            <SelectContent className="bg-craft-panel border-craft-border">
-              <SelectItem value="easy">Easy</SelectItem>
-              <SelectItem value="medium">Medium</SelectItem>
-              <SelectItem value="hard">Hard</SelectItem>
+            <SelectContent className="bg-craft-bg border-craft-border text-craft-text-primary">
+              <SelectItem value="easy" className="border-craft-border bg-inherit">Easy</SelectItem>
+              <SelectItem value="medium" className="border-craft-border">Medium</SelectItem>
+              <SelectItem value="hard" className="border-craft-border">Hard</SelectItem>
             </SelectContent>
           </Select>
 
@@ -121,7 +121,7 @@ const FilterBar = () => {
             <SelectTrigger className="w-32 bg-craft-bg border-craft-border text-craft-text-primary">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
-            <SelectContent className="bg-craft-panel border-craft-border">
+            <SelectContent className="border-craft-border bg-craft-bg text-craft-text-primary">
               <SelectItem value="solved">Solved</SelectItem>
               <SelectItem value="unsolved">Unsolved</SelectItem>
             </SelectContent>

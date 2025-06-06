@@ -11,7 +11,13 @@ import LoadingAnimation from "@/components/LoadingAnimation";
 
 const ProblemsPage = () => {
   const [searchParams] = useSearchParams();
-  const { data: problemsData, isLoading: isProblemsLoading } = useProblems(1);
+  const {
+    data: problemsData,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    isLoading: isProblemsLoading,
+  } = useProblems();
   const authUser = useCurrentUser();
 
   // Get problems array from the response
@@ -52,7 +58,7 @@ const ProblemsPage = () => {
         .map((f) => f.trim().toLowerCase());
 
       filtered = filtered.filter((p) => {
-        const isSolved = p.solvedBy?.includes(authUser.id);
+        const isSolved = p.solvedBy?.includes(authUser?.id);
 
         if (filterList.includes("solved") && isSolved) return true;
         if (filterList.includes("unsolved") && !isSolved) return true;
@@ -60,13 +66,27 @@ const ProblemsPage = () => {
       });
     }
 
+    if (query.companyTag) {
+      const companyList = query.companyTag
+        .split(",")
+        .map((tag) => tag.trim().toLowerCase());
+
+      filtered = filtered.filter((p) =>
+        companyList.every((company) =>
+          p.tags.map((tag) => tag.toLowerCase()).includes(company)
+        )
+      );
+    }
+
     return filtered;
   }, [allProblems, searchParams, authUser]);
 
-  const handleLoadMore = () => {
-    // TODO: Implement pagination with React Query
-    console.log("Load more functionality to be implemented");
+  const handleLoadMore = async () => {
+    if (hasNextPage) {
+      await fetchNextPage();
+    }
   };
+  console.log(problemsData)
 
   if (isProblemsLoading) {
     return (
@@ -112,7 +132,7 @@ const ProblemsPage = () => {
               <span>
                 {searchParams.size > 0
                   ? `${filteredProblems.length} filtered problems`
-                  : `${allProblems.length} problems`}
+                  : `${problemsData?.pagination?.message} problems`}
               </span>
             </div>
           </div>
@@ -133,7 +153,7 @@ const ProblemsPage = () => {
         </div>
 
         {/* Load More */}
-        {problemsData?.pagination?.hasNextPage && (
+        {hasNextPage && (
           <div className="text-center mt-8">
             <Button
               variant="outline"

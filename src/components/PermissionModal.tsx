@@ -58,10 +58,10 @@ const PermissionModal = ({ open, onOpenChange }: PermissionModalProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md bg-craft-panel text-white">
+      <DialogContent className="sm:max-w-md bg-craft-panel border-craft-border hover:border-craft-accent/50 text-craft-text-primary">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Camera className="w-5 h-5 text-blue-500" />
+            <Camera className="w-5 h-5 text-craft-accent hover:bg-craft-accent/80 " />
             Ready to Start Your Interview?
           </DialogTitle>
           <DialogDescription>
@@ -70,19 +70,19 @@ const PermissionModal = ({ open, onOpenChange }: PermissionModalProps) => {
         </DialogHeader>
         
         <div className="flex flex-col gap-4 py-4">
-          <div className="flex items-center gap-3 p-3 bg-blue-50 rounded-lg">
-            <Mic className="w-5 h-5 text-blue-600" />
+          <div className="flex items-center gap-3 p-3 rounded-lg bg-craft-bg">
+            <Mic className="w-5 h-5 text-craft-accent hover:bg-craft-accent/80" />
             <div>
-              <p className="font-medium text-blue-900">Microphone Access</p>
-              <p className="text-sm text-blue-700">To record your responses</p>
+              <p className="font-medium ">Microphone Access</p>
+              <p className="text-sm ">To record your responses</p>
             </div>
           </div>
           
-          <div className="flex items-center gap-3 p-3 bg-green-50 rounded-lg">
-            <Camera className="w-5 h-5 text-green-600" />
+          <div className="flex items-center gap-3 p-3 bg-craft-bg text-craft-text-primary rounded-lg">
+            <Camera className="w-5 h-5 text-craft-accent hover:bg-craft-accent/80" />
             <div>
-              <p className="font-medium text-green-900">Camera Access</p>
-              <p className="text-sm text-green-700">For a realistic interview setting</p>
+              <p className="font-medium ">Camera Access</p>
+              <p className="text-sm ">For a realistic interview setting</p>
             </div>
           </div>
           
@@ -99,7 +99,7 @@ const PermissionModal = ({ open, onOpenChange }: PermissionModalProps) => {
           <Button 
             onClick={requestPermissions}
             disabled={isRequesting}
-            className="bg-blue-600 hover:bg-blue-700"
+            className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
           >
             {isRequesting ? "Requesting..." : "Allow Access"}
           </Button>

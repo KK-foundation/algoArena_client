@@ -6,10 +6,10 @@ import { Problem } from "@/api/problems";
 import { useCurrentUser } from "@/hooks/useAuth";
 
 const difficultyColors = {
-  Easy: "bg-craft-success/20 text-craft-success border-craft-success/30",
-  Medium:
+  EASY: "bg-craft-success/20 text-craft-success border-craft-success/30",
+  MEDIUM:
     "bg-craft-accent-secondary/20 text-craft-accent-secondary border-craft-accent-secondary/30",
-  Hard: "bg-craft-error/20 text-craft-error border-craft-error/30",
+  HARD: "bg-craft-error/20 text-craft-error border-craft-error/30",
 };
 
 const ProblemCard = ({ problem }: { problem: Problem }) => {
@@ -40,7 +40,7 @@ const ProblemCard = ({ problem }: { problem: Problem }) => {
                 </h3>
               </div>
             </div>
-            <Badge className={difficultyColors[difficulty]}>{difficulty}</Badge>
+            <Badge className={difficultyColors[problem.difficulty.toUpperCase()]}>{difficulty}</Badge>
           </div>
 
           <div className="flex flex-wrap gap-2 mb-4">

@@ -1,7 +1,6 @@
-
 import { useEffect, useRef, useState } from "react";
 import { Card } from "@/components/ui/card";
-import { Camera, CameraOff } from "lucide-react";
+import { CameraOff } from "lucide-react";
 
 interface WebcamPreviewProps {
   enabled: boolean;
@@ -9,28 +8,31 @@ interface WebcamPreviewProps {
 
 const WebcamPreview = ({ enabled }: WebcamPreviewProps) => {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [hasPermission, setHasPermission] = useState(false);
+  const [hasPermission, setHasPermission] = useState(true);
+  const [stream, setStream] = useState<MediaStream | null>(null);
 
   useEffect(() => {
     const startCamera = async () => {
-      if (enabled && videoRef.current) {
-        try {
-          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-          videoRef.current.srcObject = stream;
-          setHasPermission(true);
-        } catch (error) {
-          console.error("Error accessing camera:", error);
-          setHasPermission(false);
-        }
+      if (!enabled || !videoRef.current) return;
+
+      try {
+        const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+        videoRef.current.srcObject = mediaStream;
+        await videoRef.current.play(); // Explicitly play video
+        setStream(mediaStream);
+        setHasPermission(true);
+      } catch (error) {
+        console.error("Error accessing camera:", error);
+        setHasPermission(false);
       }
     };
 
     startCamera();
 
     return () => {
-      if (videoRef.current?.srcObject) {
-        const stream = videoRef.current.srcObject as MediaStream;
-        stream.getTracks().forEach(track => track.stop());
+      // Clean up the camera stream when component unmounts or disabled
+      if (stream) {
+        stream.getTracks().forEach((track) => track.stop());
       }
     };
   }, [enabled]);
@@ -49,6 +51,7 @@ const WebcamPreview = ({ enabled }: WebcamPreviewProps) => {
         ref={videoRef}
         autoPlay
         muted
+        playsInline
         className="w-full h-full object-cover rounded-lg"
       />
       <div className="absolute top-1 right-1">

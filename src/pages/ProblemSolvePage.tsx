@@ -28,6 +28,9 @@ import {
 import { CodeFormatter } from "@/utils/codeFormatter";
 import { useProblem } from "@/hooks/useProblems";
 import LoadingAnimation from "@/components/LoadingAnimation";
+import CelebrationPopup from "@/components/CelebrationPopup";
+import { useAuthCheck } from "@/hooks/useAuth";
+import { times } from "@/constants/achivements";
 
 const langMap = {
   CPP: "cpp",
@@ -42,9 +45,11 @@ const ProblemSolvePage = () => {
   const [language, setLanguage] = useState("PYTHON");
   const [testResults, setTestResults] = useState<TestResultsT | null>(null);
   const [isRunning, setIsRunning] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(true);
+  const { data: authUser, refetch } = useAuthCheck();
 
   const { getProblemById } = problemsAPI;
-  let { data: problem, isLoading: isProblemLoading } = useProblem(id);
+  const { data: problem, isLoading: isProblemLoading } = useProblem(id);
 
   useEffect(() => {
     getProblemById(id);
@@ -59,6 +64,8 @@ const ProblemSolvePage = () => {
   const handleRunCode = async () => {
     setIsRunning(true);
     toast("Running code...");
+  
+     
 
     try {
       // Validate inputs
@@ -197,6 +204,8 @@ const ProblemSolvePage = () => {
           total: formattedCases.length,
           cases: formattedCases,
         });
+        setShowCelebration(true)
+        refetch();
       }
     } catch (error: any) {
       console.error("Error submitting solution:", error);
@@ -211,6 +220,10 @@ const ProblemSolvePage = () => {
   const handleFormat = () => {
     const formattedCode = CodeFormatter.formatForJudge0(code, language);
     setCode(formattedCode);
+  };
+
+  const handleCelebrationClose = () => {
+    setShowCelebration(false);
   };
 
   return (
@@ -354,6 +367,14 @@ const ProblemSolvePage = () => {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
+      {/* Celebration Popup */}
+      <CelebrationPopup
+        isOpen={showCelebration}
+        onClose={handleCelebrationClose}
+        xpGained={Number(times[problem?.difficulty?.toLowerCase()])}
+        currentXP={Number(authUser?.xp)}
+        newXP={Number(times[problem?.difficulty?.toLowerCase()] + authUser?.xp)}
+      />
     </div>
   );
 };

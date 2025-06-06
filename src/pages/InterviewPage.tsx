@@ -65,7 +65,7 @@ const InterviewPage = () => {
             {interview.difficulty}
           </Badge>
         </div>
-        <Link to={`/interview-analysis`}>
+        <Link to={`/interview-analysis/demo`}>
           <Button
             variant="outline"
             className="w-full border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"

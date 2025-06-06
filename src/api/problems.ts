@@ -91,7 +91,7 @@ export interface Problem {
   message: string;
 }
 
-interface PaginationData {
+export interface PaginationData {
   problems: Problem[];
   pagination: {
     currentPage: string;

@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Play, Send, Settings } from "lucide-react";
+import { Loader, Play, Send, Settings } from "lucide-react";
 import CodeEditor from "./CodeEditor";
 import TerminalCard from "./TerminalCard";
 import LoadingAnimation from "./LoadingAnimation";
@@ -106,7 +106,7 @@ const ContestCodePanel = ({
                   title="Run your code"
                 >
                   {isRunning ? (
-                    <LoadingAnimation size="sm" className="w-4 h-4 mr-2" />
+                    <Loader className="animate-spin" />
                   ) : (
                     <Play className="w-4 h-4 mr-2" />
                   )}
@@ -115,14 +115,10 @@ const ContestCodePanel = ({
                 <Button
                   onClick={onMarkSolved}
                   disabled={isRunning}
-                  className="bg-craft-success hover:bg-craft-success/80 text-white"
+                  className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
                   title="Submit your solution"
                 >
-                  {isRunning ? (
-                    <LoadingAnimation size="sm" className="w-4 h-4 mr-2" />
-                  ) : (
-                    <Send className="w-4 h-4 mr-2" />
-                  )}
+                  <Send className="w-4 h-4 mr-2" />
                   Submit
                 </Button>
               </div>

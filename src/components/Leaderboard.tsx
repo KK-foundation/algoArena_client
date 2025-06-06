@@ -144,7 +144,7 @@ const Leaderboard = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        <Link to="/sign-in">
+        <Link to="/dashboard">
           <Button
             variant="outline"
             className="w-full border-neon-green/30 hover:border-neon-green hover:shadow-neon"

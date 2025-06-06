@@ -22,7 +22,7 @@ const Footer = () => {
   ];
 
   const supportLinks = [
-    { label: "Terms & Privacy", href: "/" },
+    { label: "Terms & Privacy", href: "/terms-privacy" },
     { label: "Contact Us", href: "/contact-us" },
   ];
 
@@ -152,7 +152,7 @@ const Footer = () => {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <p className="text-sm text-muted-foreground">
-            © 2025 CodeCraft. All rights reserved.
+            © 2025 AlgoArena. All rights reserved.
           </p>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">
             <span className="flex items-center gap-2">
