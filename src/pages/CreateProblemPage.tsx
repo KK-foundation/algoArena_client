@@ -15,7 +15,15 @@ import {
 } from "@/components/ui/dialog";
 import MarkdownEditor from "@/components/MarkdownEditor";
 import TestCaseManager from "@/components/TestCaseManager";
-import { Eye, Send, X, Code2, CheckCircle2, Loader, Import } from "lucide-react";
+import {
+  Eye,
+  Send,
+  X,
+  Code2,
+  CheckCircle2,
+  Loader,
+  Import,
+} from "lucide-react";
 import { Editor } from "@monaco-editor/react";
 // Removed problemsAPI import - using React Query hook instead
 import { useCreateProblem } from "@/hooks/useProblems";
@@ -134,8 +142,7 @@ const problemSchema = z.object({
 const CreateProblemPage = () => {
   const navigate = useNavigate();
   const authUser = useCurrentUser();
-  const { mutate: createProblem, isPending: isCreatingProblem } =
-    useCreateProblem();
+  const { mutate: createProblem, isPending } = useCreateProblem();
   const [formData, setFormData] = useState<ProblemFormData>({
     title: "",
     description: "",
@@ -308,7 +315,6 @@ const CreateProblemPage = () => {
   };
 
   // --- End Sample Data and Load Functionality ---
-
   if (isPreviewMode) {
     return (
       <div className="min-h-screen bg-craft-bg">
@@ -457,8 +463,8 @@ const CreateProblemPage = () => {
                 className="w-full bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
                 disabled={!isFormValid}
               >
-                {isCreatingProblem ? (
-                  <Loader className="w-4 h-4 animate-spin mr-2" />
+                {isPending ? (
+                  <Loader className="w-4 h-4" />
                 ) : (
                   <>
                     <Send className="w-4 h-4 mr-2" />
@@ -493,13 +499,11 @@ const CreateProblemPage = () => {
         </div>
       </div>
     );
-
   }
 
   return (
     <div className="min-h-screen bg-craft-bg">
       <Header />
-
       <div className="container mx-auto px-6 py-8">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-craft-text-primary mb-2">
@@ -1043,8 +1047,14 @@ const CreateProblemPage = () => {
                   className="w-full bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
                   disabled={!isFormValid}
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  Submit Problem
+                  {isPending ? (
+                    <Loader className="w-4 h-4 mr-2" />
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4 mr-2" />
+                      Submit Problem
+                    </>
+                  )}
                 </Button>
               </div>
 
@@ -1056,7 +1066,8 @@ const CreateProblemPage = () => {
             </Card>
           </div>
         </div>
-      </div>      {/* Import JSON Dialog */}
+      </div>{" "}
+      {/* Import JSON Dialog */}
       <Dialog open={importDialogOpen} onOpenChange={setImportDialogOpen}>
         <DialogContent className="max-w-4xl p-6 mx-auto bg-craft-bg border border-craft-border rounded-lg">
           <DialogHeader>
