@@ -1,7 +1,7 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Play, Target, Users, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { landingPage } from "@/constants/landingPage";
 
@@ -45,7 +45,7 @@ const HeroBanner = () => {
             <span className="hero-text">{landingPage.hero.heading}</span>
           </h1>
           <h2 className="text-2xl md:text-4xl font-orbitron font-bold mb-4">
-            <span className="hero-text">{landingPage.hero.subheading}</span>
+            {/* <span className="hero-text">{landingPage.hero.subheading}</span> */}
           </h2>
           <p className="text-xl text-[rgb(160,160,160)] mb-8 max-w-2xl mx-auto">
             {landingPage.hero.description}
@@ -66,10 +66,70 @@ const HeroBanner = () => {
               <ChevronRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
             </Button>
           </Link>
+          <Button
+            className="ml-8 bg-craft-panel text-white text-lg px-8 py-4 group rounded-none border-2 border-craft-accent"
+            size="lg"
+          >
+            <Play />
+            Watch Demo
+          </Button>
         </motion.div>
 
         {/* Stats */}
+        {/* Enhanced Stats with improved visual hierarchy */}
         <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.8 }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16"
+        >
+          {[
+            {
+              label: "Active Coders",
+              value: "50K+",
+              icon: Users,
+              color: "craft-accent",
+            },
+            {
+              label: "Challenges",
+              value: "2.5K+",
+              icon: Target,
+              color: "white",
+            },
+            {
+              label: "Success Rate",
+              value: "94%",
+              icon: Zap,
+              color: "craft-accent",
+            },
+          ].map((stat, index) => (
+            <motion.div
+              key={index}
+              className="glass-card p-6 rounded-xl text-center group hover:scale-105 transition-all duration-300 backdrop-blur-lg border border-white/10"
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.9 + index * 0.1 }}
+              whileHover={{ y: -5 }}
+            >
+              <div className="flex justify-center mb-3">
+                <div
+                  className={`p-3 rounded-full bg-${stat.color}/20 border border-${stat.color}/30`}
+                >
+                  <stat.icon className={`w-6 h-6 text-${stat.color}`} />
+                </div>
+              </div>
+              <div
+                className={`text-2xl md:text-3xl font-orbitron font-bold text-${stat.color} mb-1`}
+              >
+                {stat.value}
+              </div>
+              <div className="text-sm text-muted-foreground font-medium">
+                {stat.label}
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+        {/* <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
@@ -83,7 +143,7 @@ const HeroBanner = () => {
               <div className="text-sm text-muted-foreground">{stat.label}</div>
             </div>
           ))}
-        </motion.div>
+        </motion.div> */}
       </div>
     </div>
   );

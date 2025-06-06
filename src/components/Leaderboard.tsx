@@ -5,18 +5,18 @@ import { Button } from "@/components/ui/button";
 
 const leaderboardData = {
   daily: [
-    { rank: 1, name: "Alex Chen", avatar: "🧑‍💻", xp: 2840, badges: 12 },
-    { rank: 2, name: "Sarah Kumar", avatar: "👩‍💻", xp: 2750, badges: 11 },
-    { rank: 3, name: "Mike Rodriguez", avatar: "👨‍💻", xp: 2680, badges: 10 },
-    { rank: 4, name: "Emma Thompson", avatar: "👩‍💻", xp: 2590, badges: 9 },
-    { rank: 5, name: "David Park", avatar: "🧑‍💻", xp: 2520, badges: 8 },
+    { rank: 1, name: "Hitesh Sir", avatar: "🧑", xp: 2840, badges: 12 },
+    { rank: 2, name: "Anirudh", avatar: "👩‍💻", xp: 2750, badges: 11 },
+    { rank: 3, name: "Piyush", avatar: "👨‍💻", xp: 2680, badges: 10 },
+    { rank: 4, name: "Herman", avatar: "👩‍💻", xp: 2590, badges: 9 },
+    { rank: 5, name: "Kunal Kumar", avatar: "🧑", xp: 2520, badges: 8 },
   ],
   weekly: [
-    { rank: 1, name: "Jordan Lee", avatar: "🧑‍💻", xp: 15840, badges: 45 },
-    { rank: 2, name: "Taylor Swift", avatar: "👩‍💻", xp: 14750, badges: 42 },
-    { rank: 3, name: "Chris Wilson", avatar: "👨‍💻", xp: 13680, badges: 38 },
-    { rank: 4, name: "Luna Zhang", avatar: "👩‍💻", xp: 12590, badges: 35 },
-    { rank: 5, name: "Sam Johnson", avatar: "🧑‍💻", xp: 11520, badges: 32 },
+    { rank: 1, name: "Suraj", avatar: "🧑", xp: 15840, badges: 45 },
+    { rank: 2, name: "Killer Chai", avatar: "👩‍💻", xp: 14750, badges: 42 },
+    { rank: 3, name: "Atomic Coder", avatar: "👨‍💻", xp: 13680, badges: 38 },
+    { rank: 4, name: "Aayush", avatar: "👩‍💻", xp: 12590, badges: 35 },
+    { rank: 5, name: "Faiz", avatar: "🧑", xp: 11520, badges: 32 },
   ],
   allTime: [
     { rank: 1, name: "Code Master", avatar: "👑", xp: 98450, badges: 156 },
@@ -27,7 +27,7 @@ const leaderboardData = {
   ],
 };
 
-const Leaderboard = ({ leaderboard }) => {
+const Leaderboard = () => {
   const [activeTab, setActiveTab] = useState<"daily" | "weekly" | "allTime">(
     "daily"
   );
@@ -59,72 +59,70 @@ const Leaderboard = ({ leaderboard }) => {
   };
 
   const tabs = [
-    { key: "Name", label: "Name" },
-    { key: "tier", label: "Tier" },
-    { key: "level", label: "Level" },
-    { key: "xp", label: "XP" },
+    { key: "daily", label: "Daily" },
+    { key: "weekly", label: "Weekly" },
+    { key: "allTime", label: "All Time" },
   ];
 
   return (
     <div className="glass-card p-6 rounded-xl">
       {/* Tabs */}
-      <div className="flex justify-between px-4 text-white space-x-1 mb-6 bg-secondary p-1 rounded-lg">
+      <div className="flex space-x-1 mb-6 bg-secondary p-1 rounded-lg">
         {tabs.map((tab) => (
-          <div className="flex " key={tab.key}>
-            <span>{tab.label}</span>
-          </div>
+          <Button
+            key={tab.key}
+            variant={activeTab === tab.key ? "default" : "ghost"}
+            size="sm"
+            onClick={() => setActiveTab(tab.key as typeof activeTab)}
+            className={`flex-1 ${
+              activeTab === tab.key
+                ? "bg-neon-green text-black font-semibold hover:bg-neon-green/80"
+                : "text-muted-foreground"
+            }
+                hover:scale-95`}
+          >
+            {tab.label}
+          </Button>
         ))}
       </div>
 
       {/* Leaderboard List */}
       <div className="space-y-3">
-        {(leaderboardData[activeTab] || []).map((user, index) => (
+        {leaderboardData[activeTab].map((user, index) => (
           <motion.div
             key={`${activeTab}-${user.rank}`}
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: index * 0.1 }}
-            className={`flex justify-between p-3 rounded-lg transition-all duration-300 text-white ${
+            className={`flex items-center gap-4 p-3 rounded-lg transition-all duration-300 text-white ${
               user.rank <= 3
                 ? "bg-gradient-to-r from-neon-green/5 to-transparent border border-neon-green/20"
                 : ""
             }`}
           >
             {/* Rank */}
-            <div className="flex items-center gap-3 flex-1">
-              <div
-                className={`text-lg font-bold w-8 text-center ${getRankColor(
-                  user.rank
-                )}`}
-              >
-                {user.rank <= 3 ? getRankIcon(user.rank) : user.rank}
-              </div>
-
-              {/* Avatar & Name */}
-              <div className="flex items-center gap-3">
-                <span className="text-2xl">{user.avatar}</span>
-                <div>
-                  <div className="font-medium text-sm">{user.name}</div>
-                  <div className="flex items-center gap-2">
-                    <Badge
-                      variant="outline"
-                      className="border-neon-green/30 text-neon-green text-xs"
-                    >
-                      🏆 {user.badges}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
+            <div
+              className={`text-lg font-bold w-8 text-center ${getRankColor(
+                user.rank
+              )}`}
+            >
+              {user.rank <= 3 ? getRankIcon(user.rank) : user.rank}
             </div>
 
             {/* Avatar & Name */}
-            <div className="flex flex-1">
-              <span>Grandmaster</span>
-            </div>
-
-            {/* level  */}
-            <div className=" flex flex-1">
-              <span>50</span>
+            <div className="flex items-center gap-3 flex-1">
+              <span className="text-2xl">{user.avatar}</span>
+              <div>
+                <div className="font-medium text-sm">{user.name}</div>
+                <div className="flex items-center gap-2">
+                  <Badge
+                    variant="outline"
+                    className="border-neon-green/30 text-neon-green text-xs"
+                  >
+                    🏆 {user.badges}
+                  </Badge>
+                </div>
+              </div>
             </div>
 
             {/* XP */}
@@ -139,7 +137,7 @@ const Leaderboard = ({ leaderboard }) => {
       </div>
 
       {/* View Profile Button */}
-      {/* <motion.div
+      <motion.div
         className="mt-6 pt-4 border-t border-border"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
@@ -151,7 +149,7 @@ const Leaderboard = ({ leaderboard }) => {
         >
           View Full Rankings
         </Button>
-      </motion.div> */}
+      </motion.div>
     </div>
   );
 };

@@ -3,20 +3,19 @@ import { stat } from "fs";
 
 export const landingPage = {
   hero: {
-    heading: "EXPLORE",
-    subheading: "SOLVE & LEVEL UP",
+    heading: "MASTER ALGORITHMS",
+    // subheading: "SOLVE & LEVEL UP",
     description:
-      "Dive into the neon-powered coding universe. Master algorithms, conquer challenges, and become the developer you've always dreamed of being.",
+      "Dive into the neon-powered coding universe. Solve challenges, level up your skills, and join the elite.",
     buttonText: "Start a Challenge",
     buttonLink: "/problems",
     stats: [
       { label: "Active Coders", value: "50K+" },
       { label: "Challenges", value: "2.5K+" },
-      { label: "Companies", value: "100+" },  
+      { label: "Companies", value: "100+" },
     ],
-  }
-  ,
-  filters : {
+  },
+  filters: {
     searchPlaceholder: "Search challenges, topics...",
     filterOptions: [
       { label: "All", value: "all" },
@@ -27,5 +26,5 @@ export const landingPage = {
       { label: "Trending", value: "trending" },
     ],
     suggestButtonText: "Suggest Me One",
-  }
-}
+  },
+};

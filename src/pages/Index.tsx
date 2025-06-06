@@ -32,8 +32,8 @@ const Index = () => {
     useTop3Problems();
   const { data: tags } = useTags();
   const { data: companiesChallenges } = useCompaniesChallenges();
-  const { leaderboard, getLeaderboard, isLeaderboardGetting } =
-    useLeaderboardStore();
+  // const { leaderboard, getLeaderboard, isLeaderboardGetting } =
+  //   useLeaderboardStore();
 
   const tabsData = [
     {
@@ -62,10 +62,6 @@ const Index = () => {
       content: <CompanyZone />,
     },
   ];
-
-  useEffect(() => {
-    // getLeaderboard();
-  }, [getLeaderboard]);
 
   return (
     <>
@@ -196,23 +192,17 @@ const Index = () => {
           </motion.section>
 
           {/* Leaderboard */}
-          <div id="leaderboard" className="grid grid-cols-1 gap-8">
+          <div className="grid grid-cols-1 gap-8 container">
             <motion.section
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.8 }}
             >
-              <h2 className="text-3xl font-orbitron font-bold mb-8 text-center">
+              <h2 className="text-2xl font-orbitron font-bold mb-6">
                 <span className="hero-text">Leaderboard</span>
               </h2>
-              {isLeaderboardGetting ? (
-                "Loading.."
-              ) : (
-                <Leaderboard leaderboard={leaderboard} />
-              )}
-
-              {/* Footer  */}
+              <Leaderboard />
             </motion.section>
           </div>
         </div>

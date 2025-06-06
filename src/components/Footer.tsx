@@ -9,21 +9,21 @@ import {
   Heart,
   Zap,
 } from "lucide-react";
+import Logo from "./Logo";
 
 const Footer = () => {
   const quickLinks = [
-    { label: "Problems", href: "/problems" },
-    { label: "Tracks", href: "/profile" },
-    { label: "Contests", href: "/contests" },
     { label: "Explore", href: "/" },
     { label: "Leaderboard", href: "#leaderboard" },
+    { label: "Problems", href: "/problems" },
+    { label: "Sheets", href: "/sheets" },
+    { label: "Interview", href: "/interview" },
+    { label: "Contests", href: "/contests" },
   ];
 
   const supportLinks = [
     { label: "Terms & Privacy", href: "/" },
     { label: "Contact Us", href: "/" },
-    { label: "Help Center", href: "/" },
-    { label: "API Docs", href: "/" },
   ];
 
   const socialLinks = [
@@ -38,7 +38,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-craft-bg border-t border-neon-green/20 backdrop-blur-lg">
+    <footer className="bg-[rgb(13, 13, 13)] p-2 border-t border-neon-green/20 backdrop-blur-lg">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Logo and Mission */}
@@ -49,11 +49,8 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <div className="flex items-center gap-2 mb-4">
-              <Zap className="w-8 h-8 text-neon-green" />
-              <h3 className="text-2xl font-orbitron font-bold text-foreground">
-                AlgoArena
-              </h3>
+            <div className="mb-4">
+              <Logo />
             </div>
             <p className="text-muted-foreground mb-4 leading-relaxed">
               Empowering developers to master coding through interactive
