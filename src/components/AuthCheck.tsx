@@ -11,7 +11,7 @@ function AuthCheck() {
   const userInfo = localStorage.getItem("userInfo");
 
   // Prefetch problems when user is authenticated
-  useProblems();
+  useProblems(1);
 
   useEffect(() => {
     if (error && !userInfo && !authUser) {
