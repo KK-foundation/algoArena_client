@@ -1,14 +1,13 @@
-
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Star, Quote } from 'lucide-react';
+import React from "react";
+import { motion } from "motion/react";
+import { Star, Quote } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-} from '@/components/ui/carousel';
+} from "@/components/ui/carousel";
 
 const TestimonialsSection = () => {
   const testimonials = [
@@ -17,29 +16,32 @@ const TestimonialsSection = () => {
       role: "Top 1% Coder on CodeCraft",
       quote: "This platform made me love coding again. The challenges are 🔥!",
       avatar: "AM",
-      rating: 5
+      rating: 5,
     },
     {
       name: "Carlos R.",
       role: "Beginner turned Full-Stack Dev",
-      quote: "The Explore page kept me coming back every day. It's addictive in the best way.",
+      quote:
+        "The Explore page kept me coming back every day. It's addictive in the best way.",
       avatar: "CR",
-      rating: 5
+      rating: 5,
     },
     {
       name: "Sarah L.",
       role: "Senior Software Engineer",
-      quote: "Finally found a platform that challenges me at my level. The algorithms section is fantastic!",
+      quote:
+        "Finally found a platform that challenges me at my level. The algorithms section is fantastic!",
       avatar: "SL",
-      rating: 5
+      rating: 5,
     },
     {
       name: "David K.",
       role: "CS Student",
-      quote: "Went from struggling with arrays to solving complex tree problems. This platform works!",
+      quote:
+        "Went from struggling with arrays to solving complex tree problems. This platform works!",
       avatar: "DK",
-      rating: 5
-    }
+      rating: 5,
+    },
   ];
 
   return (
@@ -55,7 +57,8 @@ const TestimonialsSection = () => {
           <span className="hero-text">What Our Community Says</span>
         </h2>
         <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-          Join thousands of developers who are leveling up their coding skills with AlgoArena
+          Join thousands of developers who are leveling up their coding skills
+          with AlgoArena
         </p>
       </motion.div>
 
@@ -86,27 +89,34 @@ const TestimonialsSection = () => {
                     className="absolute inset-0 bg-gradient-to-br from-neon-green/5 via-transparent to-neon-blue/5 opacity-0 group-hover:opacity-100"
                     transition={{ duration: 0.5 }}
                   />
-                  
+
                   <div className="relative z-10">
                     <Quote className="w-8 h-8 text-neon-green mb-4 opacity-60" />
-                    
+
                     <p className="text-foreground mb-6 text-lg leading-relaxed">
                       "{testimonial.quote}"
                     </p>
-                    
+
                     <div className="flex items-center gap-2 mb-4">
                       {[...Array(testimonial.rating)].map((_, i) => (
-                        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                        <Star
+                          key={i}
+                          className="w-4 h-4 fill-yellow-400 text-yellow-400"
+                        />
                       ))}
                     </div>
-                    
+
                     <div className="flex items-center gap-4">
                       <div className="w-12 h-12 bg-neon-gradient rounded-full flex items-center justify-center text-black font-bold text-lg">
                         {testimonial.avatar}
                       </div>
                       <div>
-                        <h4 className="font-semibold text-foreground">{testimonial.name}</h4>
-                        <p className="text-sm text-muted-foreground">{testimonial.role}</p>
+                        <h4 className="font-semibold text-foreground">
+                          {testimonial.name}
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          {testimonial.role}
+                        </p>
                       </div>
                     </div>
                   </div>

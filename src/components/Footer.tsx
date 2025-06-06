@@ -1,29 +1,40 @@
-
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Github, Linkedin, Twitter, Mail, Code, Heart, Zap } from 'lucide-react';
+import React from "react";
+import { motion } from "motion/react";
+import {
+  Github,
+  Linkedin,
+  Twitter,
+  Mail,
+  Code,
+  Heart,
+  Zap,
+} from "lucide-react";
 
 const Footer = () => {
   const quickLinks = [
-    { label: 'Problems', href: '/problems' },
-    { label: 'Tracks', href: '/profile' },
-    { label: 'Contests', href: '/contests' },
-    { label: 'Explore', href: '/' },
-    { label: 'Leaderboard', href: '#leaderboard' }
+    { label: "Problems", href: "/problems" },
+    { label: "Tracks", href: "/profile" },
+    { label: "Contests", href: "/contests" },
+    { label: "Explore", href: "/" },
+    { label: "Leaderboard", href: "#leaderboard" },
   ];
 
   const supportLinks = [
-    { label: 'Terms & Privacy', href: '/' },
-    { label: 'Contact Us', href: '/' },
-    { label: 'Help Center', href: '/' },
-    { label: 'API Docs', href: '/' }
+    { label: "Terms & Privacy", href: "/" },
+    { label: "Contact Us", href: "/" },
+    { label: "Help Center", href: "/" },
+    { label: "API Docs", href: "/" },
   ];
 
   const socialLinks = [
-    { icon: Twitter, href: 'https://x.com/Kunal_098', label: 'Twitter' },
-    { icon: Github, href: 'https://github.com/KUNAL01011', label: 'GitHub' },
-    { icon: Linkedin, href: 'https://www.linkedin.com/in/kunal003/', label: 'LinkedIn' },
-    { icon: Mail, href: 'mailto:kunal34255@gmail.com', label: 'Email' }
+    { icon: Twitter, href: "https://x.com/Kunal_098", label: "Twitter" },
+    { icon: Github, href: "https://github.com/KUNAL01011", label: "GitHub" },
+    {
+      icon: Linkedin,
+      href: "https://www.linkedin.com/in/kunal003/",
+      label: "LinkedIn",
+    },
+    { icon: Mail, href: "mailto:kunal34255@gmail.com", label: "Email" },
   ];
 
   return (
@@ -40,10 +51,13 @@ const Footer = () => {
           >
             <div className="flex items-center gap-2 mb-4">
               <Zap className="w-8 h-8 text-neon-green" />
-              <h3 className="text-2xl font-orbitron font-bold text-foreground">AlgoArena</h3>
+              <h3 className="text-2xl font-orbitron font-bold text-foreground">
+                AlgoArena
+              </h3>
             </div>
             <p className="text-muted-foreground mb-4 leading-relaxed">
-              Empowering developers to master coding through interactive challenges and community-driven learning.
+              Empowering developers to master coding through interactive
+              challenges and community-driven learning.
             </p>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>Made with</span>
@@ -59,7 +73,9 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h4 className="text-lg font-semibold text-foreground mb-4">Quick Links</h4>
+            <h4 className="text-lg font-semibold text-foreground mb-4">
+              Quick Links
+            </h4>
             <ul className="space-y-2">
               {quickLinks.map((link, index) => (
                 <li key={index}>
@@ -82,7 +98,9 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <h4 className="text-lg font-semibold text-foreground mb-4">Support</h4>
+            <h4 className="text-lg font-semibold text-foreground mb-4">
+              Support
+            </h4>
             <ul className="space-y-2">
               {supportLinks.map((link, index) => (
                 <li key={index}>
@@ -105,7 +123,9 @@ const Footer = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h4 className="text-lg font-semibold text-foreground mb-4">Connect</h4>
+            <h4 className="text-lg font-semibold text-foreground mb-4">
+              Connect
+            </h4>
             <div className="flex gap-4 mb-4">
               {socialLinks.map((social, index) => (
                 <motion.a
