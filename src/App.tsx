@@ -24,6 +24,8 @@ import InterviewAnalysisPage from "./pages/InterviewAnalysisPage";
 import SheetProblemManagerPage from "./pages/SheetProblemManagerPage";
 import LiveContestPage from "./pages/LiveContestPage";
 import ResultsPage from "./pages/ResultsPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -87,6 +89,8 @@ const App = () => {
               <Route path="/signin" element={<SignInPage />} />
             </Route>
             <Route path="/signup" element={<SignUpPage />} />
+            <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
