@@ -23,7 +23,7 @@ const Footer = () => {
 
   const supportLinks = [
     { label: "Terms & Privacy", href: "/" },
-    { label: "Contact Us", href: "/" },
+    { label: "Contact Us", href: "/contact-us" },
   ];
 
   const socialLinks = [

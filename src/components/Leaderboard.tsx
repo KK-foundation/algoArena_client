@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const leaderboardData = {
   daily: [
@@ -143,12 +144,14 @@ const Leaderboard = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        <Button
-          variant="outline"
-          className="w-full border-neon-green/30 hover:border-neon-green hover:shadow-neon"
-        >
-          View Full Rankings
-        </Button>
+        <Link to="/sign-in">
+          <Button
+            variant="outline"
+            className="w-full border-neon-green/30 hover:border-neon-green hover:shadow-neon"
+          >
+            View Full Rankings
+          </Button>
+        </Link>
       </motion.div>
     </div>
   );

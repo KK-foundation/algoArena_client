@@ -333,23 +333,33 @@
   }
 }
 
-.hero .btn-primary {
+.hero .btn-primary,
+.contact .btn-primary,
+.terms .btn-primary {
   @apply text-[rgb(13,13,13)] rounded-none;
 }
 
-.hero .text-foreground {
+.hero .text-foreground,
+.contact .text-foreground,
+.terms .text-foreground {
   color: #ffffff;
 }
 
-.hero .bg-secondary {
+.hero .bg-secondary,
+.contact .bg-secondary,
+.terms .bg-secondary {
   background: #1a1a1a;
 }
 
-.hero .bg-background {
+.hero .bg-background,
+.contact .bg-background,
+.terms .bg-background {
   background: rgb(13, 13, 13);
   color: #ffffff;
 }
 
-.hero .text-muted-foreground {
+.hero .text-muted-foreground,
+.contact .text-muted-foreground,
+.terms .text-muted-foreground {
   color: #a0a0a0;
 }

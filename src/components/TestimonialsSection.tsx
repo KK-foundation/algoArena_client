@@ -12,26 +12,26 @@ import {
 const TestimonialsSection = () => {
   const testimonials = [
     {
-      name: "Anjali M.",
-      role: "Top 1% Coder on CodeCraft",
-      quote: "This platform made me love coding again. The challenges are 🔥!",
-      avatar: "AM",
-      rating: 5,
-    },
-    {
-      name: "Carlos R.",
+      name: "Kunal Kumar",
       role: "Beginner turned Full-Stack Dev",
       quote:
         "The Explore page kept me coming back every day. It's addictive in the best way.",
-      avatar: "CR",
+      avatar: "KK",
       rating: 5,
     },
     {
-      name: "Sarah L.",
+      name: "Hitesh Choudhary",
+      role: "Top 1% Coder on CodeCraft",
+      quote: "This platform made me love coding again. The challenges are 🔥!",
+      avatar: "HC",
+      rating: 5,
+    },
+    {
+      name: "Piyush Garg",
       role: "Senior Software Engineer",
       quote:
         "Finally found a platform that challenges me at my level. The algorithms section is fantastic!",
-      avatar: "SL",
+      avatar: "PG",
       rating: 5,
     },
     {

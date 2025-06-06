@@ -26,6 +26,8 @@ import LiveContestPage from "./pages/LiveContestPage";
 import ResultsPage from "./pages/ResultsPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import ResetPasswordPage from "./pages/ResetPasswordPage";
+import ContactUs from "./pages/ContactUs";
+import TermsPrivacy from "./pages/Terms";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -61,6 +63,8 @@ const App = () => {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/verify-account" element={<VerifyAccountPage />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            <Route path="/terms-privacy" element={<TermsPrivacy />} />
             <Route element={<AuthCheck />}>
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/problems" element={<ProblemsPage />} />
@@ -90,7 +94,10 @@ const App = () => {
             </Route>
             <Route path="/signup" element={<SignUpPage />} />
             <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-            <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
+            <Route
+              path="/reset-password/:token"
+              element={<ResetPasswordPage />}
+            />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
