@@ -7,6 +7,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { useProblems } from "@/hooks/useProblems";
 import { useCurrentUser } from "@/hooks/useAuth";
 import { useMemo } from "react";
+import LoadingAnimation from "@/components/LoadingAnimation";
 
 const ProblemsPage = () => {
   const [searchParams] = useSearchParams();
@@ -70,7 +71,7 @@ const ProblemsPage = () => {
   if (isProblemsLoading) {
     return (
       <div className="min-h-screen bg-craft-bg flex items-center justify-center">
-        <div className="text-white text-lg">Loading problems...</div>
+        <LoadingAnimation size="4xl" />
       </div>
     );
   }
