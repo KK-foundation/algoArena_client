@@ -1,11 +1,25 @@
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Play, Target, Users, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 import { landingPage } from "@/constants/landingPage";
+import VideoDialog from "./VideoDialog";
 
 const HeroBanner = () => {
+  const [open, setOpen] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleMouseEnter = () => {
+    if (!videoLoaded) {
+      setVideoLoaded(true);
+    }
+  };
+
   return (
     <div className="relative min-h-[70vh] flex items-center justify-center overflow-hidden">
       {/* Animated Background */}
@@ -69,12 +83,14 @@ const HeroBanner = () => {
           <Button
             className="ml-8 bg-craft-panel text-white text-lg px-8 py-4 group rounded-none border-2 border-craft-accent"
             size="lg"
+            onClick={handleOpen}
+            onMouseEnter={handleMouseEnter}
           >
             <Play />
             Watch Demo
           </Button>
         </motion.div>
-
+        <VideoDialog open={open} setOpen={setOpen} />
         {/* Stats */}
         {/* Enhanced Stats with improved visual hierarchy */}
         <motion.div
