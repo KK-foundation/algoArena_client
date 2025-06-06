@@ -28,8 +28,8 @@ export const useProblems = () => {
     queryKey: ["problems"],
     queryFn: ({ pageParam = 1 }) => problemsAPI.getAllProblems(pageParam),
     getNextPageParam: (lastPage) => {
-      const currentPage = Number(lastPage.pagination.currentPage);
-      const totalPages = Number(lastPage.pagination.totalPages);
+      const currentPage = Number(lastPage?.pagination?.currentPage);
+      const totalPages = Number(lastPage?.pagination?.totalPages);
 
       return currentPage < totalPages ? currentPage + 1 : undefined;
     },
