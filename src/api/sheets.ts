@@ -78,6 +78,17 @@ export const sheetsAPI = {
     }
   },
 
+  getSheetById: async (sheetId: string): Promise<Sheet> => {
+    try {
+      const res = await axiosInstance.get(`sheets/get-sheet-by-id/${sheetId}`);
+      return res.data.data;
+    } catch (error: any) {
+      const message = error?.response?.data?.message || "Failed to fetch sheet";
+      toast.error(message);
+      throw error;
+    }
+  },
+
   // Update sheet
   updateSheet: async (sheetId: string, formData: FormData): Promise<any> => {
     try {

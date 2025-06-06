@@ -44,6 +44,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { userInfo } from "os";
 
 // Helper function for difficulty colors
 const getDifficultyColor = (difficulty: string) => {
@@ -163,6 +164,7 @@ const SheetProblemCard = ({
 };
 
 const SheetProblemManagerPage = () => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const { sheetId: id } = useParams<{ sheetId: string }>();
   const navigate = useNavigate();
 
@@ -310,13 +312,15 @@ const SheetProblemManagerPage = () => {
               Manage and track problems in this sheet
             </p>
           </div>
-          <Button
-            onClick={() => setAddProblemsDialogOpen(true)}
-            className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Problems
-          </Button>
+          {sheetData?.userId === userInfo.id && (
+            <Button
+              onClick={() => setAddProblemsDialogOpen(true)}
+              className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Problems
+            </Button>
+          )}
         </div>
 
         {/* Progress Section */}
@@ -343,14 +347,16 @@ const SheetProblemManagerPage = () => {
                 <p className="text-craft-text-secondary mb-4">
                   No problems in this sheet yet
                 </p>
-                <Button
-                  onClick={() => setAddProblemsDialogOpen(true)}
-                  variant="outline"
-                  className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add Your First Problem
-                </Button>
+                {sheetData?.userId === userInfo.id && (
+                  <Button
+                    onClick={() => setAddProblemsDialogOpen(true)}
+                    variant="outline"
+                    className="border-craft-border text-craft-text-secondary hover:border-craft-accent hover:text-craft-accent"
+                  >
+                    <Plus className="w-4 h-4 mr-2" />
+                    Add Your First Problem
+                  </Button>
+                )}
               </div>
             </Card>
           ) : (

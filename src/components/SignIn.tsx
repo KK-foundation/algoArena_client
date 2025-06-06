@@ -11,6 +11,8 @@ import {
 } from "../lib/validation";
 import { toast } from "@/hooks/use-toast";
 import { useLogin } from "@/hooks/useAuth";
+import { Button } from "./ui/button";
+import { demoUser } from "@/constants/demoUser";
 
 const SignIn = () => {
   const { mutate: signin, isPending: isLoggingIn } = useLogin();
@@ -70,6 +72,12 @@ const SignIn = () => {
       });
     }
   };
+  const handleGuestLogin = async () => {
+    formData.data = demoUser.username;
+    formData.password = demoUser.password;
+
+    signin(formData);
+  }
 
   const isFormValid =
     formData.data && formData.password && Object.keys(errors).length === 0;
@@ -118,21 +126,11 @@ const SignIn = () => {
           Sign In
         </LoadingButton>
 
-        <div className="relative">
-          <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-600"></div>
-          </div>
-          <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-gray-800 text-gray-400">
-              Or continue with
-            </span>
-          </div>
-        </div>
-
-        <GoogleSignInButton
-          onClick={handleGoogleSignIn}
-          loading={isLoggingIn}
-        />
+        <Button className="w-full" onClick={handleGuestLogin}>
+          <span className="px-2 text-gray-400">
+            Continue As Guest
+          </span>
+        </Button>
 
         <div className="text-center">
           <p className="text-gray-400">

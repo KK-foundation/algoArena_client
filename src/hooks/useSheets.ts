@@ -37,7 +37,7 @@ export const usePublicSheets = () => {
 export const useSheet = (sheetId: string) => {
   return useQuery({
     queryKey: sheetKeys.detail(sheetId),
-    queryFn: () => sheetsAPI.getMySheetById(sheetId),
+    queryFn: () => sheetsAPI.getSheetById(sheetId),
     enabled: !!sheetId,
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
