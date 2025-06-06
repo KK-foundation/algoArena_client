@@ -104,7 +104,7 @@ const ProblemSolvePage = () => {
         const formattedCases = (results || []).map((testCase) => ({
           input: testCase.stdin,
           expected: testCase.expected,
-          actual: testCase.actual || "No output",
+          actual: testCase.actual || testCase.stdout || "No output",
           passed: testCase.passed,
           time: testCase.time || "0ms",
         }));
@@ -173,8 +173,30 @@ const ProblemSolvePage = () => {
 
       // Handle successful submission
       if (response && response.data) {
-        // You can add additional logic here based on the response
-        // For example, redirect to problems page or show detailed results
+        const { testCases, stdin } = response.data;
+        console.log({ testCases });
+        // split the stdin string into an array of lines
+        const lines = stdin.split("\n");
+
+        // Format the results to match TestResults component expectations
+        const formattedCases = (testCases || []).map((testCase, index) => ({
+          input: testCase.stdin || lines[index],
+          expected: testCase.expected,
+          actual: testCase.actual || testCase.stdout || "No output",
+          passed: testCase.passed,
+          time: testCase.time || "0ms",
+        }));
+
+        const passedCount = formattedCases.filter(
+          (tc: any) => tc.passed
+        ).length;
+
+        console.log({ formattedCases });
+        setTestResults({
+          passed: passedCount,
+          total: formattedCases.length,
+          cases: formattedCases,
+        });
       }
     } catch (error: any) {
       console.error("Error submitting solution:", error);
