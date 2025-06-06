@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthCheck } from "@/hooks/useAuth";
 import { useProblems } from "@/hooks/useProblems";
+import LoadingAnimation from "./LoadingAnimation";
 
 function AuthCheck() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function AuthCheck() {
   if (isCheckingAuth) {
     return (
       <div className="min-h-screen bg-craft-bg flex items-center justify-center">
-        <div className="text-white text-lg">Loading...</div>
+        <LoadingAnimation size="4xl" />
       </div>
     );
   }

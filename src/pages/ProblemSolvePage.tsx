@@ -27,6 +27,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { CodeFormatter } from "@/utils/codeFormatter";
 import { useProblem } from "@/hooks/useProblems";
+import LoadingAnimation from "@/components/LoadingAnimation";
 
 const langMap = {
   CPP: "cpp",
@@ -43,7 +44,7 @@ const ProblemSolvePage = () => {
   const [isRunning, setIsRunning] = useState(false);
 
   const { getProblemById } = problemsAPI;
-  const { data: problem, isLoading: isProblemLoading } = useProblem(id);
+  let { data: problem, isLoading: isProblemLoading } = useProblem(id);
 
   useEffect(() => {
     getProblemById(id);
@@ -182,8 +183,8 @@ const ProblemSolvePage = () => {
       setIsRunning(false);
     }
   };
-
-  if (isProblemLoading) return <div>Loading...</div>;
+  // isProblemLoading = true;
+  if (isProblemLoading) return <LoadingAnimation size="4xl" />;
 
   const handleFormat = () => {
     const formattedCode = CodeFormatter.formatForJudge0(code, language);
