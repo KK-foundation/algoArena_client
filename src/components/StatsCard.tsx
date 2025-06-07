@@ -22,7 +22,7 @@ const StatsCard = ({ title, value, subtitle, badge, icon, glowColor = 'craft-acc
         <div className="flex items-center justify-between mb-2">
           <span className="text-craft-text-secondary text-sm font-medium">{title}</span>
           {icon && (
-            <div className={`text-${glowColor} group-hover:animate-glow-pulse`}>
+            <div className={`text-${glowColor}`}>
               {icon}
             </div>
           )}

@@ -15,8 +15,8 @@ const LiveTranscript = ({ transcript }: LiveTranscriptProps) => {
         <h3 className="font-semibold">Live Transcript</h3>
       </div>
       
-      <ScrollArea className="h-32">
-        <div className="text-sm text-gray-700 leading-relaxed">
+      <ScrollArea className="h-32 text-white">
+        <div className="text-sm leading-relaxed text-white">
           {transcript || (
             <span className="text-gray-400 italic">
               Start speaking to see your words appear here...

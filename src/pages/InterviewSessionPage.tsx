@@ -202,7 +202,7 @@ const InterviewSessionPage = () => {
             <div className="flex gap-3">
               <Button
                 onClick={nextQuestion}
-                className="flex-1 hover:outline cursor-pointer"
+                className="flex-1 hover:outline cursor-pointer bg-craft-accent text-black"
                 disabled={!transcript.trim()}
               
               >

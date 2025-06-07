@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Header from "@/components/Header";
 import CodeEditor from "@/components/CodeEditor";
@@ -14,7 +14,6 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { problemsAPI } from "@/api/problems";
-import { useEffect } from "react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -30,7 +29,7 @@ import { useProblem } from "@/hooks/useProblems";
 import LoadingAnimation from "@/components/LoadingAnimation";
 import CelebrationPopup from "@/components/CelebrationPopup";
 import { useAuthCheck } from "@/hooks/useAuth";
-import { times } from "@/constants/achivements";
+import { times, xp } from "@/constants/achivements";
 
 const langMap = {
   CPP: "cpp",
@@ -46,38 +45,46 @@ const ProblemSolvePage = () => {
   const [testResults, setTestResults] = useState<TestResultsT | null>(null);
   const [isRunning, setIsRunning] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [newXp, setNewXp] = useState(0);
+  
   const { data: authUser, refetch } = useAuthCheck();
-
-  const { getProblemById } = problemsAPI;
   const { data: problem, isLoading: isProblemLoading } = useProblem(id);
 
+  // Calculate XP when problem or authUser changes
   useEffect(() => {
-    getProblemById(id);
-  }, [getProblemById, id]);
+    if (problem && authUser) {
+      const isAlreadySolved = problem.solvedBy?.some(
+        (user) => user.userId === authUser.id
+      );
+      const calculatedNewXp = isAlreadySolved 
+        ? authUser.xp 
+        : authUser.xp + (xp[problem.difficulty?.toLowerCase()] || 0);
+      setNewXp(Number(calculatedNewXp));
+    }
+  }, [problem, authUser]);
 
+  // Set initial code when problem loads or language changes
   useEffect(() => {
-    if (problem && problem.codeSnippets) {
+    if (problem?.codeSnippets?.[language]) {
       setCode(problem.codeSnippets[language]);
     }
   }, [problem, language]);
 
   const handleRunCode = async () => {
+    if (isRunning) return; // Prevent multiple simultaneous runs
+    
     setIsRunning(true);
     toast("Running code...");
-  
-     
 
     try {
       // Validate inputs
       if (!code.trim()) {
         toast.error("Please write some code before running");
-        setIsRunning(false);
         return;
       }
 
       if (!id) {
         toast.error("Problem ID not found");
-        setIsRunning(false);
         return;
       }
 
@@ -85,7 +92,6 @@ const ProblemSolvePage = () => {
       const languageId = CodeFormatter.getJudge0LanguageId(langMap[language]);
       if (!languageId) {
         toast.error(`Unsupported language: ${language}`);
-        setIsRunning(false);
         return;
       }
 
@@ -103,22 +109,20 @@ const ProblemSolvePage = () => {
       console.log("Run code response:", response);
 
       // Process the response and format for TestResults component
-      if (response && response.data) {
+      if (response?.data) {
         const results = response.data;
         console.log({ results });
 
         // Format the results to match TestResults component expectations
         const formattedCases = (results || []).map((testCase) => ({
-          input: testCase.stdin,
-          expected: testCase.expected,
+          input: testCase.stdin || "",
+          expected: testCase.expected || "",
           actual: testCase.actual || testCase.stdout || "No output",
-          passed: testCase.passed,
+          passed: Boolean(testCase.passed),
           time: testCase.time || "0ms",
         }));
 
-        const passedCount = formattedCases.filter(
-          (tc: any) => tc.passed
-        ).length;
+        const passedCount = formattedCases.filter((tc) => tc.passed).length;
 
         console.log({ formattedCases });
         setTestResults({
@@ -131,15 +135,18 @@ const ProblemSolvePage = () => {
       } else {
         toast.error("Invalid response from server");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error running code:", error);
-      toast.error(error.message || "Failed to run code");
+      const errorMessage = error instanceof Error ? error.message : "Failed to run code";
+      toast.error(errorMessage);
     } finally {
       setIsRunning(false);
     }
   };
 
   const handleSubmit = async () => {
+    if (isRunning) return; // Prevent multiple simultaneous submissions
+    
     setIsRunning(true);
     toast("Submitting solution...");
 
@@ -147,13 +154,11 @@ const ProblemSolvePage = () => {
       // Validate inputs
       if (!code.trim()) {
         toast.error("Please write some code before submitting");
-        setIsRunning(false);
         return;
       }
 
       if (!id) {
         toast.error("Problem ID not found");
-        setIsRunning(false);
         return;
       }
 
@@ -161,7 +166,6 @@ const ProblemSolvePage = () => {
       const languageId = CodeFormatter.getJudge0LanguageId(langMap[language]);
       if (!languageId) {
         toast.error(`Unsupported language: ${language}`);
-        setIsRunning(false);
         return;
       }
 
@@ -179,24 +183,23 @@ const ProblemSolvePage = () => {
       console.log("Submit solution response:", response);
 
       // Handle successful submission
-      if (response && response.data) {
+      if (response?.data) {
         const { testCases, stdin } = response.data;
         console.log({ testCases });
-        // split the stdin string into an array of lines
-        const lines = stdin.split("\n");
+        
+        // Split the stdin string into an array of lines
+        const lines = stdin ? stdin.split("\n") : [];
 
         // Format the results to match TestResults component expectations
         const formattedCases = (testCases || []).map((testCase, index) => ({
-          input: testCase.stdin || lines[index],
-          expected: testCase.expected,
+          input: testCase.stdin || lines[index] || "",
+          expected: testCase.expected || "",
           actual: testCase.actual || testCase.stdout || "No output",
-          passed: testCase.passed,
+          passed: Boolean(testCase.passed),
           time: testCase.time || "0ms",
         }));
 
-        const passedCount = formattedCases.filter(
-          (tc: any) => tc.passed
-        ).length;
+        const passedCount = formattedCases.filter((tc) => tc.passed).length;
 
         console.log({ formattedCases });
         setTestResults({
@@ -204,27 +207,70 @@ const ProblemSolvePage = () => {
           total: formattedCases.length,
           cases: formattedCases,
         });
-        setShowCelebration(true)
+
+        // Show celebration only if all test cases passed
+        if (passedCount === formattedCases.length && formattedCases.length > 0) {
+          setShowCelebration(true);
+        }
+        
+        // Refetch user data to update XP and solved problems
         refetch();
+        
+        toast.success("Solution submitted successfully!");
+      } else {
+        toast.error("Invalid response from server");
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error submitting solution:", error);
-      // Error toast is already handled in the API function
+      const errorMessage = error instanceof Error ? error.message : "Failed to submit solution";
+      toast.error(errorMessage);
     } finally {
       setIsRunning(false);
     }
   };
-  // isProblemLoading = true;
-  if (isProblemLoading) return <LoadingAnimation size="4xl" />;
 
   const handleFormat = () => {
-    const formattedCode = CodeFormatter.formatForJudge0(code, language);
-    setCode(formattedCode);
+    try {
+      const formattedCode = CodeFormatter.formatForJudge0(code, language);
+      setCode(formattedCode);
+      toast.success("Code formatted successfully");
+    } catch (error) {
+      console.error("Error formatting code:", error);
+      toast.error("Failed to format code");
+    }
   };
 
   const handleCelebrationClose = () => {
     setShowCelebration(false);
   };
+
+  const handleReset = () => {
+    if (problem?.codeSnippets?.[language]) {
+      setCode(problem.codeSnippets[language]);
+      toast.success("Code reset to template");
+    }
+  };
+
+  // Show loading animation while problem is loading
+  if (isProblemLoading) {
+    return <LoadingAnimation size="4xl" />;
+  }
+
+  // Show error if problem is not found
+  if (!problem && !isProblemLoading) {
+    return (
+      <div className="min-h-screen bg-craft-bg flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-craft-text-primary mb-2">
+            Problem not found
+          </h1>
+          <p className="text-craft-text-secondary">
+            The requested problem could not be loaded.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-craft-bg">
@@ -238,11 +284,13 @@ const ProblemSolvePage = () => {
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
                     <h1 className="text-xl font-bold text-craft-text-primary">
-                      {problem?.title}
+                      {problem?.title || "Loading..."}
                     </h1>
-                    <Badge className="bg-craft-success/20 text-craft-success border-craft-success/30">
-                      {problem?.difficulty}
-                    </Badge>
+                    {problem?.difficulty && (
+                      <Badge className="bg-craft-success/20 text-craft-success border-craft-success/30">
+                        {problem.difficulty}
+                      </Badge>
+                    )}
                   </div>
                   <div className="flex items-center space-x-2">
                     <Button
@@ -264,9 +312,7 @@ const ProblemSolvePage = () => {
 
                 <ProblemDescription problem={problem} />
               </div>
-              
             </div>
-           
           </ResizablePanel>
 
           {/* Resize Handle */}
@@ -285,6 +331,7 @@ const ProblemSolvePage = () => {
                           value={language}
                           onChange={(e) => setLanguage(e.target.value)}
                           className="bg-craft-bg border px-2 border-craft-border rounded py-1 text-craft-text-primary focus:border-craft-accent"
+                          disabled={isRunning}
                         >
                           <option value="PYTHON">Python</option>
                           <option value="JAVASCRIPT">Javascript</option>
@@ -297,6 +344,7 @@ const ProblemSolvePage = () => {
                               size="sm"
                               variant="ghost"
                               className="text-craft-text-secondary hover:text-craft-accent"
+                              disabled={isRunning}
                             >
                               <Settings className="w-4 h-4" />
                             </Button>
@@ -307,7 +355,9 @@ const ProblemSolvePage = () => {
                             <DropdownMenuItem onClick={handleFormat}>
                               Format
                             </DropdownMenuItem>
-                            <DropdownMenuItem>Reset</DropdownMenuItem>
+                            <DropdownMenuItem onClick={handleReset}>
+                              Reset
+                            </DropdownMenuItem>
                             <DropdownMenuItem>FullScreen</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -321,7 +371,7 @@ const ProblemSolvePage = () => {
                           className="border-craft-border text-black hover:border-craft-bg"
                         >
                           <Play className="w-4 h-4 mr-2" />
-                          Run
+                          {isRunning ? "Running..." : "Run"}
                         </Button>
                         <Button
                           onClick={handleSubmit}
@@ -329,7 +379,7 @@ const ProblemSolvePage = () => {
                           className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
                         >
                           <Send className="w-4 h-4 mr-2" />
-                          Submit
+                          {isRunning ? "Submitting..." : "Submit"}
                         </Button>
                       </div>
                     </div>
@@ -339,12 +389,10 @@ const ProblemSolvePage = () => {
                   <div className="h-full">
                     <CodeEditor
                       value={code}
-                      onChange={(value) => setCode(value)}
+                      onChange={(value) => setCode(value || "")}
                       language={langMap[language]}
                     />
                   </div>
-
-                  {/* Test Results */}
                 </div>
               </ResizablePanel>
               <ResizableHandle />
@@ -369,14 +417,17 @@ const ProblemSolvePage = () => {
           </ResizablePanel>
         </ResizablePanelGroup>
       </div>
+      
       {/* Celebration Popup */}
-      <CelebrationPopup
-        isOpen={showCelebration}
-        onClose={handleCelebrationClose}
-        xpGained={Number(times[problem?.difficulty?.toLowerCase()])}
-        currentXP={Number(authUser?.xp)}
-        newXP={Number(times[problem?.difficulty?.toLowerCase()] + authUser?.xp)}
-      />
+      {showCelebration && authUser && problem && (
+        <CelebrationPopup
+          isOpen={showCelebration}
+          onClose={handleCelebrationClose}
+          xpGained={xp[problem.difficulty?.toLowerCase()] || 0}
+          currentXP={Number(authUser?.xp)}
+          newXP={newXp}
+        />
+      )}
     </div>
   );
 };

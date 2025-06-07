@@ -21,87 +21,88 @@ const ResultsPage = () => {
 
   // Mock leaderboard data
   const leaderboardData = [
-    {
-      rank: 1,
-      name: "Alice Johnson",
-      timeTaken: "8:45",
-      totalQuestions: 4,
-      correctAnswers: 4,
-      wrongAnswers: 0,
-      rating: 5,
-      xp: 2450
-    },
-    {
-      rank: 2,
-      name: "Bob Smith",
-      timeTaken: "9:12",
-      totalQuestions: 4,
-      correctAnswers: 4,
-      wrongAnswers: 0,
-      rating: 5,
-      xp: 2380
-    },
-    {
-      rank: 3,
-      name: "Carol Davis",
-      timeTaken: "9:58",
-      totalQuestions: 4,
-      correctAnswers: 4,
-      wrongAnswers: 0,
-      rating: 5,
-      xp: 2320
-    },
-    {
-      rank: 4,
-      name: "David Wilson",
-      timeTaken: "7:32",
-      totalQuestions: 4,
-      correctAnswers: 3,
-      wrongAnswers: 1,
-      rating: 4,
-      xp: 1890
-    },
-    {
-      rank: 5,
-      name: "Eva Brown",
-      timeTaken: "8:21",
-      totalQuestions: 4,
-      correctAnswers: 3,
-      wrongAnswers: 1,
-      rating: 4,
-      xp: 1820
-    },
-    {
-      rank: 6,
-      name: "Frank Miller",
-      timeTaken: "9:45",
-      totalQuestions: 4,
-      correctAnswers: 3,
-      wrongAnswers: 1,
-      rating: 4,
-      xp: 1750
-    },
-    {
-      rank: 7,
-      name: "Grace Taylor",
-      timeTaken: "6:18",
-      totalQuestions: 4,
-      correctAnswers: 2,
-      wrongAnswers: 2,
-      rating: 3,
-      xp: 1280
-    },
-    {
-      rank: 8,
-      name: "Henry Anderson",
-      timeTaken: "9:03",
-      totalQuestions: 4,
-      correctAnswers: 2,
-      wrongAnswers: 2,
-      rating: 3,
-      xp: 1150
-    }
-  ];
+  {
+    rank: 1,
+    name: "Aarav Sharma",
+    timeTaken: "8:45",
+    totalQuestions: 4,
+    correctAnswers: 4,
+    wrongAnswers: 0,
+    rating: 5,
+    xp: 2450
+  },
+  {
+    rank: 2,
+    name: "Diya Patel",
+    timeTaken: "9:12",
+    totalQuestions: 4,
+    correctAnswers: 4,
+    wrongAnswers: 0,
+    rating: 5,
+    xp: 2380
+  },
+  {
+    rank: 3,
+    name: "Vivaan Mehta",
+    timeTaken: "9:58",
+    totalQuestions: 4,
+    correctAnswers: 4,
+    wrongAnswers: 0,
+    rating: 5,
+    xp: 2320
+  },
+  {
+    rank: 4,
+    name: "Ishita Verma",
+    timeTaken: "7:32",
+    totalQuestions: 4,
+    correctAnswers: 3,
+    wrongAnswers: 1,
+    rating: 4,
+    xp: 1890
+  },
+  {
+    rank: 5,
+    name: "Kabir Reddy",
+    timeTaken: "8:21",
+    totalQuestions: 4,
+    correctAnswers: 3,
+    wrongAnswers: 1,
+    rating: 4,
+    xp: 1820
+  },
+  {
+    rank: 6,
+    name: "Ananya Desai",
+    timeTaken: "9:45",
+    totalQuestions: 4,
+    correctAnswers: 3,
+    wrongAnswers: 1,
+    rating: 4,
+    xp: 1750
+  },
+  {
+    rank: 7,
+    name: "Rohan Nair",
+    timeTaken: "6:18",
+    totalQuestions: 4,
+    correctAnswers: 2,
+    wrongAnswers: 2,
+    rating: 3,
+    xp: 1280
+  },
+  {
+    rank: 8,
+    name: "Meera Iyer",
+    timeTaken: "9:03",
+    totalQuestions: 4,
+    correctAnswers: 2,
+    wrongAnswers: 2,
+    rating: 3,
+    xp: 1150
+  }
+];
+
 
   const topThree = leaderboardData.slice(0, 3);
   const contestStats = {

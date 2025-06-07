@@ -22,7 +22,7 @@ export const ProfileHeader = ({ onEditClick }: ProfileHeaderProps) => {
           <div className="w-20 h-20 rounded-full bg-gradient-to-br from-[#00FFA3] to-[#4DFFDF] p-1 animate-pulse">
             <div className="w-full h-full rounded-full bg-craft-panel flex items-center justify-center">
               <img
-                src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=200&h=200&fit=crop&crop=face"
+                src={authUser?.image ? authUser?.image : "https://jqj85xu4kj.ufs.sh/f/ebjSeZwBViRsJGBNrwpphUq4X3FdtTAI7NRfyEug5aMZzCvL"}
                 alt="Profile"
                 className="w-16 h-16 rounded-full object-cover"
               />
