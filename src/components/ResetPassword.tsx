@@ -46,12 +46,10 @@ const ResetPassword = () => {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  console.log(token)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log(formData)
     if (!validateForm()) return;
     if(!token) return;
     formData.token = token;

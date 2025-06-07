@@ -102,16 +102,16 @@ const ProblemSolvePage = () => {
         problemId: id,
       };
 
-      console.log("Running code with data:", runData);
+      
 
       // Make the actual API call
       const response = await problemsAPI.runCode(runData);
-      console.log("Run code response:", response);
+     
 
       // Process the response and format for TestResults component
       if (response?.data) {
         const results = response.data;
-        console.log({ results });
+       
 
         // Format the results to match TestResults component expectations
         const formattedCases = (results || []).map((testCase) => ({
@@ -124,7 +124,6 @@ const ProblemSolvePage = () => {
 
         const passedCount = formattedCases.filter((tc) => tc.passed).length;
 
-        console.log({ formattedCases });
         setTestResults({
           passed: passedCount,
           total: formattedCases.length,
@@ -176,16 +175,16 @@ const ProblemSolvePage = () => {
         problemId: id,
       };
 
-      console.log("Submitting solution with data:", submitData);
+      
 
       // Make the actual API call
       const response = await problemsAPI.submitSolution(submitData);
-      console.log("Submit solution response:", response);
+      
 
       // Handle successful submission
       if (response?.data) {
         const { testCases, stdin } = response.data;
-        console.log({ testCases });
+        
         
         // Split the stdin string into an array of lines
         const lines = stdin ? stdin.split("\n") : [];
@@ -201,7 +200,6 @@ const ProblemSolvePage = () => {
 
         const passedCount = formattedCases.filter((tc) => tc.passed).length;
 
-        console.log({ formattedCases });
         setTestResults({
           passed: passedCount,
           total: formattedCases.length,

@@ -118,11 +118,11 @@ export const problemsAPI = {
       const res = await axiosInstance.get(
         `/problems/get-all-problems?page=${page}`
       );
-      console.log(res.data.data)
+     
       return res.data.data;
 
     } catch (error: any) {
-      console.log(error)
+     console.log(error)
     }
   },
 

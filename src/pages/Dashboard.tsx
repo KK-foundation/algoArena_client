@@ -23,7 +23,7 @@ const Index = () => {
   const { data: potd } = usePotd();
 
   const nextLevelXp = useNextLevelXp();
-  // console.log(problems)
+
 
   const handleRandomProblemClick = async () => {
     try {
@@ -56,8 +56,7 @@ const Index = () => {
   // const handleQuerySearch = () => {
 
   // };
-  console.log({ authUser });
-  console.log(data?.problems)
+ 
 
   return (
     <div className="min-h-screen bg-craft-bg">

@@ -13,7 +13,7 @@ const difficultyColors = {
 };
 
 const ProblemCard = ({ problem }: { problem: Problem }) => {
-  console.log(problem);
+  
   const { id, title, tags, difficulty } = problem;
   const authUser = useCurrentUser();
   const solved = problem?.solvedBy?.some(

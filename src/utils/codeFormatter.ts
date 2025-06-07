@@ -273,37 +273,3 @@ if (typeof module !== "undefined" && module.exports) {
   window.CodeFormatter = CodeFormatter;
 }
 
-// Usage examples:
-/*
-// Basic formatting
-const monacoCode = "def hello():\n\t\tprint('Hello World')\n\n\n";
-const formatted = CodeFormatter.formatForJudge0(monacoCode, 'python');
-
-// Complete submission preparation
-try {
-  const submission = CodeFormatter.prepareSubmission(
-    monacoCode, 
-    'python', 
-    'input data', 
-    'expected output'
-  );
-  
-  // Send to Judge0 API
-  fetch('https://judge0-ce.p.rapidapi.com/submissions', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'X-RapidAPI-Key': 'your-api-key'
-    },
-    body: JSON.stringify(submission)
-  });
-} catch (error) {
-  console.error('Submission preparation failed:', error.message);
-}
-
-// Validation only
-const validation = CodeFormatter.validateCode(monacoCode, 'python');
-if (!validation.isValid) {
-  console.log('Issues found:', validation.issues);
-}
-*/

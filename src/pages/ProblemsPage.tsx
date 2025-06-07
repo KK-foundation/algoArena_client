@@ -86,7 +86,6 @@ const ProblemsPage = () => {
       await fetchNextPage();
     }
   };
-  console.log(problemsData)
 
   if (isProblemsLoading) {
     return (

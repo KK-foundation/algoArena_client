@@ -87,11 +87,9 @@ export const authAPI = {
           const res = await axiosInstance.get("/auth/check");
           return res.data.data;
         } catch (refreshError) {
-          console.log("Refresh token failed:", refreshError);
           throw new Error("Authentication failed");
         }
       } else {
-        console.log("Auth check error:", error);
         throw error;
       }
     }
@@ -104,7 +102,7 @@ export const authAPI = {
       });
       return res;
     } catch (error: any) {
-      console.log(error);
+      
       toast.error(error.response.data.message);
       throw error;
     }
@@ -140,14 +138,14 @@ export const authAPI = {
       return res;
     } catch (error: any) {
       toast.error("didn't find your email");
-      console.log(error);
+      
       throw error;
     }
   },
 
   resetPassword: async (data: ResetPasswordData) => {
     try {
-      console.log(data);
+      
       const res = await axiosInstance.post("/auth/reset-password", data);
       return res;
     } catch (error: any) {
@@ -172,7 +170,7 @@ export const authAPI = {
       localStorage.removeItem("userInfo");
       return res;
     } catch (error: any) {
-      console.log(error);
+      
       toast.error("Error logging out");
       throw error;
     }

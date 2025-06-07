@@ -38,7 +38,6 @@ export default function Otp() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
     verify({
       otp: data.pin,
     });

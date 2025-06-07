@@ -185,7 +185,6 @@ const SheetProblemManagerPage = () => {
     []
   );
 
-  console.log(sheetData);
 
   // Transform data
   const problems = useMemo(() => {

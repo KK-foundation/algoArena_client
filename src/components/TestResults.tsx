@@ -19,7 +19,7 @@ interface TestResultsProps {
 }
 
 const TestResults = ({ results }: TestResultsProps) => {
-  console.log({ results });
+  
   const overallPassed = results.passed === results.total;
 
   return (
