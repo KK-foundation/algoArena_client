@@ -26,7 +26,7 @@ const VideoDialog: React.FC<VideoDialogProps> = ({ open, setOpen }) => {
         <div className="aspect-w-16 aspect-h-9">
           <video width="100%" height="auto" controls autoPlay>
             <source
-              src="https://9hb9jto7eu.ufs.sh/f/YR4nKaOXanCO3ahe96x4NM2rkluJpf7jLUXBDZiQPe8dcqRE"
+              src="https://ynxir50uoi.ufs.sh/f/k9OWiEDGjYKIbnMXi3kq4aGnNMjS6Q9Vhpo5dZg8kyisLu0H"
               type="video/mp4"
             />
             Your browser does not support the video tag.
