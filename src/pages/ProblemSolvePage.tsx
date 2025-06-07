@@ -45,7 +45,7 @@ const ProblemSolvePage = () => {
   const [language, setLanguage] = useState("PYTHON");
   const [testResults, setTestResults] = useState<TestResultsT | null>(null);
   const [isRunning, setIsRunning] = useState(false);
-  const [showCelebration, setShowCelebration] = useState(true);
+  const [showCelebration, setShowCelebration] = useState(false);
   const { data: authUser, refetch } = useAuthCheck();
 
   const { getProblemById } = problemsAPI;
