@@ -158,10 +158,10 @@ const ContactUs = () => {
                 Or email us directly at:
               </span>
               <a
-                href="mailto:support@codecraft.com"
+                href="mailto:kunal34255@gmail.com"
                 className="text-neon-green hover:text-neon-blue transition-colors duration-200 font-medium"
               >
-                support@codecraft.com
+                kunal34255@gmail.com
               </a>
             </div>
           </div>

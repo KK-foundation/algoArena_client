@@ -192,7 +192,7 @@ const Index = () => {
           </motion.section>
 
           {/* Leaderboard */}
-          <div className="grid grid-cols-1 gap-8 container">
+          <div className="grid grid-cols-1 gap-8 sm:container">
             <motion.section
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}

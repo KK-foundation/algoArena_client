@@ -21,7 +21,7 @@ const TestimonialsSection = () => {
     },
     {
       name: "Hitesh Choudhary",
-      role: "Top 1% Coder on CodeCraft",
+      role: "Top 1% Coder on AlgoArena",
       quote: "This platform made me love coding again. The challenges are 🔥!",
       avatar: "HC",
       rating: 5,
@@ -74,7 +74,7 @@ const TestimonialsSection = () => {
             align: "start",
             loop: true,
           }}
-          className="w-full"
+          className="w-full relative"
         >
           <CarouselContent>
             {testimonials.map((testimonial, index) => (
@@ -93,7 +93,7 @@ const TestimonialsSection = () => {
                   <div className="relative z-10">
                     <Quote className="w-8 h-8 text-neon-green mb-4 opacity-60" />
 
-                    <p className="text-foreground mb-6 text-lg leading-relaxed line-clamp-3 h-20">
+                    <p className="text-foreground mb-6 text-lg leading-relaxed line-clamp-3 h-24">
                       "{testimonial.quote}"
                     </p>
 
@@ -124,8 +124,8 @@ const TestimonialsSection = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="border-neon-green/30 hover:bg-neon-green/10" />
-          <CarouselNext className="border-neon-green/30 hover:bg-neon-green/10" />
+          <CarouselPrevious className="border-neon-green/30 hover:bg-neon-green/10 absolute left-0" />
+          <CarouselNext className="border-neon-green/30 hover:bg-neon-green/10 absolute right-0" />
         </Carousel>
       </motion.div>
     </div>

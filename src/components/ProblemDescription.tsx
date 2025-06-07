@@ -133,8 +133,6 @@ const ProblemDescription = ({ problem }: ProblemDescriptionProps) => {
             <p className="px-4 text-craft-accent font-mono text-sm">
               {problem?.constraints}
             </p>
-            <br />
-            <br />
           </div>
         </TabsContent>
 
@@ -195,7 +193,6 @@ const ProblemDescription = ({ problem }: ProblemDescriptionProps) => {
           </div>
         </TabsContent>
       </Tabs>
-      <br />
     </div>
   );
 };

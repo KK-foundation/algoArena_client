@@ -28,7 +28,7 @@ const FeaturedChallenge = ({ potd }) => {
       />
 
       <div className="relative z-10">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col sm:flex-row items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-3">
               <span className="bg-neon-gradient text-black px-3 py-1 rounded-full text-sm font-semibold">
@@ -66,7 +66,7 @@ const FeaturedChallenge = ({ potd }) => {
             </div>
           </div>
 
-          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="">
             <Link to={`/problem/${potd.problem.id}`} className="w-full">
               <Button className="btn-primary text-lg px-6 py-3 group">
                 Start Challenge

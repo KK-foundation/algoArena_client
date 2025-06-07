@@ -42,7 +42,7 @@ const TermsPrivacy = () => {
                   Acceptance
                 </h3>
                 <p>
-                  By accessing and using CodeCraft, you accept and agree to be
+                  By accessing and using AlgoArena, you accept and agree to be
                   bound by the terms and provision of this agreement. If you do
                   not agree to abide by the above, please do not use this
                   service.
@@ -67,7 +67,7 @@ const TermsPrivacy = () => {
                 </h3>
                 <p>
                   All content, challenges, and educational materials provided on
-                  CodeCraft are protected by intellectual property laws. Users
+                  AlgoArena are protected by intellectual property laws. Users
                   retain ownership of their submitted solutions but grant us a
                   license to use them for educational purposes.
                 </p>
@@ -158,7 +158,7 @@ const TermsPrivacy = () => {
                 </h3>
                 <p>
                   For any privacy-related questions or concerns, please reach
-                  out to us at privacy@codecraft.com. We typically respond
+                  out to us at privacy@algoarena.com. We typically respond
                   within 48 hours and are committed to addressing your concerns
                   promptly.
                 </p>

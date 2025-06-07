@@ -233,7 +233,7 @@ const ProblemSolvePage = () => {
         <ResizablePanelGroup direction="horizontal">
           {/* Left Panel - Problem Description */}
           <ResizablePanel>
-            <div className="bg-craft-panel border-r border-craft-border overflow-y-auto [scrollbar-gutter:stable]">
+            <div className="bg-craft-panel border-r border-craft-border overflow-y-auto [scrollbar-gutter:stable] h-[calc(100vh-80px)]">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center space-x-2">
@@ -264,7 +264,9 @@ const ProblemSolvePage = () => {
 
                 <ProblemDescription problem={problem} />
               </div>
+              
             </div>
+           
           </ResizablePanel>
 
           {/* Resize Handle */}

@@ -41,7 +41,7 @@ const ContestsPage = () => {
     },
     {
       id: 3,
-      title: "CodeCraft Monthly Championship",
+      title: "AlgoArena Monthly Championship",
       status: "upcoming", 
       startTime: "2025-01-20T10:00:00Z",
       duration: "3h 00m",

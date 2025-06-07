@@ -55,7 +55,7 @@ const HeroBanner = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className="text-6xl md:text-8xl font-orbitron font-black mb-6">
+          <h1 className="text-5xl md:text-8xl font-orbitron font-black mb-6">
             <span className="hero-text">{landingPage.hero.heading}</span>
           </h1>
           <h2 className="text-2xl md:text-4xl font-orbitron font-bold mb-4">
@@ -70,6 +70,7 @@ const HeroBanner = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}
+          className="flex flex-col sm:flex-row gap-3 justify-center items-center"
         >
           <Link to={landingPage.hero.buttonLink}>
             <Button
@@ -81,7 +82,7 @@ const HeroBanner = () => {
             </Button>
           </Link>
           <Button
-            className="ml-8 bg-craft-panel text-white text-lg px-8 py-4 group rounded-none border-2 border-craft-accent"
+            className="bg-craft-panel text-white text-lg px-8 py-4 group rounded-none border-2 border-craft-accent"
             size="lg"
             onClick={handleOpen}
             onMouseEnter={handleMouseEnter}
@@ -97,7 +98,7 @@ const HeroBanner = () => {
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto mt-16"
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-3xl md:max-w-4xl mx-auto mt-16"
         >
           {[
             {

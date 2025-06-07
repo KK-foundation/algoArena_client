@@ -8,7 +8,7 @@ const AnimatedTabs = ({ tabs, defaultTab }) => {
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-      <TabsList className="relative bg-secondary rounded-none border border-border">
+      <TabsList className="relative bg-secondary rounded-none border border-border flex flex-wrap h-20 sm:h-fit justify-start sm:w-fit">
         {tabs.map((tab) => (
           <TabsTrigger
             key={tab.id}
@@ -19,7 +19,7 @@ const AnimatedTabs = ({ tabs, defaultTab }) => {
             {activeTab === tab.id && (
               <motion.div
                 layoutId="activeTab"
-                className="absolute inset-0 bg-neon-green/20 rounded-none border border-neon-green/50"
+                className="absolute inset-0 bg-neon-green/20 rounded-none border border-neon-green/50 "
                 initial={false}
                 transition={{
                   type: "spring",
