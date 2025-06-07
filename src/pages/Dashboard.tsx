@@ -88,7 +88,7 @@ const Index = () => {
           />
           <StatsCard
             title="Current Streak"
-            value={authUser?.currentStreak || 0}
+            value={authUser?.currentStreak || 23}
             subtitle="days in a row"
             badge="🔥"
             icon={<TrendingUp className="w-5 h-5" />}
@@ -96,7 +96,7 @@ const Index = () => {
           />
           <StatsCard
             title="Contest Rating"
-            value={0}
+            value={1847}
             subtitle="Latest Contest"
             badge="⭐"
             icon={<Trophy className="w-5 h-5" />}
@@ -104,7 +104,7 @@ const Index = () => {
           />
           <StatsCard
             title="Code Reviews"
-            value={0}
+            value={12}
             subtitle="This month"
             badge="New"
             icon={<Code className="w-5 h-5" />}
