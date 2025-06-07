@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Zap, Target, Trophy, Users, TrendingUp, Code } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { useProblems, useRandomProblem } from "@/hooks/useProblems";
+import { useProblems, useRandomProblem, useSolvedProblems } from "@/hooks/useProblems";
 import { useCurrentUser } from "@/hooks/useAuth";
 import { useNextLevelXp } from "@/hooks/useNextLevelXp";
 import { useContestStore } from "@/store/useContestStore";
@@ -21,6 +21,7 @@ const Index = () => {
   const authUser = useCurrentUser();
   // const { latestRating } = useContestStore();
   const { data: potd } = usePotd();
+  const {data:solvedProblems} = useSolvedProblems();
 
   const nextLevelXp = useNextLevelXp();
 
@@ -53,9 +54,6 @@ const Index = () => {
     navigate("/contests");
   };
 
-  // const handleQuerySearch = () => {
-
-  // };
  
 
   return (
@@ -80,7 +78,7 @@ const Index = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <StatsCard
             title="Problems Solved"
-            value={authUser?.problemSolved || 0}
+            value={solvedProblems?.length || 0}
             subtitle="Great progress!"
             badge={`+${authUser?.submission?.length || 0}`}
             icon={<Target className="w-5 h-5" />}
