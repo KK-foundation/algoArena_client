@@ -25,13 +25,11 @@ import {
   Import,
 } from "lucide-react";
 import { Editor } from "@monaco-editor/react";
-// Removed problemsAPI import - using React Query hook instead
 import { useCreateProblem } from "@/hooks/useProblems";
 import { useNavigate } from "react-router-dom";
 import { useCurrentUser } from "@/hooks/useAuth";
 import { sampledData, sampleStringProblem } from "@/constants/sample";
 import { availableTags } from "@/constants/tags";
-import { problemSet } from "@/constants/code";
 import { toast } from "sonner";
 
 const langMap = {
@@ -264,8 +262,7 @@ const CreateProblemPage = () => {
     formData.title && formData.description && selectedTags.length > 0;
 
   const loadSampleData = (sampleType: "DP" | "String") => {
-    // const sampleData = sampleType === "DP" ? sampledData : sampleStringProblem;
-    const sampleData = problemSet[0];
+    const sampleData = sampleType === "DP" ? sampledData : sampleStringProblem;
 
     setFormData(sampleData);
     setSelectedTags(sampleData.tags);
