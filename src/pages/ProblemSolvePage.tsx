@@ -369,7 +369,8 @@ const ProblemSolvePage = () => {
                           className="border-craft-border text-black hover:border-craft-bg"
                         >
                           <Play className="w-4 h-4 mr-2" />
-                          {isRunning ? "Running..." : "Run"}
+                          {/* {isRunning ? "Running..." : "Run"} */}
+                          Run
                         </Button>
                         <Button
                           onClick={handleSubmit}
@@ -377,7 +378,8 @@ const ProblemSolvePage = () => {
                           className="bg-craft-accent hover:bg-craft-accent/80 text-craft-bg"
                         >
                           <Send className="w-4 h-4 mr-2" />
-                          {isRunning ? "Submitting..." : "Submit"}
+                          {/* {isRunning ? "Submitting..." : "Submit"} */}
+                          Submit
                         </Button>
                       </div>
                     </div>
