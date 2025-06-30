@@ -89,7 +89,7 @@ const SignIn = () => {
     >
       <form onSubmit={handleSubmit} className="space-y-6">
         <FormInput
-          label="Email"
+          label="Email or Username"
           type="text"
           placeholder="Enter your email or username"
           value={formData.data}
